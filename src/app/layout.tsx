@@ -1,54 +1,73 @@
-import type { Metadata } from 'next'
-import { NextIntlClientProvider } from 'next-intl'
-import { notFound } from 'next/navigation'
-import { DefaultSeo } from 'next-seo'
-import SEO from '../../next-seo.config'
-import './globals.css'
+// src/app/[locale]/layout.tsx
+import type { Metadata } from 'next';
+import './globals.css';
+import Header from '@/components/Header';
+import Script from 'next/script';
 
+// Metadata chuẩn SEO—không dùng next-seo, dùng Metadata API của Next.js 16.1.1
 export const metadata: Metadata = {
-  title: 'Thi công điện nước, camera giám sát, năng lượng mặt trời, cơ điện',
-  description: 'Thi công điện nước dân dụng, công nghiệp, camera giám sát, năng lượng mặt trời, cơ điện trên địa bàn HCM, Bình Dương, Đồng Nai, Tây Ninh, Vũng Tàu, Bình Phước, DakNong, DakLak...',
-  metadataBase: new URL('https://example.com'),
-}
+  title: {
+    default: 'Camera giám sát - năng lượng mặt trời',
+    template: '%s | Camera giám sát - năng lượng mặt trời',
+  },
+  icons: {
+    icon: '/favicon.ico', // favicon chính 
+    shortcut: '/favicon.png', // favicon phụ 
+    apple: '/apple-touch-icon.png',
+  },// cho iOS
+  description: `Thi công điện dân dụng, công nghiệp, camera giám sát, năng lượng mặt trời, pccc, blhd, cơ điện tại HCM, Bình Dương, 
+  Bình Phước, Đồng Nai, Tây Ninh, Vũng Tàu, DakNong, DakLak, toàn quốc. Nghiệm thu từng giai đoạn, chuyên
+  nghiệp`,
+  keywords: ['camera giám sat', 'năng lượng mặt trời', 'thi công điện nước', 'pccc'],
+  metadataBase: new URL('https://cameramattroi.com'),
+  openGraph: {
+    title: 'Camera giám sát - năng lượng mặt trời',
+    description: `Thi công điện dân dụng, công nghiệp, camera giám sát, năng lượng mặt trời, pccc, blhd, cơ điện tại HCM, Bình Dương, 
+  Bình Phước, Đồng Nai, Tây Ninh, Vũng Tàu, DakNong, DakLak, toàn quốc. Nghiệm thu từng giai đoạn, chuyên
+  nghiệp`,
+    url: 'https://cameramattroi.com',
+    siteName: 'Camera giám sát - năng lượng mặt trời',
+    images: [{ url: '/og-cover.jpg', width: 1200, height: 630, alt: 'Camera giám sát - năng lượng mặt trời' }],
+    // locale: 'vi_VN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Camera giám sát - năng lượng mặt trời',
+    description: `Thi công điện dân dụng, công nghiệp, camera giám sát, năng lượng mặt trời, pccc, blhd, cơ điện tại HCM, Bình Dương, 
+  Bình Phước, Đồng Nai, Tây Ninh, Vũng Tàu, DakNong, DakLak, toàn quốc. Nghiệm thu từng giai đoạn, chuyên
+  nghiệp`,
+    images: ['/og-cover.jpg'],
+  },
+  /*alternates: {
+    canonical: 'https://cameramattroi.com',
+    languages: {
+      vi: 'https://cameramattroi.com/vi',
+      en: 'https://cameramattroi.com/en',
+    },
+  },*/
+};
 
-async function getMessages(locale: string) {
-  try {
-    return (await import(`../messages/${locale}.json`)).default
-  } catch {
-    return null
-  }
-}
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
   params,
 }: {
-  children: React.ReactNode
-  params: { locale?: string }
+  children: React.ReactNode;
+  params: { locale: 'vi' | 'en' };
 }) {
-  const locale = params?.locale ?? 'vi'
-  const messages = await getMessages(locale)
-  if (!messages) notFound()
-
   return (
-    <html lang={locale}>
+    <html lang={params.locale}>
       <head>
-        {/* next-seo default */}
+        <></>
       </head>
-      <body>
-        <DefaultSeo
-          titleTemplate="%s | NextMerce Clone"
-          openGraph={{
-            type: 'website',
-            locale,
-            siteName: 'NextMerce Clone',
-          }}
-          twitter={{ cardType: 'summary_large_image' }}
-        />
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+      <body className="min-h-dvh bg-white text-gray-900 antialiased">
+        {/* Header—lấy dữ liệu động theo locale */}
+        <Header />
+        {/* Nội dung trang */}
+        <main>{children}</main>
+        {/* Footer sẽ thêm sau */}
+        <Script src="/script.js" strategy="afterInteractive"></Script>
       </body>
     </html>
-  )
+  );
 }
