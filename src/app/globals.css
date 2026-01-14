@@ -264,7 +264,7 @@ a {
 
 /* Search Form */
 .search-form {
-  /* width: 85%;*/
+  width: 90%;
 }
 
 .search-wrapper {
@@ -523,7 +523,7 @@ a {
   position: relative;
   overflow: hidden;
   border-radius: 16px;
-  background: #f8f3ff;
+  background: #a0d9df;
   padding: 20px 0;
 }
 

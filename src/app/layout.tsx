@@ -2,7 +2,14 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
+import HeroBanner from '@/components/HeroBanner';
 import Script from 'next/script';
+import Category from '@/components/Category';
+import PopularCategory from '@/components/PopularCategory';
+import ProductsHome from '@/components/ProductsHome';
+import ProductGrid from '@/components/ProductGrid';
+import ReBanner from '@/components/ReBanner';
+import Footer from '@/components/Footer';
 
 // Metadata chuẩn SEO—không dùng next-seo, dùng Metadata API của Next.js 16.1.1
 export const metadata: Metadata = {
@@ -48,25 +55,30 @@ export const metadata: Metadata = {
   },*/
 };
 
-export default function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { locale: 'vi' | 'en' };
+export default function RootLayout({ children }: {
+  children: React.ReactNode
 }) {
   return (
-    <html lang={params.locale}>
+    <html lang='vi'>
       <head>
         <></>
       </head>
-      <body className="min-h-dvh bg-white text-gray-900 antialiased">
-        {/* Header—lấy dữ liệu động theo locale */}
-        <Header />
-        {/* Nội dung trang */}
-        <main>{children}</main>
-        {/* Footer sẽ thêm sau */}
-        <Script src="/script.js" strategy="afterInteractive"></Script>
+      <body className="">
+        <>
+          {/* Header—lấy dữ liệu động theo locale */}
+          <Header />
+          <HeroBanner />
+          <Category />
+          <PopularCategory />
+          <ProductsHome />
+          {/* <ProductGrid /> */}
+          <ReBanner />
+          <Footer />
+          {/* Nội dung trang */}
+          {/* <main>{children}</main> */}
+          {/* Footer sẽ thêm sau */}
+          <Script src="/script.js" strategy="afterInteractive" />
+        </>
       </body>
     </html>
   );
