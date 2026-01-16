@@ -56,8 +56,22 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: {
-  children: React.ReactNode
-}) {
+  children: React.ReactNode;
+
+}) {/*
+  async function getProducts() {
+  const res = await fetch('https://api.tonkliplock1000.com', {
+    cache: 'no-store', // luôn lấy dữ liệu mới, tốt cho SEO
+  });
+
+  if (!res.ok) {
+    throw new Error('Không thể fetch dữ liệu sản phẩm');
+  }
+
+  const json = await res.json();
+  return json.data; // API của đệ trả về { data: [...] }
+}
+  const products = await getProducts();*/
   return (
     <html lang='vi'>
       <head>
@@ -70,13 +84,13 @@ export default function RootLayout({ children }: {
           <HeroBanner />
           <Category />
           <PopularCategory />
-          <ProductsHome />
-          {/* <ProductGrid /> */}
-          <ReBanner />
-          <Footer />
           {/* Nội dung trang */}
-          {/* <main>{children}</main> */}
+          {/* <ProductsHome /> */}
+          <main>{children}</main>
+          {/* <ProductGrid products={products} /> */}
+          <ReBanner />
           {/* Footer sẽ thêm sau */}
+          <Footer />
           <Script src="/script.js" strategy="afterInteractive" />
         </>
       </body>

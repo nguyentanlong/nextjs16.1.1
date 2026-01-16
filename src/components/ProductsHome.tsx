@@ -1,4 +1,20 @@
-export default function ProductsHome() {
+import Link from "next/link"
+interface Product {
+    id: string;
+    productName: string;
+    shortDescription: string;
+    description: string;
+    media: string[];
+    price: string;
+    stock: number;
+    // nếu API có thêm trường discountPercent thì mình dùng, còn không thì bỏ qua
+    discountPercent?: number;
+}
+
+export default function ProductsHome({ products }: { products: Product[] }) {
+    if (!products || products.length === 0) {
+        return <div>Chưa có sản phẩm nào</div>;
+    }
     return (
         <>
             {/* ==================== CÓ THỂ BẠN THÍCH – GRID THẬT SỰ ==================== */}
@@ -13,154 +29,30 @@ export default function ProductsHome() {
                     {/* GRID 5 CỘT (desktop) */}
                     <div className="suggestion-grid">
                         {/* Sản phẩm 1 */}
-                        <div className="suggestion-card">
-                            <a href="#" className="product-link">
-                                <div className="badge-percent">-50%</div>
-                                <img
-                                    src="https://i1-dulich.vnecdn.net/2014/10/30/nang-chieu-050-1411223792-1414642993.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=8Qns7hOFhBnrqoKixTIBLg"
-                                    alt="Thảm yoga"
-                                />
-                                <div className="badges">
-                                    <span className="badge-discount">Discount Extra</span>
-                                    <span className="badge-official">Official Sale</span>
-                                </div>
-                                <h3>Thảm tập yoga TPE cao cấp, chống trơn trượt, chính hãng</h3>
-                                <div className="price">
-                                    <span className="price-new">₫87.656</span>
-                                    <span className="sold">Đã bán 683</span>
-                                </div>
-                            </a>
-                        </div>
-                        {/* Sản phẩm 2 */}
-                        <div className="suggestion-card">
-                            <a href="#" className="product-link">
-                                <div className="badge-percent">-38%</div>
-                                <img
-                                    src="https://i1-dulich.vnecdn.net/2014/10/30/img-5401-copy-1413910289-1414642993.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=OX4lz4tFdqdsI6gcHiyWmw"
-                                    alt="Dép nữ"
-                                />
-                                <div className="badges">
-                                    <span className="badge-discount">Discount Extra</span>
-                                    <span className="badge-official">Official Sale</span>
-                                </div>
-                                <h3>028ĐEP NỮ QUẢNG CHÂU</h3>
-                                <div className="price">
-                                    <span className="price-new">₫64.800</span>
-                                    <span className="sold">Đã bán 180</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div className="suggestion-card">
-                            <a href="#" className="product-link">
-                                <div className="badge-percent">-50%</div>
-                                <img
-                                    src="https://i1-dulich.vnecdn.net/2014/10/30/nang-chieu-050-1411223792-1414642993.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=8Qns7hOFhBnrqoKixTIBLg"
-                                    alt="Thảm yoga"
-                                />
-                                <div className="badges">
-                                    <span className="badge-discount">Discount Extra</span>
-                                    <span className="badge-official">Official Sale</span>
-                                </div>
-                                <h3>Thảm tập yoga TPE cao cấp, chống trơn trượt, chính hãng</h3>
-                                <div className="price">
-                                    <span className="price-new">₫87.656</span>
-                                    <span className="sold">Đã bán 683</span>
-                                </div>
-                            </a>
-                        </div>
-                        {/* Sản phẩm 2 */}
-                        <div className="suggestion-card">
-                            <a href="#" className="product-link">
-                                <div className="badge-percent">-38%</div>
-                                <img
-                                    src="https://i1-dulich.vnecdn.net/2014/10/30/img-5401-copy-1413910289-1414642993.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=OX4lz4tFdqdsI6gcHiyWmw"
-                                    alt="Dép nữ"
-                                />
-                                <div className="badges">
-                                    <span className="badge-discount">Discount Extra</span>
-                                    <span className="badge-official">Official Sale</span>
-                                </div>
-                                <h3>028ĐEP NỮ QUẢNG CHÂU</h3>
-                                <div className="price">
-                                    <span className="price-new">₫64.800</span>
-                                    <span className="sold">Đã bán 180</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div className="suggestion-card">
-                            <a href="#" className="product-link">
-                                <div className="badge-percent">-50%</div>
-                                <img
-                                    src="https://i1-dulich.vnecdn.net/2014/10/30/nang-chieu-050-1411223792-1414642993.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=8Qns7hOFhBnrqoKixTIBLg"
-                                    alt="Thảm yoga"
-                                />
-                                <div className="badges">
-                                    <span className="badge-discount">Discount Extra</span>
-                                    <span className="badge-official">Official Sale</span>
-                                </div>
-                                <h3>Thảm tập yoga TPE cao cấp, chống trơn trượt, chính hãng</h3>
-                                <div className="price">
-                                    <span className="price-new">₫87.656</span>
-                                    <span className="sold">Đã bán 683</span>
-                                </div>
-                            </a>
-                        </div>
-                        {/* Sản phẩm 2 */}
-                        <div className="suggestion-card">
-                            <a href="#" className="product-link">
-                                <div className="badge-percent">-38%</div>
-                                <img
-                                    src="https://i1-dulich.vnecdn.net/2014/10/30/img-5401-copy-1413910289-1414642993.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=OX4lz4tFdqdsI6gcHiyWmw"
-                                    alt="Dép nữ"
-                                />
-                                <div className="badges">
-                                    <span className="badge-discount">Discount Extra</span>
-                                    <span className="badge-official">Official Sale</span>
-                                </div>
-                                <h3>028ĐEP NỮ QUẢNG CHÂU</h3>
-                                <div className="price">
-                                    <span className="price-new">₫64.800</span>
-                                    <span className="sold">Đã bán 180</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div className="suggestion-card">
-                            <a href="#" className="product-link">
-                                <div className="badge-percent">-50%</div>
-                                <img
-                                    src="https://i1-dulich.vnecdn.net/2014/10/30/nang-chieu-050-1411223792-1414642993.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=8Qns7hOFhBnrqoKixTIBLg"
-                                    alt="Thảm yoga"
-                                />
-                                <div className="badges">
-                                    <span className="badge-discount">Discount Extra</span>
-                                    <span className="badge-official">Official Sale</span>
-                                </div>
-                                <h3>Thảm tập yoga TPE cao cấp, chống trơn trượt, chính hãng</h3>
-                                <div className="price">
-                                    <span className="price-new">₫87.656</span>
-                                    <span className="sold">Đã bán 683</span>
-                                </div>
-                            </a>
-                        </div>
-                        {/* Sản phẩm 2 */}
-                        <div className="suggestion-card">
-                            <a href="#" className="product-link">
-                                <div className="badge-percent">-38%</div>
-                                <img
-                                    src="https://i1-dulich.vnecdn.net/2014/10/30/img-5401-copy-1413910289-1414642993.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=OX4lz4tFdqdsI6gcHiyWmw"
-                                    alt="Dép nữ"
-                                />
-                                <div className="badges">
-                                    <span className="badge-discount">Discount Extra</span>
-                                    <span className="badge-official">Official Sale</span>
-                                </div>
-                                <h3>028ĐEP NỮ QUẢNG CHÂU</h3>
-                                <div className="price">
-                                    <span className="price-new">₫64.800</span>
-                                    <span className="sold">Đã bán 180</span>
-                                </div>
-                            </a>
-                        </div>
+                        {products.map((p) => (
+                            <div key={p.id} className="suggestion-card">
+                                <Link href={`/product/${p.id}`} className="product-link">
+                                    {p.discountPercent && (
+                                        <div className="badge-percent">-50%-{/*p.discountPercent*/}%</div>)}
+                                    {p.media && p.media.length > 0 ? (
+                                        <img
+                                            src={p.media[0]} alt={p.productName}
+                                        />
+                                    ) : (
+                                        <div className="placeholder" />
+                                    )}
+                                    <div className="badges">
+                                        <span className="badge-discount">Discount Extra</span>
+                                        <span className="badge-official">Official Sale</span>
+                                    </div>
+                                    <h3>{p.productName}</h3>
+                                    <div className="price">
+                                        <span className="price-new"> {Number(p.price).toLocaleString('vi-VN')} ₫</span>
+                                        <span className="sold">Còn {p.stock} sản phẩm</span>
+                                    </div>
+                                </Link>
+                            </div>
+                        ))}
                         {/* Copy thêm 18 cái nữa (tổng 20 sp cho đẹp) */}
                         {/* Sư phụ làm sẵn 18 cái dưới đây rồi, đệ chỉ cần dán vào */}
                     </div>

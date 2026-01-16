@@ -18,7 +18,7 @@ export default function Navigation() {
     return (
         <div className="category-dropdown" id="category-dropdown">
             <button className="category-btn">
-                Danh Mục Sản Phẩm<span className="arrow">v</span>
+                Danh Mục<span className="arrow">v</span>
             </button>
             <div className="category-menu">
                 {categories.map((cat) => (

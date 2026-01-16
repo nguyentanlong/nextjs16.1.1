@@ -42,12 +42,15 @@ const nextConfig: NextConfig = {
   },
   // Cho phép tải ảnh từ các domain cần thiết
   images: {
+    domains: ['cameramattroi.com'], // 👈 thêm domain này
     remotePatterns: [
       { protocol: 'https', hostname: 'api.tonkliplock1000.com' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdn.jsdelivr.net' },
     ],
   },
+  // next.config.js
+
 };
 
 export default nextConfig;

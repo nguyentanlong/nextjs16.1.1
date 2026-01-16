@@ -1,22 +1,27 @@
-// src/app/product/[id]/page.tsx
-import type { Metadata } from 'next'
+// src/app/page.tsx
+// import ProductGrid from '@/components/ProductGrid';
+import ProductsHome from '@/components/ProductsHome';
 
-type Props = { params: { id: string } }
+async function getProducts() {
+  const res = await fetch('https://api.tonkliplock1000.com', {
+    cache: 'no-store', // luôn lấy dữ liệu mới, tốt cho SEO
+  });
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await fetch(`https://api.tonkliplock1000.com/`).then(res => res.json())//sau .com/${params.id}
-
-  return {
-    title: product.name,
-    description: product.description,
-    openGraph: {
-      title: product.name,
-      description: product.description,
-      images: [{ url: product.image }],
-    },
+  if (!res.ok) {
+    throw new Error('Không thể fetch dữ liệu sản phẩm');
   }
+
+  const json = await res.json();
+  return json.data; // API của đệ trả về { data: [...] }
 }
 
-export default function ProductPage({ params }: Props) {
-  return <h1>Chi tiết sản phẩm {params.id}</h1>
+export default async function HomePage() {
+  const products = await getProducts();
+
+  return (
+    <main>
+      <h1>Trang chủ Tonkliplock Store</h1>
+      <ProductsHome products={products} />
+    </main>
+  );
 }

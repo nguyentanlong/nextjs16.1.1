@@ -1,58 +1,59 @@
 // src/components/ProductGrid.tsx
-'use client';
+import Link from 'next/link';
 
-import useSWR from 'swr';
-import axios from 'axios';
-import Image from 'next/image';
+interface Product {
+    id: string;
+    productName: string;
+    shortDescription: string;
+    description: string;
+    media: string[];
+    price: string;
+    stock: number;
+    // nếu API có thêm trường discountPercent thì mình dùng, còn không thì bỏ qua
+    discountPercent?: number;
+}
 
-type Product = {
-    id: string | number;
-    name: string;
-    price: number;
-    salePrice?: number;
-    imageUrl?: string;
-};
-
-const fetcher = (url: string) =>
-    axios.get(url, { baseURL: 'https://api.tonkliplock1000.com' }).then((res) => res.data);
-
-export default function ProductGrid({ locale }: { locale: string }) {
-    const { data, error, isLoading } = useSWR<Product[]>(`/products?lang=${locale}`, fetcher);
-
-    if (isLoading) return <div>Đang tải sản phẩm...</div>;
-    if (error) return <div className="text-red-600">Không tải được dữ liệu.</div>;
-    if (!data || data.length === 0) return <div>Chưa có sản phẩm.</div>;
+export default function ProductGrid({ products }: { products: Product[] }) {
+    if (!products || products.length === 0) {
+        return <div>Chưa có sản phẩm nào</div>;
+    }
 
     return (
-        <section aria-label="Sản phẩm mới" className="my-8">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {data.map((p) => (
-                    <article key={p.id} className="rounded-lg border p-4 shadow-sm">
-                        <div className="relative aspect-square mb-3">
-                            {p.imageUrl ? (
-                                <Image
-                                    src={p.imageUrl}
-                                    alt={p.name}
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 33vw"
-                                    className="object-cover rounded-md"
-                                />
-                            ) : (
-                                <div className="bg-gray-100 rounded-md w-full h-full" />
+        <section aria-label="Danh sách sản phẩm" className="product-grid">
+            <div className="grid">
+                {products.map((p) => (
+                    <div key={p.id} className="suggestion-card">
+                        <Link href={`/product/${p.id}`} className="product-link">
+                            {/* Badge phần trăm giảm giá nếu có */}
+                            {p.discountPercent && (
+                                <div className="badge-percent">-{p.discountPercent}%</div>
                             )}
-                        </div>
-                        <h3 className="font-medium">{p.name}</h3>
-                        <div className="mt-2">
-                            {p.salePrice ? (
-                                <>
-                                    <span className="text-lg font-semibold text-emerald-600">${p.salePrice}</span>
-                                    <span className="text-sm text-gray-500 line-through">${p.price}</span>
-                                </>
+
+                            {/* Hình ảnh sản phẩm */}
+                            {p.media && p.media.length > 0 ? (
+                                <img src={p.media[0]} alt={p.productName} />
                             ) : (
-                                <span className="text-lg font-semibold">${p.price}</span>
+                                <div className="placeholder" />
                             )}
-                        </div>
-                    </article>
+
+                            {/* Badges cố định (đệ có thể thay đổi sau) */}
+                            <div className="badges">
+                                <span className="badge-discount">Discount Extra</span>
+                                <span className="badge-official">Official Sale</span>
+                            </div>
+
+                            {/* Tên sản phẩm */}
+                            <h3>{p.productName}</h3>
+
+                            {/* Giá và số lượng tồn kho */}
+                            <div className="price">
+                                <span className="price-new">
+                                    {Number(p.price).toLocaleString('vi-VN')} ₫
+                                </span>
+                                <span className="sold">Còn {p.stock} sản phẩm</span>
+                            </div>
+                        </Link>
+                    </div>
                 ))}
             </div>
         </section>
