@@ -1,3 +1,4 @@
+import { slugifyProduct } from "@/lib/slugify";
 import Link from "next/link"
 interface Product {
     id: string;
@@ -31,7 +32,7 @@ export default function ProductsHome({ products }: { products: Product[] }) {
                         {/* Sản phẩm 1 */}
                         {products.map((p) => (
                             <div key={p.id} className="suggestion-card">
-                                <Link href={`/product/${p.id}`} className="product-link">
+                                <Link href={`/${slugifyProduct(p.productName)}`} className="product-link">
                                     {p.discountPercent && (
                                         <div className="badge-percent">-50%-{/*p.discountPercent*/}%</div>)}
                                     {p.media && p.media.length > 0 ? (
@@ -56,6 +57,7 @@ export default function ProductsHome({ products }: { products: Product[] }) {
                         {/* Copy thêm 18 cái nữa (tổng 20 sp cho đẹp) */}
                         {/* Sư phụ làm sẵn 18 cái dưới đây rồi, đệ chỉ cần dán vào */}
                     </div>
+                    {/* <Link href={'/login'}>Test Login</Link> */}
                 </div>
             </section>
         </>

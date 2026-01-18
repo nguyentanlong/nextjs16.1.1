@@ -1,10 +1,16 @@
 // src/app/page.tsx
 // import ProductGrid from '@/components/ProductGrid';
+import Header from '@/components/Header';
+import HeroBanner from '@/components/HeroBanner';
+import Category from '@/components/Category';
+import PopularCategory from '@/components/PopularCategory';
 import ProductsHome from '@/components/ProductsHome';
-
+import ReBanner from '@/components/ReBanner';
+import Link from 'next/link';
+// import ProductGrid from '@/components/ProductGrid';
 async function getProducts() {
   const res = await fetch('https://api.tonkliplock1000.com', {
-    cache: 'no-store', // luôn lấy dữ liệu mới, tốt cho SEO
+    next: { revalidate: 3600 }, // cache 1h
   });
 
   if (!res.ok) {
@@ -20,8 +26,13 @@ export default async function HomePage() {
 
   return (
     <main>
-      <h1>Trang chủ Tonkliplock Store</h1>
+      <Header />
+      <HeroBanner />
+      <Category />
+      <PopularCategory />
       <ProductsHome products={products} />
+      <Link href="/LoginPage" className="login-link">Đăng nhập</Link>
+      <ReBanner />
     </main>
   );
 }

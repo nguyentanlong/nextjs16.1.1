@@ -1,14 +1,7 @@
 // src/app/[locale]/layout.tsx
 import type { Metadata } from 'next';
 import './globals.css';
-import Header from '@/components/Header';
-import HeroBanner from '@/components/HeroBanner';
 import Script from 'next/script';
-import Category from '@/components/Category';
-import PopularCategory from '@/components/PopularCategory';
-import ProductsHome from '@/components/ProductsHome';
-import ProductGrid from '@/components/ProductGrid';
-import ReBanner from '@/components/ReBanner';
 import Footer from '@/components/Footer';
 
 // Metadata chuẩn SEO—không dùng next-seo, dùng Metadata API của Next.js 16.1.1
@@ -80,18 +73,16 @@ export default function RootLayout({ children }: {
       <body className="">
         <>
           {/* Header—lấy dữ liệu động theo locale */}
-          <Header />
-          <HeroBanner />
-          <Category />
-          <PopularCategory />
           {/* Nội dung trang */}
           {/* <ProductsHome /> */}
           <main>{children}</main>
           {/* <ProductGrid products={products} /> */}
-          <ReBanner />
+
           {/* Footer sẽ thêm sau */}
           <Footer />
           <Script src="/script.js" strategy="afterInteractive" />
+          <Script src="/product-script.js" strategy="afterInteractive" />
+          <Script src="/script-login.js"></Script>
         </>
       </body>
     </html>

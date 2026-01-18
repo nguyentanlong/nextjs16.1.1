@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
   },
   // Cho phép tải ảnh từ các domain cần thiết
   images: {
-    domains: ['cameramattroi.com'], // 👈 thêm domain này
+    domains: ['cameramattroi.com'], // 👈 thêm ảnh từ domain này
     remotePatterns: [
       { protocol: 'https', hostname: 'api.tonkliplock1000.com' },
       { protocol: 'https', hostname: 'images.unsplash.com' },

@@ -1219,7 +1219,7 @@ body {
 }
 
 .tab-btn.active::after {
-  content: 'Đang xem';
+  /* content: 'Đang xem'; */
   position: absolute;
   bottom: -2px;
   left: 0;
