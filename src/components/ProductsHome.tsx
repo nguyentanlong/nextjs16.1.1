@@ -1,17 +1,6 @@
+import { Product } from "@/lib/api";
 import { slugifyProduct } from "@/lib/slugify";
 import Link from "next/link"
-interface Product {
-    id: string;
-    productName: string;
-    shortDescription: string;
-    description: string;
-    media: string[];
-    price: string;
-    stock: number;
-    // nếu API có thêm trường discountPercent thì mình dùng, còn không thì bỏ qua
-    discountPercent?: number;
-}
-
 export default function ProductsHome({ products }: { products: Product[] }) {
     if (!products || products.length === 0) {
         return <div>Chưa có sản phẩm nào</div>;

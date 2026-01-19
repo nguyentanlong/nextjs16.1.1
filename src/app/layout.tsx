@@ -2,7 +2,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
-import Footer from '@/components/Footer';
 
 // Metadata chuẩn SEO—không dùng next-seo, dùng Metadata API của Next.js 16.1.1
 export const metadata: Metadata = {
@@ -70,7 +69,7 @@ export default function RootLayout({ children }: {
       <head>
         <></>
       </head>
-      <body className="">
+      <body>
         <>
           {/* Header—lấy dữ liệu động theo locale */}
           {/* Nội dung trang */}
@@ -79,7 +78,6 @@ export default function RootLayout({ children }: {
           {/* <ProductGrid products={products} /> */}
 
           {/* Footer sẽ thêm sau */}
-          <Footer />
           <Script src="/script.js" strategy="afterInteractive" />
           <Script src="/product-script.js" strategy="afterInteractive" />
           <Script src="/script-login.js"></Script>

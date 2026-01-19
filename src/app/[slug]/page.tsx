@@ -2,8 +2,9 @@
 import { Metadata } from "next";
 import { slugifyProduct } from "@/lib/slugify";
 import Link from "next/link";
+import { fetchProducts, Product } from "@/lib/api";
 
-interface Product {
+/*interface Product {
     id: string;
     productName: string;
     shortDescription: string;
@@ -14,15 +15,16 @@ interface Product {
 }
 
 async function getProducts(): Promise<Product[]> {
-    const res = await fetch("https://api.tonkliplock1000.com", {
+    const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+    const res = await fetch(`${API_BASE}`, {
         next: { revalidate: 3600 }, // cache 1h để build nhanh và tốt SEO
     });
     const json = await res.json();
     return json.data;
 }
-
+*/
 async function getProductBySlug(slug: string): Promise<Product | null> {
-    const products = await getProducts();
+    const products = await fetchProducts();
     return products.find((p) => slugifyProduct(p.productName) === slug) || null;
 }
 
@@ -35,14 +37,18 @@ export async function generateMetadata({
     const { slug } = await params;
     const product = await getProductBySlug(slug);
 
-    if (!product) return { title: "Sản phẩm không tồn tại" };
+    if (!product) return {
+        title: process.env.NEXT_PUBLIC_API_TITLE,
+        description: process.env.NEXT_PUBLIC_API_DESCRIPT
+    };
     return {
         title: product.productName,
         description: product.shortDescription,
+        keywords: product.keywords,
     };
 }
 
-export default async function ProductDetailPage({
+/*export default async function ProductDetailPage({
     params,
 }: {
     params: Promise<{ slug: string }>;
@@ -50,6 +56,15 @@ export default async function ProductDetailPage({
     const { slug } = await params;
     const product = await getProductBySlug(slug);
 
+    if (!product) return <div>Không tìm thấy sản phẩm</div>;*/
+export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params; // unwrap Promise
+    return (<ProductDetail slug={slug} />);
+}
+async function ProductDetail({ slug }: { slug: string }) {
+    const products = await fetchProducts();
+    // const product = products.find((p) => slugifyProduct(p.productName) === params.slug);
+    const product = products.find((p) => slugifyProduct(p.productName) === slug);
     if (!product) return <div>Không tìm thấy sản phẩm</div>;
 
     return (
@@ -189,6 +204,6 @@ export default async function ProductDetailPage({
 
 // ✅ generateStaticParams để build sẵn slug cho SEO
 export async function generateStaticParams() {
-    const products = await getProducts();
+    const products = await fetchProducts();
     return products.map((p) => ({ slug: slugifyProduct(p.productName) }));
 }
