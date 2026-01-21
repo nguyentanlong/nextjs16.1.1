@@ -6,7 +6,7 @@ import Category from '@/components/Category';
 import PopularCategory from '@/components/PopularCategory';
 import ProductsHome from '@/components/ProductsHome';
 import ReBanner from '@/components/ReBanner';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { fetchProducts } from '@/lib/api';
 
 export default async function HomePage() {
@@ -19,7 +19,7 @@ export default async function HomePage() {
       <Category />
       <PopularCategory />
       <ProductsHome products={products} />
-      <Link href="/login" className="login-link">Đăng nhập</Link>
+      {/* <Link href="/login" className="login-link">Đăng nhập</Link> */}
       <ReBanner />
     </main>
   );

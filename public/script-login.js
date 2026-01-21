@@ -1,7 +1,7 @@
 // Login Form 1 - Glassmorphism Style JavaScript
 // This file extends form-utils.js with form-specific functionality
 
-class LoginForm1 {
+/*class LoginForm1 {
     constructor() {
         this.form = document.getElementById('loginForm');
         this.submitBtn = this.form.querySelector('.login-btn');
@@ -357,17 +357,27 @@ class LoginForm1 {
 
         return data;
     }
-}
+}*/
 
 // Initialize when DOM is loaded
-/*document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     // Add entrance animation to login card
     const loginCard = document.querySelector('.login-card');
     FormUtils.addEntranceAnimation(loginCard);
 
     // Initialize the login form
     new LoginForm1();
-});*/
+});
+const passwordInput = document.getElementById("password");
+const toggleBtn = document.getElementById("passwordToggle");
+
+if (passwordInput) toggleBtn.addEventListener("click", () => {
+    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
+
+    // đổi icon
+    toggleBtn.textContent = type === "password" ? "👁️" : "🙈";
+});
 
 // Handle page visibility changes for better UX
 document.addEventListener('visibilitychange', () => {

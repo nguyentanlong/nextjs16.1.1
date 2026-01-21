@@ -28,12 +28,13 @@ export default function Header() {
                                 Tài khoản của bạn <span className="arrow">v</span>
                             </button>
                             <div className="dropdown-menu">
-                                <Link href="#">Đăng nhập</Link>
-                                <Link href="#">Đăng ký miễn phí</Link>
+                                <Link href="/login">Đăng nhập</Link>
                                 <hr />
-                                <Link href="#">Đơn hàng của tôi</Link>
+                                <Link href="/register">Đăng ký miễn phí</Link>
+                                <hr />
+                                {/* <Link href="#">Đơn hàng của tôi</Link>
                                 <Link href="#">Đổi mật khẩu</Link>
-                                <Link href="#">Đăng xuất</Link>
+                                <Link href="#">Đăng xuất</Link> */}
                             </div>
                         </div>
                     </div>

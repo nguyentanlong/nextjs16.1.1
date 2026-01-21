@@ -1,20 +1,36 @@
 // src/app/login/page.tsx
-"use client"; // để dùng script client-side
-
-// import Script from "next/script";
-// import "./style.css"; // CSS riêng cho login
-import { useEffect } from "react";
-
+"use client";
+import Link from "next/link";
+import { useState } from "react";
 export default function LoginPage() {
-    useEffect(() => {
-        // Script riêng cho login
-
-        // const form = document.getElementById("login-form") as HTMLFormElement;
-        // form?.addEventListener("submit", (e) => {
-        //     e.preventDefault();
-        //     alert("Đăng nhập thành công (demo)!");
-        // });
-    }, []);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get("email");
+        const password = formData.get("password");
+        try {
+            const res = await fetch(`/api/auth/login`,
+                {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+            if (!res.ok) { throw new Error("Sai tài khoản hoặc mật khẩu"); }
+            const data = await res.json();
+            // Lưu token vào cookie (client-side demo) 
+            // document.cookie = `authToken=${data.accessToken}; path=/;`;
+            // SetCookie: authToken=`${data.accessToken}; path=/;`; HttpOnly; Secure; SameSite=Strict
+            // Redirect sang account 
+            window.location.href = "/";
+        }
+        catch (err: any) {
+            setError(err.message);
+        }
+        finally { setLoading(false); }
+    }
 
     return (<>
         {/* <Script src='/script-login.js' strategy="afterInteractive" ></Script> */}
@@ -24,13 +40,14 @@ export default function LoginPage() {
                     <h2>Xin Chào!!</h2>
                     <p>Đăng nhập tài khoản</p>
                 </div>
-                <form className="login-form" id="loginForm" >
+                <form className="login-form" id="loginForm" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <div className="input-wrapper">
                             <input
                                 type="email"
                                 id="email"
                                 name="email"
+                                required
                                 placeholder="Email"
                                 autoComplete="email"
                             />
@@ -53,8 +70,10 @@ export default function LoginPage() {
                                 className="password-toggle"
                                 id="passwordToggle"
                                 aria-label="Toggle password visibility"
+
                             >
-                                <span className="eye-icon" />
+                                👁️
+                                {/* <span className="eye-icon" /> */}
                             </button>
                             <span className="focus-border" />
                         </div>
@@ -73,9 +92,12 @@ export default function LoginPage() {
                         </a>
                     </div>
                     <button type="submit" className="login-btn btn">
-                        <span className="btn-text">Đăng Nhập</span>
+                        <span className="btn-text"></span>
                         <span className="btn-loader" />
+
+                        {loading ? "Đang đăng nhập..." : "Đăng nhập"}
                     </button>
+                    {error && <p className="error">{error}</p>}
                 </form>
                 <div className="divider">
                     <span>hoặc đăng nhập với?</span>
@@ -92,7 +114,7 @@ export default function LoginPage() {
                 </div>
                 <div className="signup-link">
                     <p>
-                        Bạn chưa có tài khoản? <a href="#">Đăng ký</a>
+                        Bạn chưa có tài khoản? <Link href="/register">Đăng ký</Link>
                     </p>
                 </div>
                 <div className="success-message" id="successMessage">

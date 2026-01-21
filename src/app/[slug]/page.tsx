@@ -199,6 +199,7 @@ async function ProductDetail({ slug }: { slug: string }) {
                 </div>
             </div>
         </section>
+
     );
 }
 

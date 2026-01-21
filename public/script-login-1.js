@@ -8,14 +8,14 @@ class FormUtils {
         }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) {
-            return { isValid: false, message: 'Please enter a valid email address' };
+            return { isValid: false, message: 'Không đúng định dạng email' };
         }
         return { isValid: true };
     }
 
     static validatePassword(value) {
         if (!value) {
-            return { isValid: false, message: 'Password is required' };
+            return { isValid: false, message: 'Không được bỏ tróng' };
         }
         if (value.length < 8) {
             return { isValid: false, message: 'Password must be at least 8 characters long' };

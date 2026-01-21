@@ -410,7 +410,7 @@ body {
 
 .password-toggle {
     position: absolute;
-    right: 12px;
+    right: 1px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
@@ -420,10 +420,11 @@ body {
     color: rgba(255, 255, 255, 0.6);
     transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 2;
+    opacity: 70%;
 }
 
 .password-toggle:hover {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(5, 230, 247, 0.9);
 }
 
 .eye-icon {

@@ -8,6 +8,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode })
     <main>{children}
       <Script src="./script-login.js" />
       <Script src="./script-login-1.js" />
+      <Script src="./script-alt.js" />
     </main>
   );
 }
