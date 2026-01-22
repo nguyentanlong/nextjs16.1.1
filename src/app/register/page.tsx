@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 export default function RegisterPage() {
@@ -27,7 +28,7 @@ export default function RegisterPage() {
 
             const data = await res.json();
             alert("Đăng ký thành công!");
-            window.location.href = "/";
+            window.location.href = "/login";
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -120,10 +121,14 @@ export default function RegisterPage() {
                                 accept="image/*"
                             />
                             <div className="image-preview">
-                                <img id="previewImage" src="" alt="" />
+                                {/* <Image id="previewImage" src="/favicon.icon" fill                     // ảnh sẽ fill toàn bộ container
+                                    style={{ objectFit: "cover" }} // cách ảnh co giãn (cover, contain, fill, none, scale-down)
+                                    priority /> */}
+                                <Image src="/favicon.ico" alt="favicon" fill style={{ objectFit: "cover" }} priority />
+
                                 <span id="previewText">Chưa chọn ảnh</span>
                             </div>
-                            <button type="button">Upload Image</button>
+                            {/* <button type="button">Upload Image</button> */}
                             {/* <div className="form-row p-t-20">
                                 <label className="label label--block">
                                     Bạn chắc chắn đúng thông tin?

@@ -7,6 +7,7 @@
 body {
   font-family: 'Inter', sans-serif;
   background: #f9f5ff;
+  color: #737373;
 }
 
 a {
@@ -544,13 +545,15 @@ a {
   flex: 0 0 110px;
   text-align: center;
   text-decoration: none;
-  color: #333;
+  color: #7d0fd2;
+  box-shadow: 0 6px 20px rgb(237 0 253 / 58%);
+  border-radius: 15px;
 }
 
 .cat-item img {
   width: 70px;
   height: 70px;
-  object-fit: contain;
+  object-fit: cover;
   margin-bottom: 8px;
 }
 
@@ -567,7 +570,7 @@ a {
   border-radius: 16px;
   text-align: center;
   text-decoration: none;
-  color: #333;
+  color: #7d0fd2;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s;
 }
@@ -719,7 +722,7 @@ a {
   /* ← đẩy nội dung xuống dưới */
   padding: 12px;
   text-decoration: none;
-  color: inherit;
+  color: #7d0fd2;
 }
 
 /* 2 badge nhỏ */
@@ -763,7 +766,7 @@ a {
 
 .price-new {
   font-size: 18px;
-  color: #e91e63;
+  color: #0008f5;
 }
 
 .suggestion-card .sold {
@@ -1113,9 +1116,14 @@ body {
 }
 
 .main-image img {
-  width: 100%;
+  /* width: 100%;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); */
+  border-radius: 16px;
+  width: 95%;
+  box-shadow: 0 10px 30px rgb(237 0 253 / 58%);
+  height: 95%;
+  position: relative;
 }
 
 .thumbnail-list {
@@ -1127,6 +1135,7 @@ body {
 }
 
 .thumb {
+  position: relative;
   width: 80px;
   height: 80px;
   object-fit: cover;
@@ -1155,7 +1164,7 @@ body {
   margin: 20px 0;
   font-size: 28px;
   font-weight: 800;
-  color: #e91e63;
+  color: #7d0fd2;
 }
 
 .old-price {
@@ -1165,7 +1174,7 @@ body {
 }
 
 .discount {
-  background: #ff3b30;
+  background: #a6ff30;
   color: white;
   padding: 4px 12px;
   border-radius: 8px;
@@ -1188,23 +1197,23 @@ body {
 }
 
 .btn-buy {
-  background: #ff3b30;
+  background: #3A00EB;
   color: white;
   flex: 1;
 }
 
 .btn-cart {
-  background: #8839ef;
+  background: #5000b9;
   color: white;
 }
 
 .product-tabs {
-  margin-top: 60px;
+  margin-top: 0%;
 }
 
 .tab-buttons {
   display: flex;
-  border-bottom: 2px solid orangered;
+  border-bottom: 2px solid #8839ef;
   margin-bottom: 30px;
 }
 
@@ -1212,10 +1221,11 @@ body {
   padding: 12px 24px;
   background: none;
   /* border: none; */
-  border: 2px outset greenyellow;
+  border: 2px outset #ffc97a;
   font-weight: 600;
   cursor: pointer;
   position: relative;
+  border-radius: 10px;
 }
 
 .tab-btn.active::after {
@@ -1248,8 +1258,10 @@ body {
   }
 
   .thumbnail-list {
-    justify-content: center;
+    justify-content: left;
   }
+
+
 }
 
 @media (min-width: 1024px) {
@@ -1279,7 +1291,7 @@ body {
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 20px rgb(237 0 253 / 58%);
   text-align: center;
   padding: 16px;
   transition: transform 0.3s;
@@ -1302,7 +1314,7 @@ body {
 }
 
 .related-card .price {
-  color: #e91e63;
+  color: #7d0fd2;
   font-weight: 700;
 }
 
@@ -1356,3 +1368,9 @@ body {
     scroll-snap-align: start;
   }
 }
+
+/* .badges,
+.price,
+h3 {
+  z-index: 2;
+} */

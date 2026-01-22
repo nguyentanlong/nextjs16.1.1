@@ -8,6 +8,7 @@ import ProductsHome from '@/components/ProductsHome';
 import ReBanner from '@/components/ReBanner';
 // import Link from 'next/link';
 import { fetchProducts } from '@/lib/api';
+import Footer from '@/components/Footer';
 
 export default async function HomePage() {
   const products = await fetchProducts();
@@ -21,6 +22,7 @@ export default async function HomePage() {
       <ProductsHome products={products} />
       {/* <Link href="/login" className="login-link">Đăng nhập</Link> */}
       <ReBanner />
+      <Footer />
     </main>
   );
 }

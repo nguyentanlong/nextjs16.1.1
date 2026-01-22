@@ -1,8 +1,13 @@
 // src/app/[slug]/page.tsx
+// "use client";
 import { Metadata } from "next";
 import { slugifyProduct } from "@/lib/slugify";
 import Link from "next/link";
-import { fetchProducts, Product } from "@/lib/api";
+import { fetchProducts, Product, fetchRelatedProductsLocal } from "@/lib/api";
+import Image from "next/image";
+import ProductImages from "@/components/ProductImage";
+import ProductTabs from "@/components/ProductTab";
+import RelatedProducts from "@/components/RelateProducts";
 
 /*interface Product {
     id: string;
@@ -26,6 +31,7 @@ async function getProducts(): Promise<Product[]> {
 async function getProductBySlug(slug: string): Promise<Product | null> {
     const products = await fetchProducts();
     return products.find((p) => slugifyProduct(p.productName) === slug) || null;
+
 }
 
 // ✅ Fix: params là Promise, cần await
@@ -60,11 +66,15 @@ export async function generateMetadata({
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params; // unwrap Promise
     return (<ProductDetail slug={slug} />);
+
 }
 async function ProductDetail({ slug }: { slug: string }) {
     const products = await fetchProducts();
     // const product = products.find((p) => slugifyProduct(p.productName) === params.slug);
     const product = products.find((p) => slugifyProduct(p.productName) === slug);
+    // Lấy sản phẩm cùng danh mục 
+    const relatedProducts = await fetchRelatedProductsLocal(product.categories);
+    // const [mainImg, setMainImg] = useState(product?.media?.[0] ?? "/favicon.ico");
     if (!product) return <div>Không tìm thấy sản phẩm</div>;
 
     return (
@@ -75,25 +85,8 @@ async function ProductDetail({ slug }: { slug: string }) {
                     <Link href="/">Trang chủ</Link> &gt; <Link href="#">Danh mục</Link> &gt;{" "}
                     <span>{product.productName}</span>
                 </div>
-
                 <div className="product-grid">
-                    {/* Cột trái: Hình ảnh */}
-                    <div className="product-images">
-                        <div className="main-image">
-                            <img src={product.media[0]} alt={product.productName} id="main-img" />
-                        </div>
-                        <div className="thumbnail-list">
-                            {product.media.slice(1).map((img, i) => (
-                                <img
-                                    key={i}
-                                    src={img}
-                                    alt={`${product.productName} thumbnail ${i}`}
-                                    className={`thumb ${i === 0 ? "active" : ""}`}
-                                    data-img={img}
-                                />
-                            ))}
-                        </div>
-                    </div>
+                    <ProductImages productName={product.productName} media={product.media} />
 
                     {/* Cột phải: Thông tin */}
                     <div className="product-info">
@@ -130,73 +123,11 @@ async function ProductDetail({ slug }: { slug: string }) {
                 </div>
 
                 {/* Tabs */}
-                <div className="product-tabs">
-                    <div className="tab-buttons">
-                        <button className="tab-btn active" data-tab="desc">
-                            Nội dung chi tiết
-                        </button>
-                        <button className="tab-btn" data-tab="video">
-                            Video hướng dẫn
-                        </button>
-                        <button className="tab-btn" data-tab="guide">
-                            Hướng dẫn lắp đặt
-                        </button>
-                    </div>
-                    <div className="tab-content">
-                        <div id="desc" className="tab-pane active">
-                            <p>{product.description}</p>
-                        </div>
-                        <div id="video" className="tab-pane">
-                            <iframe
-                                width="100%"
-                                height={500}
-                                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                                frameBorder={0}
-                                allowFullScreen
-                            />
-                        </div>
-                        <div id="guide" className="tab-pane">
-                            <h3>Hướng dẫn lắp đặt nhanh</h3>
-                            <img
-                                src="https://i.imgur.com/ezviz-install.jpg"
-                                alt="Hướng dẫn lắp đặt"
-                                style={{ width: "100%", borderRadius: 12 }}
-                            />
-                        </div>
-                    </div>
-                </div>
+                <ProductTabs description={product.description} />
 
                 {/* Sản phẩm liên quan */}
-                <div className="related-products">
-                    <h2>Sản phẩm cùng danh mục</h2>
-                    <div className="related-carousel">
-                        <div className="carousel-track" id="related-track">
-                            {product.media.map((img, i) => (
-                                <div key={i} className="related-card">
-                                    <img src={img} alt={`Sản phẩm liên quan ${i}`} />
-                                    <h4>
-                                        {product.productName} {i}
-                                    </h4>
-                                    <p className="price">
-                                        {Number(product.price).toLocaleString("vi-VN")} ₫
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                        <span
-                            style={{
-                                display: "flex",
-                                justifyContent: "end",
-                                color: "orange",
-                                paddingTop: 15,
-                            }}
-                        >
-                            Xem Tất cả
-                        </span>
-                    </div>
-                    <button className="carousel-prev">Left Arrow</button>
-                    <button className="carousel-next">Right Arrow</button>
-                </div>
+                {/* ... phần ảnh sản phẩm, tabs */}
+                <RelatedProducts categories={product.categories} products={relatedProducts} />
             </div>
         </section>
 

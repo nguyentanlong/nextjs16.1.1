@@ -79,9 +79,9 @@ export default function RootLayout({ children }: {
 
           {/* Footer sẽ thêm sau */}
           <Script src="/script.js" strategy="afterInteractive" />
-          <Script src="./script-alt.js" />
-          <Script src="/product-script.js" strategy="afterInteractive" />
-          {/* <Script src="/script-login.js"></Script> */}
+          <Script src="./script-alt.js" strategy="afterInteractive" />
+          <Script src="./product-script.js" strategy="afterInteractive" />
+          <Script src="/script-login.js" strategy="afterInteractive" />
         </>
       </body>
     </html>

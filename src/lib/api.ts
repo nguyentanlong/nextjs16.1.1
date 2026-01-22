@@ -67,3 +67,50 @@ export async function fetchProductById(id: string): Promise<Product> {
     return json.data;
 }
 
+// src/lib/api.tsx
+
+export interface ProductRelate {
+    id: string;
+    productName: string;
+    price: string;
+    media: string[];
+    categories: string;
+}
+
+// =========================
+// Kiểu 1: Lấy trực tiếp từ bảng products
+// =========================
+
+// Giả sử mình có sẵn danh sách products trong memory (mock data)
+export async function fetchRelatedProductsLocal(
+    categories: string): Promise<ProductRelate[]> {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}`,
+        {
+            method: "GET", headers: { "Content-Type": "application/json" },
+            next: { revalidate: 3600 },
+        });
+    if (!res.ok) {
+        throw new Error("Không lấy được danh sách sản phẩm");
+    }
+    const allProducts: ProductRelate[] = await res.json();
+    return allProducts.filter((p) => p.categories === categories);
+}
+
+// =========================
+// Kiểu 2: Gọi API backend
+// =========================
+
+// export async function fetchRelatedProductsAPI(categoryId: string): Promise<Product[]> {
+//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/products/related?categoryId=${categoryId}`, {
+//     method: "GET",
+//     headers: { "Content-Type": "application/json" },
+//     cache: "no-store", // tránh cache để luôn lấy dữ liệu mới
+//   });
+
+//   if (!res.ok) {
+//     throw new Error("Không lấy được sản phẩm liên quan");
+//   }
+
+//   const data = await res.json();
+//   return data.products as Product[];
+// }

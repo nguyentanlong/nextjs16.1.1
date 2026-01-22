@@ -1,5 +1,6 @@
 import { Product } from "@/lib/api";
 import { slugifyProduct } from "@/lib/slugify";
+import Image from "next/image";
 import Link from "next/link"
 export default function ProductsHome({ products }: { products: Product[] }) {
     if (!products || products.length === 0) {
@@ -25,9 +26,8 @@ export default function ProductsHome({ products }: { products: Product[] }) {
                                     {p.discountPercent && (
                                         <div className="badge-percent">-50%-{/*p.discountPercent*/}%</div>)}
                                     {p.media && p.media.length > 0 ? (
-                                        <img
-                                            src={p.media[0]} alt={p.productName}
-                                        />
+                                        <Image src={p.media[0]} alt={p.productName} width={100} height={90} />
+
                                     ) : (
                                         <div className="placeholder" />
                                     )}
