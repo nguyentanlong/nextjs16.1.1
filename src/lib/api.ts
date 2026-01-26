@@ -42,11 +42,12 @@ export interface Product {
     shortDescription: string;
     description: string;
     media: string[];
-    price: string;
+    price: number;
     stock: number;
     N0: number;
     keywords: string[];
     discountPercent: number;
+    categories: number;
 }
 
 // Fetch tất cả sản phẩm cho trang chủ
@@ -69,13 +70,13 @@ export async function fetchProductById(id: string): Promise<Product> {
 
 // src/lib/api.tsx
 
-export interface ProductRelate {
+/*export interface ProductRelate {
     id: string;
     productName: string;
     price: string;
     media: string[];
-    categories: string;
-}
+    categories: number;
+}*/
 
 // =========================
 // Kiểu 1: Lấy trực tiếp từ bảng products
@@ -83,34 +84,49 @@ export interface ProductRelate {
 
 // Giả sử mình có sẵn danh sách products trong memory (mock data)
 export async function fetchRelatedProductsLocal(
-    categories: string): Promise<ProductRelate[]> {
+    stock: number): Promise<Product[]> {
+    console.log("👉 Bắt đầu fetch sản phẩm theo danh mục:", stock);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}`,
         {
             method: "GET", headers: { "Content-Type": "application/json" },
             next: { revalidate: 3600 },
         });
+    console.log("📡 Status code từ API:", res.status);
     if (!res.ok) {
         throw new Error("Không lấy được danh sách sản phẩm");
     }
-    const allProducts: ProductRelate[] = await res.json();
-    return allProducts.filter((p) => p.categories === categories);
+    const json = await res.json();
+    console.log("📦 JSON trả về từ API:", json);
+    // const allProducts: Product[] = await res.json();
+    // API trả về { data: [...] } 
+    const allProducts: Product[] = json.data;
+    console.log("📊 Tổng số sản phẩm nhận được:", allProducts?.length);
+    console.log("🔍 Sản phẩm mẫu (phần tử đầu tiên):", allProducts?.[0]);
+    if (!Array.isArray(allProducts)) {
+        console.error("API không trả về mảng sản phẩm:", json); return [];
+    }
+    // allProducts.filter((p) => p.stock === stock)
+    const filtered = allProducts.filter((p) => {
+        console.log("🧾 Kiểm tra sản phẩm:", p);
+        console.log("➡️ p.stock:", p.stock, " | cần lọc:", stock);
+        return p.stock === stock;
+    });
+    console.log("✅ Số sản phẩm sau khi lọc:", filtered.length);
+    // console.log("👉 stock param nhận vào:", categories);
+    // console.log("📦 JSON trả về từ API:", json);
+    // console.log("🔍 Sản phẩm đầu tiên:", allProducts?.[0]);
+
+
+    return allProducts.filter((p) => p.stock === stock);
 }
 
 // =========================
-// Kiểu 2: Gọi API backend
-// =========================
-
+// ========================= // Kiểu 2: Gọi API backend (khi có endpoint riêng) // =========================
 // export async function fetchRelatedProductsAPI(categoryId: string): Promise<Product[]> {
-//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/products/related?categoryId=${categoryId}`, {
-//     method: "GET",
-//     headers: { "Content-Type": "application/json" },
-//     cache: "no-store", // tránh cache để luôn lấy dữ liệu mới
-//   });
-
-//   if (!res.ok) {
-//     throw new Error("Không lấy được sản phẩm liên quan");
-//   }
-
-//   const data = await res.json();
-//   return data.products as Product[];
-// }
+// const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/products/related?categoryId=${categoryId}`, {
+// method: "GET", headers: {
+//  "Content-Type": "application/json" }, cache: "no-store", });
+// if (!res.ok) {
+// throw new Error("Không lấy được sản phẩm liên quan"); }
+// const data = await res.json();
+// return data.products as Product[]; }

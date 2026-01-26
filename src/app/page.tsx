@@ -9,6 +9,7 @@ import ReBanner from '@/components/ReBanner';
 // import Link from 'next/link';
 import { fetchProducts } from '@/lib/api';
 import Footer from '@/components/Footer';
+import HomeNavbar from '@/components/HomeNavbar';
 
 export default async function HomePage() {
   const products = await fetchProducts();
@@ -16,6 +17,7 @@ export default async function HomePage() {
   return (
     <main>
       <Header />
+      <HomeNavbar />
       <HeroBanner />
       <Category />
       <PopularCategory />

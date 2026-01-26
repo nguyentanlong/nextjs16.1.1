@@ -8,6 +8,7 @@ import Image from "next/image";
 import ProductImages from "@/components/ProductImage";
 import ProductTabs from "@/components/ProductTab";
 import RelatedProducts from "@/components/RelateProducts";
+import { notFound } from "next/navigation";
 
 /*interface Product {
     id: string;
@@ -72,8 +73,11 @@ async function ProductDetail({ slug }: { slug: string }) {
     const products = await fetchProducts();
     // const product = products.find((p) => slugifyProduct(p.productName) === params.slug);
     const product = products.find((p) => slugifyProduct(p.productName) === slug);
+    if (!product) { // xử lý trường hợp không tìm thấy sản phẩm 
+        return notFound();
+    } // hoặc redirect, hoặc render fallback }
     // Lấy sản phẩm cùng danh mục 
-    const relatedProducts = await fetchRelatedProductsLocal(product.categories);
+    const relatedProducts = await fetchRelatedProductsLocal(product.stock);
     // const [mainImg, setMainImg] = useState(product?.media?.[0] ?? "/favicon.ico");
     if (!product) return <div>Không tìm thấy sản phẩm</div>;
 
@@ -127,7 +131,7 @@ async function ProductDetail({ slug }: { slug: string }) {
 
                 {/* Sản phẩm liên quan */}
                 {/* ... phần ảnh sản phẩm, tabs */}
-                <RelatedProducts categories={product.categories} products={relatedProducts} />
+                <RelatedProducts stock={product.stock} products={relatedProducts} />
             </div>
         </section>
 

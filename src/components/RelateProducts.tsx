@@ -2,20 +2,23 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { slugifyProduct } from "@/lib/slugify";
 
 interface Product {
     id: string;
     productName: string;
     price: number;
     media: string[];
+    stock: number;
 }
 
 interface RelatedProductsProps {
-    categories: number;
+    stock: number;
     products: Product[];
 }
 
-export default function RelatedProducts({ categories, products }: RelatedProductsProps) {
+export default function RelatedProducts({ stock, products }: RelatedProductsProps) {
     const trackRef = useRef<HTMLDivElement>(null);
     const [index, setIndex] = useState(0);
 
@@ -50,18 +53,22 @@ export default function RelatedProducts({ categories, products }: RelatedProduct
             <div className="related-carousel">
                 <div className="carousel-track" ref={trackRef}>
                     {products.map((p, i) => (
-                        <div key={p.id} className="related-card">
-                            <Image
-                                src={p.media[0]}
-                                alt={`Sản phẩm liên quan ${i}`}
-                                width={100}
-                                height={100}
-                            />
-                            <h4>{p.productName}</h4>
-                            <p className="price">{Number(p.price).toLocaleString("vi-VN")} ₫</p>
-                        </div>
+                        <Link key={p.id} href={`/${slugifyProduct(p.productName)}`}>
+                            <div className="related-card">
+                                <Image
+                                    src={p.media[0]}
+                                    alt={`Sản phẩm liên quan ${i}`}
+                                    width={100}
+                                    height={100}
+                                />
+                                <h4>{p.productName}</h4>
+                                <p className="price">{Number(p.price).toLocaleString("vi-VN")} ₫</p>
+                            </div>
+                        </Link>
                     ))}
                 </div>
+                <button className="carousel-prev" onClick={handlePrev}>&lt;</button>
+                <button className="carousel-next" onClick={handleNext}>{">"}</button>
                 <span
                     style={{
                         display: "flex",
@@ -73,12 +80,7 @@ export default function RelatedProducts({ categories, products }: RelatedProduct
                     Xem Tất cả
                 </span>
             </div>
-            <button className="carousel-prev" onClick={handlePrev}>
-                Left Arrow
-            </button>
-            <button className="carousel-next" onClick={handleNext}>
-                Right Arrow
-            </button>
+
         </div>
     );
 }

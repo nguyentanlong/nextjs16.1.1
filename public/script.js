@@ -1,4 +1,4 @@
-console.log("Script file loaded at all!");
+// console.log("Script file loaded at all!");
 // document.addEventListener("DOMContentLoaded", () => {
 // === Dropdown (topbar + category) ===
 const dropdownBtns = document.querySelectorAll(
@@ -91,3 +91,13 @@ document
   .forEach(initCarousel);
 console.log("Custom script loaded!");
 // });
+//navbar
+const mobileNav = document.querySelector(".hamburger");
+const navbar = document.querySelector(".menubar");
+if (mobileNav && navbar) {
+  const toggleNav = () => {
+    navbar.classList.toggle("active");
+    mobileNav.classList.toggle("hamburger-active");
+  };
+}
+mobileNav.addEventListener("click", () => toggleNav());

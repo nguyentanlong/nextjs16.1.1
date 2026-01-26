@@ -137,9 +137,9 @@ export default function PopularCategory() {
                         <p>Bear Official Store VN</p>
                     </a>
                     {/* Thêm thoải mái bao nhiêu shop cũng được, tự động trượt */}
+                    <button className="carousel-prev">&lt;</button>
+                    <button className="carousel-next">{">"}</button>
                 </div>
-                <button className="carousel-prev">Left Arrow</button>
-                <button className="carousel-next">Right Arrow</button>
             </div>
         </>
 

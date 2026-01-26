@@ -74,9 +74,11 @@ export default function Category() {
                                 />
                                 <p>Đồ lót</p>
                             </a>
+                            <button className="carousel-prev">&lt;</button>
+                            <button className="carousel-next">{">"}</button>
                         </div>
-                        <button className="carousel-prev">Left Arrow</button>
-                        <button className="carousel-next">Right Arrow</button>
+
+
                     </div>
                 </div>
             </section>
