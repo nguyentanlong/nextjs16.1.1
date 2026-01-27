@@ -5,17 +5,19 @@ const dropdownBtns = document.querySelectorAll(
   ".dropdown .dropbtn, .category-dropdown .category-btn"
 );
 
-dropdownBtns.forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const dropdown = btn.closest(".dropdown, .category-dropdown");
+if (dropdownBtns) {
+  dropdownBtns.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const dropdown = btn.closest(".dropdown, .category-dropdown");
 
-    // Đóng tất cả dropdown khác
-    document
-      .querySelectorAll(".dropdown, .category-dropdown")
-      .forEach((el) => el.classList.toggle("active", el === dropdown));
+      // Đóng tất cả dropdown khác
+      document
+        .querySelectorAll(".dropdown, .category-dropdown")
+        .forEach((el) => el.classList.toggle("active", el === dropdown));
+    });
   });
-});
+}
 
 // Click ngoài thì đóng hết
 document.addEventListener("click", () => {
@@ -94,6 +96,7 @@ console.log("Custom script loaded!");
 //navbar
 const mobileNav = document.querySelector(".hamburger");
 const navbar = document.querySelector(".menubar");
+if (!mobileNav && !navbar) console.log("không phải giao diện diện thoại");
 if (mobileNav && navbar) {
   const toggleNav = () => {
     navbar.classList.toggle("active");
