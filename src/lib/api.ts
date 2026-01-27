@@ -89,26 +89,31 @@ export async function fetchRelatedProductsLocal(
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}`,
         {
             method: "GET", headers: { "Content-Type": "application/json" },
-            next: { revalidate: 3600 },
+            cache: "no-store",//next: { revalidate: 3600 },
         });
-    console.log("📡 Status code từ API:", res.status);
+    // console.log("📡 Status code từ API:", res.status);
     if (!res.ok) {
         throw new Error("Không lấy được danh sách sản phẩm");
     }
     const json = await res.json();
-    console.log("📦 JSON trả về từ API:", json);
+    // console.log("📦 JSON trả về từ API:", json);
     // const allProducts: Product[] = await res.json();
     // API trả về { data: [...] } 
     const allProducts: Product[] = json.data;
-    console.log("📊 Tổng số sản phẩm nhận được:", allProducts?.length);
-    console.log("🔍 Sản phẩm mẫu (phần tử đầu tiên):", allProducts?.[0]);
+    // console.log("📊 Tổng số sản phẩm nhận được:", allProducts?.length);
+    // console.log("🔍 Sản phẩm mẫu (phần tử đầu tiên):", allProducts?.[0]);
     if (!Array.isArray(allProducts)) {
-        console.error("API không trả về mảng sản phẩm:", json); return [];
+        // console.error("API không trả về mảng sản phẩm:", json); return [];
     }
     // allProducts.filter((p) => p.stock === stock)
     const filtered = allProducts.filter((p) => {
-        console.log("🧾 Kiểm tra sản phẩm:", p);
-        console.log("➡️ p.stock:", p.stock, " | cần lọc:", stock);
+        // console.log("🧾 Kiểm tra sản phẩm:", p);
+        // console.log("➡️ p.stock:", p.stock, " | cần lọc:", stock);
+        // console.log(typeof p.stock, p.stock);
+        // console.log(typeof stock, stock);
+        // console.table(allProducts.map(p => ({ id: p.id, stock: p.stock })));
+
+
         return p.stock === stock;
     });
     console.log("✅ Số sản phẩm sau khi lọc:", filtered.length);
