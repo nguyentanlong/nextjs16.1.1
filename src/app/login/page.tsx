@@ -24,7 +24,7 @@ export default function LoginPage() {
             // document.cookie = `authToken=${data.accessToken}; path=/;`;
             // SetCookie: authToken=`${data.accessToken}; path=/;`; HttpOnly; Secure; SameSite=Strict
             // Redirect sang account 
-            window.location.href = "/";
+            window.location.href = "/admin";
         }
         catch (err: any) {
             setError(err.message);

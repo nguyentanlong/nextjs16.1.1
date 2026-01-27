@@ -2,6 +2,9 @@
 // "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import './font-css.css';
+import './material-dashboard.css'; import './nucleo-icons.css'; import './nucleo-svg.css';
+import Script from "next/script";
 
 export default function Sidebar() {
     const { user } = useAuth();
@@ -301,6 +304,8 @@ export default function Sidebar() {
             </nav>
             {/* End Navbar */}
             {/*   Core JS Files   */}
+            <Script src="./material-dashdoard.min.js" />
+            <Script src="./perfect-scrollbar.min.js" />
         </main>
     </>
     );

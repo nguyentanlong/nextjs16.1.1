@@ -28,7 +28,7 @@ export default function RegisterPage() {
 
             const data = await res.json();
             alert("Đăng ký thành công!");
-            window.location.href = "/login";
+            window.location.href = "/admin";
         } catch (err: any) {
             setError(err.message);
         } finally {
