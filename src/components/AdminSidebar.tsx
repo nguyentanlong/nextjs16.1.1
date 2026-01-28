@@ -6,6 +6,7 @@ import '../app/admin/material-dashboard.css'; import '../app/admin/nucleo-icons.
 export default function AdminSidebar() {
     const { user } = useAuth();
     const isAdminOrStaff = user?.role === "admin" || user?.role === "staff";
+    const isUser = user?.role === "user";
     return (<>
         <aside
             className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2"
@@ -108,7 +109,7 @@ export default function AdminSidebar() {
                         type="button"
                     >
                         Hỗ trợ khẩn cấp:{" "}
-                        {isAdminOrStaff ? "038 73 2676" : "038 542 9989"}
+                        {isAdminOrStaff ? "0328 73 2676" : "038 542 9989"}
                     </a>
                 </div>
             </div>

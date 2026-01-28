@@ -96,11 +96,16 @@ console.log("Custom script loaded!");
 //navbar
 const mobileNav = document.querySelector(".hamburger");
 const navbar = document.querySelector(".menubar");
-if (!mobileNav && !navbar) console.log("không phải giao diện diện thoại");
+
+if (!mobileNav && !navbar) {
+  console.log("không phải giao diện điện thoại");
+}
+
 if (mobileNav && navbar) {
   const toggleNav = () => {
     navbar.classList.toggle("active");
     mobileNav.classList.toggle("hamburger-active");
   };
+
+  mobileNav.addEventListener("click", toggleNav);
 }
-mobileNav.addEventListener("click", () => toggleNav());

@@ -52,32 +52,43 @@ import jwt from "jsonwebtoken";
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // ✅ Redirect từ "/" sang "/home"
-    // if (pathname === "/") {
-    //     return NextResponse.redirect(new URL("/home", request.url));
-    // }
+    // Redirect "/" → "/home" 
+    if (pathname === "/home" || pathname === "/trang-chu") {
+        return NextResponse.redirect(new URL("/", request.url));
+    }
 
-    // ✅ Các route không cần xác thực
-    const publicPaths = ["/login", "/register", "/", "/product", "/[slug]"];
+    // Các route public không cần token
+    const publicPaths = ["/login", "/register", "/", "/product", "/:slug.html"];
     if (publicPaths.some((path) => pathname.startsWith(path))) {
         return NextResponse.next();
     }
 
-    // ✅ Kiểm tra token
-    const token = request.cookies.get("accessToken")?.value;
-    if (!token) {
+    // Lấy token từ cookie
+    const token: string = request.cookies.get("accessToken")?.value || "";
+    // Nếu đã đăng nhập mà vẫn vào /login → redirect sang /account
+    if (pathname.startsWith("/login") && token) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/admin"; // trang account của đệ
+        return NextResponse.redirect(url);
+    }
+
+    // Nếu chưa đăng nhập mà vào /account → redirect sang /login
+    // if (pathname.startsWith("/account") && !token) {
+    //     const url = request.nextUrl.clone();
+    //     url.pathname = "/login";
+    //     return NextResponse.redirect(url);
+    // }
+    if (!token && pathname.startsWith("/admin")) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // ✅ Bảo vệ route /admin và các trang con
+    // Nếu route là /admin → kiểm tra role
     if (pathname.startsWith("/admin")) {
         try {
-            // const decoded = jwt.decode(token) as { role?: string };
-            //an toàn hơn
             const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { role?: string };
 
             if (decoded?.role === "admin" || decoded?.role === "staff") {
-                return NextResponse.next(); // Cho phép truy cập
+                return NextResponse.next(); // Cho phép
             } else {
                 return NextResponse.redirect(new URL("/403", request.url)); // Không đủ quyền
             }
@@ -86,10 +97,19 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // ✅ Các route còn lại (có token) → cho phép
+    // Các route khác (có token) → cho phép
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/", "/admin/:path*", "/", "/login", "/register", "/product/:path*", "/[slug]/:path*"],
+    matcher: [
+        // "/",
+        "/admin/:path*",
+        // "/admin",
+        // "/home",
+        "/login",
+        "/register",
+        "/product/:path*",
+        "/:slug.html", // match product detail dạng slug.html
+    ],
 };

@@ -1,6 +1,17 @@
+"use client";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 export default function AdminHeader() {
+    const { user, logout } = useAuth();
+    const isAdminOrStaff = user?.role === "admin" || user?.role === "staff";
+    const router = useRouter()
+    function handleLogout() {
+        logout();
+        router.push("/");
+    } // ✅ quay về trang login }
     return (
         <>
+            {/*  */}
             <div className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
                 {/* Navbar */}
                 <nav
@@ -182,6 +193,7 @@ export default function AdminHeader() {
                                     <i className="material-symbols-rounded">account_circle</i>
                                 </a>
                             </li>
+                            <li className="rong"> <button onClick={handleLogout}>Đăng xuất</button></li>
                         </div>
                     </div>
                 </nav>
@@ -189,6 +201,7 @@ export default function AdminHeader() {
                 {/*   Core JS Files   */}
 
             </div>
+            {/* </AuthProvider> */}
         </>
     );
 }

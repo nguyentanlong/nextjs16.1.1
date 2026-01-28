@@ -1,10 +1,17 @@
 // src/app/login/page.tsx
-"use client";
+/*"use client";
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const router = useRouter();
+    const { login } = useAuth(); // lấy hàm login từ AuthContext
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setLoading(true);
@@ -24,16 +31,50 @@ export default function LoginPage() {
             // document.cookie = `authToken=${data.accessToken}; path=/;`;
             // SetCookie: authToken=`${data.accessToken}; path=/;`; HttpOnly; Secure; SameSite=Strict
             // Redirect sang account 
-            window.location.href = "/admin";
-            // router.push("/admin");
+            // window.location.href = "/admin";
+            router.push("/admin");
 
         }
         catch (err: any) {
             setError(err.message);
         }
         finally { setLoading(false); }
+    }*/
+"use client";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
+import Link from "next/link";
+export default function LoginPage() {
+    const router = useRouter();
+    const { login } = useAuth(); // ✅ lấy hàm login từ AuthContext 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault(); try { // ✅ Gọi API login 
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/auth/login`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                    credentials: "include",
+                }); // để cookie HTTP-only được gửi kèm
+            if (!res.ok) {
+                console.log(res.status); console.log(JSON.stringify({ email, password }));
+                console.log(process.env.NEXT_PUBLIC_API_BASE);
+            }//throw new Error("Login failed");
+            const data = await res.json().catch(() => ({}));//await res.json();
+            console.log("data   ", data);
+            // ❌ KHÔNG cần gọi lại login(email, password) ở đây 
+            // Vì mình đã có data.user từ API, chỉ cần setUser trong AuthContext 
+            // Nếu login() trong AuthContext đã làm việc này thì gọi login() thôi 
+            await login(email, password); // ✅ Redirect sang admin 
+            router.push("/admin");
+        }
+        catch (err) { console.error("Login error:", err, "   data   "); }
     }
-
     return (<>
         {/* <Script src='/script-login.js' strategy="afterInteractive" ></Script> */}
         <div className="login-container">
@@ -48,9 +89,10 @@ export default function LoginPage() {
                             <input
                                 type="email"
                                 id="email"
+                                placeholder="Email"
+                                value={email} onChange={(e) => setEmail(e.target.value)}
                                 name="email"
                                 required
-                                placeholder="Email"
                                 autoComplete="email"
                             />
                             <label htmlFor="email">Địa chỉ Email</label>
@@ -62,6 +104,8 @@ export default function LoginPage() {
                         <div className="input-wrapper password-wrapper">
                             <input
                                 type="password"
+                                placeholder="Mật khẩu"
+                                value={password} onChange={(e) => setPassword(e.target.value)}
                                 id="password"
                                 name="password"
                                 autoComplete="current-password"
