@@ -47,6 +47,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'api.tonkliplock1000.com' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdn.jsdelivr.net' },
+      { protocol: 'https', hostname: 'cameramattroi.com' },
     ],
   },
   // next.config.js

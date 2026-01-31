@@ -38,7 +38,7 @@ export default function ProductsHome({ products }: { products: Product[] }) {
                                     <h3>{p.productName}</h3>
                                     <div className="price">
                                         <span className="price-new"> {Number(p.price).toLocaleString('vi-VN')} ₫</span>
-                                        <span className="sold">Còn {p.stock} sản phẩm</span>
+                                        <span className="sold">{p.stock} sản phẩm</span>
                                     </div>
                                 </Link>
                             </div>

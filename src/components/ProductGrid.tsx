@@ -11,6 +11,7 @@ interface Product {
     stock: number;
     // nếu API có thêm trường discountPercent thì mình dùng, còn không thì bỏ qua
     discountPercent?: number;
+    subCategoryId: number;
 }
 
 export default function ProductGrid({ products }: { products: Product[] }) {

@@ -33,8 +33,11 @@ export const swrFetcher = async (path: string) => {
     const res = await api.get(path);
     return res.data;
 };*/
+
+import { error } from "console";
+
 // src/lib/api.ts
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.tonkliplock1000.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 
 export interface Product {
     id: string;
@@ -47,15 +50,18 @@ export interface Product {
     N0: number;
     keywords: string[];
     discountPercent: number;
-    categories: number;
+    subCategoryId: number;
 }
 
 // Fetch tất cả sản phẩm cho trang chủ
 export async function fetchProducts(): Promise<Product[]> {
     const res = await fetch(`${API_BASE}`, {
-        next: { revalidate: 3600 },
+        cache: "no-store",// next: { revalidate: 3600 },
     });
-    if (!res.ok) throw new Error("Không thể fetch dữ liệu sản phẩm");
+    if (!res.ok) {
+        const text = await res.text(); // log nội dung lỗi từ backend 
+        console.error("Fetch products error:", res.status, text);
+    }//throw new Error("Không thể fetch dữ liệu sản phẩm");
     const json = await res.json();
     return json.data;
 }
@@ -63,7 +69,7 @@ export async function fetchProducts(): Promise<Product[]> {
 // Fetch chi tiết sản phẩm theo id
 export async function fetchProductById(id: string): Promise<Product> {
     const res = await fetch(`${API_BASE}${id}`, { next: { revalidate: 3600 }, });
-    if (!res.ok) throw new Error("Không thể fetch dữ liệu sản phẩm");
+    if (!res.ok) console.error(error)//throw new Error("Không thể fetch dữ liệu sản phẩm");
     const json = await res.json();
     return json.data;
 }
@@ -84,8 +90,8 @@ export async function fetchProductById(id: string): Promise<Product> {
 
 // Giả sử mình có sẵn danh sách products trong memory (mock data)
 export async function fetchRelatedProductsLocal(
-    stock: number): Promise<Product[]> {
-    console.log("👉 Bắt đầu fetch sản phẩm theo danh mục:", stock);
+    subCategoryId: number): Promise<Product[]> {
+    console.log("👉 Bắt đầu fetch sản phẩm theo danh mục:", subCategoryId);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}`,
         {
             method: "GET", headers: { "Content-Type": "application/json" },
@@ -105,16 +111,16 @@ export async function fetchRelatedProductsLocal(
     if (!Array.isArray(allProducts)) {
         // console.error("API không trả về mảng sản phẩm:", json); return [];
     }
-    // allProducts.filter((p) => p.stock === stock)
+    // allProducts.filter((p) => p.subCategoryId === subCategoryId)
     const filtered = allProducts.filter((p) => {
         // console.log("🧾 Kiểm tra sản phẩm:", p);
-        // console.log("➡️ p.stock:", p.stock, " | cần lọc:", stock);
-        // console.log(typeof p.stock, p.stock);
-        // console.log(typeof stock, stock);
-        // console.table(allProducts.map(p => ({ id: p.id, stock: p.stock })));
+        // console.log("➡️ p.subCategoryId:", p.subCategoryId, " | cần lọc:", subCategoryId);
+        // console.log(typeof p.subCategoryId, p.subCategoryId);
+        // console.log(typeof subCategoryId, subCategoryId);
+        // console.table(allProducts.map(p => ({ id: p.id, subCategoryId: p.subCategoryId })));
 
 
-        return p.stock === stock;
+        return p.subCategoryId === subCategoryId;
     });
     console.log("✅ Số sản phẩm sau khi lọc:", filtered.length);
     // console.log("👉 stock param nhận vào:", categories);
@@ -122,7 +128,7 @@ export async function fetchRelatedProductsLocal(
     // console.log("🔍 Sản phẩm đầu tiên:", allProducts?.[0]);
 
 
-    return allProducts.filter((p) => p.stock === stock);
+    return allProducts.filter((p) => p.subCategoryId === subCategoryId);
 }
 
 // =========================

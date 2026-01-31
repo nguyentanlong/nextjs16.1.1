@@ -41,10 +41,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     method: "POST",
                     credentials: "include", // gửi cookie để backend biết session nào cần hủy 
                 });
+
+            // setUser(null);
             // console.log(JSON.stringify({}));
         }
         catch (err) { console.error("Logout API error:", err); }
         // document.cookie = "accessToken=; Max-Age=0; path=/;";// xóa thủ công
+        document.cookie = "accessToken=; Max-Age=0; path=/;";
+        localStorage.removeItem("accessToken"); // nếu có lưu 
+        sessionStorage.removeItem("accessToken");
         // ✅ Xóa user trong context 
         setUser(null);
         // ❌ Không cần tự document.cookie nữa 
@@ -53,6 +58,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // document.cookie = "accessToken=; Max-Age=0; path=/;"; 
         // // ✅ Xóa user trong context
         // setUser(null);
+        // Đặt flag logout 
+        // localStorage.setItem("isLoggedOut", "true");
     }
 
     return (

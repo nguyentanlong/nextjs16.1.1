@@ -77,7 +77,7 @@ async function ProductDetail({ slug }: { slug: string }) {
         return notFound();
     } // hoặc redirect, hoặc render fallback }
     // Lấy sản phẩm cùng danh mục 
-    const relatedProducts = await fetchRelatedProductsLocal(product.stock);
+    const relatedProducts = await fetchRelatedProductsLocal(product.subCategoryId);
     // const [mainImg, setMainImg] = useState(product?.media?.[0] ?? "/favicon.ico");
     if (!product) return <div>Không tìm thấy sản phẩm</div>;
 
@@ -131,7 +131,7 @@ async function ProductDetail({ slug }: { slug: string }) {
 
                 {/* Sản phẩm liên quan */}
                 {/* ... phần ảnh sản phẩm, tabs */}
-                <RelatedProducts stock={product.stock} products={relatedProducts} />
+                <RelatedProducts subCategoryID={product.subCategoryId} products={relatedProducts} />
             </div>
         </section>
 

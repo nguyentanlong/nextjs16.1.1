@@ -61,12 +61,12 @@ export default function LoginPage() {
                     body: JSON.stringify({ email, password }),
                     credentials: "include",
                 }); // để cookie HTTP-only được gửi kèm
-            if (!res.ok) {
-                console.log(res.status); console.log(JSON.stringify({ email, password }));
-                console.log(process.env.NEXT_PUBLIC_API_BASE);
-            }//throw new Error("Login failed");
+            if (!res.ok) throw new Error("Sai thông tin");//{
+            // console.log(res.status); console.log(JSON.stringify({ email, password }));
+            // console.log(process.env.NEXT_PUBLIC_API_BASE);
+            // }//
             const data = await res.json().catch(() => ({}));//await res.json();
-            console.log("data   ", data);
+            // console.log("data   ", data);
             // ❌ KHÔNG cần gọi lại login(email, password) ở đây 
             // Vì mình đã có data.user từ API, chỉ cần setUser trong AuthContext 
             // Nếu login() trong AuthContext đã làm việc này thì gọi login() thôi 

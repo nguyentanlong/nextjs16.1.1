@@ -50,62 +50,66 @@ import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
 export function middleware(request: NextRequest) {
+    const token = ""//;request.cookies.get("accessToken")?.value;
     const { pathname } = request.nextUrl;
 
-    // Redirect "/" → "/home" 
-    if (pathname === "/home" || pathname === "/trang-chu") {
-        return NextResponse.redirect(new URL("/", request.url));
-    }
-
+    console.log("👉 Middleware check:", { token, pathname });
     // Các route public không cần token
     const publicPaths = ["/login", "/register", "/", "/product", "/:slug.html"];
     if (publicPaths.some((path) => pathname.startsWith(path))) {
         return NextResponse.next();
     }
 
-    // Lấy token từ cookie
-    const token: string = request.cookies.get("accessToken")?.value || "";
-    // Nếu đã đăng nhập mà vẫn vào /login → redirect sang /account
-    if (pathname.startsWith("/login") && token) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/admin"; // trang account của đệ
-        return NextResponse.redirect(url);
-    }
-
-    // Nếu chưa đăng nhập mà vào /account → redirect sang /login
-    // if (pathname.startsWith("/account") && !token) {
-    //     const url = request.nextUrl.clone();
-    //     url.pathname = "/login";
-    //     return NextResponse.redirect(url);
-    // }
-    if (!token && pathname.startsWith("/admin")) {
+    // Nếu chưa có token → redirect về /login
+    if (!token) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Nếu route là /admin → kiểm tra role
-    if (pathname.startsWith("/admin")) {
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { role?: string };
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { role?: string };
 
-            if (decoded?.role === "admin" || decoded?.role === "staff") {
-                return NextResponse.next(); // Cho phép
-            } else {
-                return NextResponse.redirect(new URL("/403", request.url)); // Không đủ quyền
+        // Bảo vệ route /admin
+        if (pathname.startsWith("/admin")) {
+            if (decoded?.role === "admin") {
+                return NextResponse.next();
             }
-        } catch (err) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/403", request.url));
         }
-    }
 
-    // Các route khác (có token) → cho phép
-    return NextResponse.next();
+        // Bảo vệ route /dashboard
+        if (pathname.startsWith("/dashboard")) {
+            if (decoded?.role === "staff" || decoded?.role === "admin") {
+                return NextResponse.next();
+            }
+            return NextResponse.redirect(new URL("/403", request.url));
+        }
+
+        // Bảo vệ route /profile
+        if (pathname.startsWith("/profile")) {
+            if (decoded?.role === "user" || decoded?.role === "staff" || decoded?.role === "admin") {
+                return NextResponse.next();
+            }
+            return NextResponse.redirect(new URL("/403", request.url));
+        }
+
+        // Các route khác cho qua
+        return NextResponse.next();
+    } catch (err) {
+        console.error("👉 Token verify error:", err);
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
 }
+
+/*export function middleware(request: NextRequest) {
+    console.log("👉 Middleware đã chạy cho:", request.nextUrl.pathname);
+    return NextResponse.redirect(new URL("/login", request.url));
+}*/
 
 export const config = {
     matcher: [
-        // "/",
+        "/",
         "/admin/:path*",
-        // "/admin",
+        "/admin",
         // "/home",
         "/login",
         "/register",
