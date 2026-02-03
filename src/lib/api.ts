@@ -38,6 +38,7 @@ import { error } from "console";
 
 // src/lib/api.ts
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
 
 export interface Product {
     id: string;
@@ -55,7 +56,7 @@ export interface Product {
 
 // Fetch tất cả sản phẩm cho trang chủ
 export async function fetchProducts(): Promise<Product[]> {
-    const res = await fetch(`${API_BASE}`, {
+    const res = await fetch(`${API_BASE || API_BASE_L}`, {
         cache: "no-store",// next: { revalidate: 3600 },
     });
     if (!res.ok) {
@@ -68,7 +69,7 @@ export async function fetchProducts(): Promise<Product[]> {
 
 // Fetch chi tiết sản phẩm theo id
 export async function fetchProductById(id: string): Promise<Product> {
-    const res = await fetch(`${API_BASE}${id}`, { next: { revalidate: 3600 }, });
+    const res = await fetch(`${API_BASE || API_BASE_L}${id}`, { next: { revalidate: 3600 }, });
     if (!res.ok) console.error(error)//throw new Error("Không thể fetch dữ liệu sản phẩm");
     const json = await res.json();
     return json.data;

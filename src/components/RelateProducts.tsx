@@ -11,15 +11,15 @@ interface Product {
     price: number;
     media: string[];
     stock: number;
-    subCategoryID: number;
+    subCategoryId: number;
 }
 
 interface RelatedProductsProps {
-    subCategoryID: number;
+    subCategoryId: number;
     products: Product[];
 }
 
-export default function RelatedProducts({ subCategoryID, products }: RelatedProductsProps) {
+export default function RelatedProducts({ subCategoryId, products }: RelatedProductsProps) {
     const trackRef = useRef<HTMLDivElement>(null);
     const [index, setIndex] = useState(0);
 

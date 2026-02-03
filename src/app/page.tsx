@@ -10,6 +10,8 @@ import ReBanner from '@/components/ReBanner';
 import { fetchProducts } from '@/lib/api';
 import Footer from '@/components/Footer';
 import HomeNavbar from '@/components/HomeNavbar';
+import ProductEditorClient from './ProductEditorClient';
+
 
 export default async function HomePage() {
   const products = await fetchProducts();
@@ -22,7 +24,7 @@ export default async function HomePage() {
       <Category />
       <PopularCategory />
       <ProductsHome products={products} />
-      {/* <Link href="/login" className="login-link">Đăng nhập</Link> */}
+      <ProductEditorClient />
       <ReBanner />
       <Footer />
     </main>

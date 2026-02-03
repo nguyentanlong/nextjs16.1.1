@@ -10,9 +10,7 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
-    "@mantine/core": "^5.10.5",
-    "@mantine/hooks": "^5.10.5",
-    "@mantine/rte": "^5.10.5",
+    "@tinymce/tinymce-react": "6.3.0",
     "axios": "1.13.2",
     "jsonwebtoken": "9.0.3",
     "next": "16.1.1",

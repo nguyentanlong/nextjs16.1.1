@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
+// import AddProductForm from '@/components/ProductEditor';
 
 // Metadata chuẩn SEO—không dùng next-seo, dùng Metadata API của Next.js 16.1.1
 export const metadata: Metadata = {
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: {
           {/* <ProductGrid products={products} /> */}
 
           {/* Footer sẽ thêm sau */}
+          {/* <AddProductForm /> */}
           <Script src="/script.js" strategy="afterInteractive" />
           <Script src="./script-alt.js" strategy="afterInteractive" />
           <Script src="./product-script.js" strategy="afterInteractive" />

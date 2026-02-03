@@ -131,7 +131,7 @@ async function ProductDetail({ slug }: { slug: string }) {
 
                 {/* Sản phẩm liên quan */}
                 {/* ... phần ảnh sản phẩm, tabs */}
-                <RelatedProducts subCategoryID={product.subCategoryId} products={relatedProducts} />
+                <RelatedProducts subCategoryId={product.subCategoryId} products={relatedProducts} />
             </div>
         </section>
 
