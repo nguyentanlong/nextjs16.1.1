@@ -112,10 +112,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const logout = async () => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L}/auth/logout`, {
+        await fetch(`api/auth/logout`, {
             method: "POST",
             credentials: "include",
         });
+
         setUser(null); // xoá state user
     };
 

@@ -20,7 +20,7 @@ export default function middleware(request: NextRequest) {
 
     // const token = localStorage.getItem("token");
     // Nếu đã đăng nhập mà vẫn vào /login → redirect sang /account
-    console.log("👉 Middleware bắt đầu:", { token, pathname });
+    // console.log("👉 Middleware bắt đầu:", { token, pathname });
     if (!token && pathname.startsWith("/admin")) {
         return NextResponse.redirect(new URL("/login", request.url));
     }

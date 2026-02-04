@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     // Tạo response và set cookie bảo mật
     const response = NextResponse.json({ user: data.user });
 
-    response.cookies.set("accessToken", data.accessToken, {//authToken
+    /*response.cookies.set("accessToken", data.accessToken, {//authToken
         httpOnly: true,
         secure: true,//trên dev thì bỏ bởi ko localhost không có https
         //domain: ".cameramatroi.com", // cho phép dùng ở cả api. và www. nếu deloy backend ở subdomain
@@ -37,6 +37,6 @@ export async function POST(req: Request) {
         sameSite: "none",// khi có domain đỗi lax hoặc strict sẽ ổn định hơn
         path: "/",
         maxAge: 60 * 60 * 24 * 2, // 7 ngày
-    });
+    });*/
     return response;
 }

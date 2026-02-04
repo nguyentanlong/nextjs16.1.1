@@ -5,8 +5,10 @@ import '../app/admin/material-dashboard.css'; import '../app/admin/nucleo-icons.
 
 export default function AdminSidebar() {
     const { user } = useAuth();
-    const isAdminOrStaff = user?.role === "admin";
+    const isAdmin = user?.role === "admin";
     const isStaff = user?.role === "staff";
+    const isAdminOrStaff = isAdmin || isStaff;
+
     // const isUser = user?.role === "user";
     return (<>
         <aside
@@ -52,16 +54,16 @@ export default function AdminSidebar() {
                     <li className="nav-item">
                         <a className="nav-link text-dark" href="../pages/tables.html">
                             <i className="material-symbols-rounded opacity-5">table_view</i>
-                            <span className="nav-link-text ms-1">{(isAdminOrStaff || isStaff) ? "Danh mục" : "Lượt comment"}</span>
+                            <span className="nav-link-text ms-1">{(isAdminOrStaff) ? "Danh mục" : "Lượt comment"}</span>
                         </a>
                     </li>
                     <li className="nav-item">
                         <a className="nav-link text-dark" href="../pages/billing.html">
                             <i className="material-symbols-rounded opacity-5">receipt_long</i>
-                            <span className="nav-link-text ms-1">{(isAdminOrStaff || isStaff) ? "Danh mục con" : "Lượt like"}</span>
+                            <span className="nav-link-text ms-1">{(isAdminOrStaff) ? "Danh mục con" : "Lượt like"}</span>
                         </a>
                     </li>
-                    {(isAdminOrStaff || isStaff) && <li className="nav-item">
+                    {(isAdminOrStaff) && <li className="nav-item">
                         <a
                             className="nav-link text-dark"
                             href="../pages/virtual-reality.html"
@@ -81,13 +83,13 @@ export default function AdminSidebar() {
                             <span className="nav-link-text ms-1">Profile</span>
                         </a>
                     </li>
-                    {isAdminOrStaff && (<li className="nav-item">
+                    {isAdmin && (<li className="nav-item">
                         <a className="nav-link text-dark" href="../pages/sign-in.html">
                             <i className="material-symbols-rounded opacity-5">login</i>
                             <span className="nav-link-text ms-1">Nhân viên</span>
                         </a>
                     </li>)}
-                    {isAdminOrStaff && (<li className="nav-item">
+                    {isAdmin && (<li className="nav-item">
                         <a className="nav-link text-dark" href="../pages/sign-up.html">
                             <i className="material-symbols-rounded opacity-5">assignment</i>
                             <span className="nav-link-text ms-1">Thêm nhân viên</span>
@@ -110,7 +112,7 @@ export default function AdminSidebar() {
                         type="button"
                     >
                         Hỗ trợ:{" "}
-                        {(isAdminOrStaff || isStaff) ? "0328 73 2676" : "038 542 9989"}
+                        {(isAdminOrStaff) ? "0328 73 2676" : "038 542 9989"}
                     </a>
                 </div>
             </div>
