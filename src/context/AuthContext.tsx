@@ -94,7 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
 
     const login = async (email: string, password: string) => {
-        const res = await fetch(`api/auth/login`, {
+        const res = await fetch(`/api/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
@@ -102,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
 
         if (!res.ok) {
-            throw new Error("Sai thông tin đăng nhập");
+            throw new Error("Sai thông tin đăng nhập AC");
         }
 
         const data = await res.json();
@@ -112,7 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const logout = async () => {
-        await fetch(`api/auth/logout`, {
+        await fetch(`/api/auth/logout`, {
             method: "POST",
             credentials: "include",
         });

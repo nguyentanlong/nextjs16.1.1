@@ -10,33 +10,25 @@ export async function POST(req: Request) {
         body: JSON.stringify(body),
         credentials: "include", // bắt buộc để cookie được lưu
     });
-    console.log("API_BASE:", API_BASE);
+    // console.log("API_BASE:", API_BASE);
+    console.log("👉 Backend response headers:", Array.from(res.headers.entries()));
+    // console.log("document.cookie:   ", document.cookie);
+
 
     if (!res.ok) {
-        return NextResponse.json({ error: "Sai tài khoản hoặc mật khẩu" }, { status: 401 });
+        return NextResponse.json({ error: "Sai tài khoản hoặc mật khẩu R" }, { status: res.status });
+        console.log("Login response status:", res.status);
+        console.log("Login response body:", await res.text());
+
     }
 
     const data = await res.json();
-
+    // Lấy cookie từ backend 
+    const setCookie = res.headers.get("set-cookie");
     // Tạo response và set cookie bảo mật
-    const response = NextResponse.json({ user: data.user });
-
-    /*response.cookies.set("accessToken", data.accessToken, {//authToken
-        httpOnly: true,
-        secure: true,//trên dev thì bỏ bởi ko localhost không có https
-        //domain: ".cameramatroi.com", // cho phép dùng ở cả api. và www. nếu deloy backend ở subdomain
-        sameSite: "none",// khi có domain đỗi lax hoặc strict sẽ ổn định hơn
-        path: "/",
-        maxAge: 60 * 60, // 1h
-    });
-
-    response.cookies.set("refreshToken", data.refreshToken, {
-        httpOnly: true,
-        secure: true,//trên dev thì bỏ bởi ko localhost không có https
-        //domain: ".cameramatroi.com", // cho phép dùng ở cả api. và www. nếu deloy backend ở subdomain
-        sameSite: "none",// khi có domain đỗi lax hoặc strict sẽ ổn định hơn
-        path: "/",
-        maxAge: 60 * 60 * 24 * 2, // 7 ngày
-    });*/
+    const response = NextResponse.json({ data });//user: data.user
+    console.log("AccessToken:  ", response);
+    //forwward cookie
+    if (setCookie) { response.headers.set("set-cookie", setCookie); }
     return response;
 }

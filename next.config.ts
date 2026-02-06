@@ -51,6 +51,13 @@ const nextConfig: NextConfig = {
     ],
   },
   // next.config.js
+  // next.config.js
+  async rewrites() {
+    return [{
+      source: "/api/:path*",
+      destination: "https://api.tonkliplock1000.com/:path*",
+    },];
+  },
 
 };
 

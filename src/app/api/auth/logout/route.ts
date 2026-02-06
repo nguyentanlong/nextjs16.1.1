@@ -1,40 +1,72 @@
-import { NextResponse } from "next/server";
+/*import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-export async function POST() {
-    // Tạo response rỗng
-    /*const response = NextResponse.json({ message: "Đã logout thành công. Tạm biệt dệ9" });
 
-    // Xóa cookie accessToken
-    response.cookies.set("accessToken", "", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-        maxAge: 0, // hết hạn ngay lập tức
-    });
-
-    // Xóa cookie refreshToken
-    response.cookies.set("refreshToken", "", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-        maxAge: 0,
-    });
-    // response.cookies.delete("accessToken");
-    //   response.cookies.delete("accessToken");
-    return response;*/
-    const API_BASE = process.env.NEXT_PUBLIC_API_BASE; // Lấy refreshToken từ cookie của frontend 
-    // // (Next.js có thể đọc cookie từ request) 
-    // // Nhưng ở API route, mình phải đọc từ headers hoặc cookies // 
-    // Ví dụ: // 
-    const cookieStore = await cookies();
-    const refreshToken = cookieStore.get("refreshToken")?.value;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+export async function POST(req: Request) {
+    /*    const cookieHeader = req.headers.get("cookie");
+    let refreshToken: string | undefined;
+    if (cookieHeader) {
+        const cookies = Object.fromEntries(cookieHeader.split(";").map(c => { const [key, ...v] = c.trim().split("="); return [key, v.join("=")]; })); refreshToken = cookies["refreshToken"];
+    }
+    console.log("👉 RefreshToken:", refreshToken);
+    const secure = process.env.NODE_ENV === "production";
+    // Gọi backend logout 
     const res = await fetch(`${API_BASE}/auth/logout`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ refreshToken }),
     });
     const data = await res.json();
-    return NextResponse.json(data);
+    // Tạo response 
+    const response = NextResponse.json(data, { status: res.status });
+    // Xoá cookie ở frontend domain 
+    response.headers.set(
+        "set-cookie", [`accessToken=; Path=/; HttpOnly; ${secure ? "Secure;" : ""}; SameSite=None; Max-Age=0`, `refreshToken=; Path=/; HttpOnly; ${secure ? "Secure;" : ""}; SameSite=None; Max-Age=0`,].join(", "));
+    return response;
+}*/
+import { NextResponse } from "next/server";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+
+export async function POST(req: Request) {
+    // Lấy cookie từ request headers
+    const cookieHeader = req.headers.get("cookie");
+    let refreshToken: string | undefined;
+
+    if (cookieHeader) {
+        const cookies = Object.fromEntries(
+            cookieHeader.split(";").map((c) => {
+                const [key, ...v] = c.trim().split("=");
+                return [key, v.join("=")];
+            })
+        );
+        refreshToken = cookies["refreshToken"];
+    }
+
+    console.log("👉 RefreshToken:", refreshToken);
+
+    // Gọi backend logout với refreshToken
+    const res = await fetch(`${API_BASE}/auth/logout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ refreshToken }),
+    });
+
+    const data = await res.json();
+
+    // Tạo response và xoá cookie ở frontend domain
+    const response = NextResponse.json(data, { status: res.status });
+    const secure = process.env.NODE_ENV === "production";
+
+    response.headers.set(
+        "set-cookie",
+        [
+            `accessToken=; Path=/; HttpOnly; ${secure ? "Secure;" : ""} SameSite=None; Max-Age=0`,
+            `refreshToken=; Path=/; HttpOnly; ${secure ? "Secure;" : ""} SameSite=None; Max-Age=0`,
+        ].join(", ")
+    );
+
+    return response;
 }

@@ -6,6 +6,9 @@ export default function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     // Lấy token từ cookie
     const token = request.cookies.get("accessToken")?.value;
+    const refreshToken = request.cookies.get("refreshToken")?.value;
+    // Kiểm tra accessToken hết hạn (ví dụ decode JWT) 
+    let isExpired = false;
 
     // Redirect "/" → "/home" 
     /*if (pathname === "/home" || pathname === "/trang-chu") {
@@ -20,7 +23,10 @@ export default function middleware(request: NextRequest) {
 
     // const token = localStorage.getItem("token");
     // Nếu đã đăng nhập mà vẫn vào /login → redirect sang /account
-    // console.log("👉 Middleware bắt đầu:", { token, pathname });
+    console.log("👉 Middleware bắt đầu:", { token, pathname });
+    console.log("RefreshToken:   ", refreshToken)
+    // console.log("👉 Request cookies in middleware:", request.cookies.getAll());
+
     if (!token && pathname.startsWith("/admin")) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -30,10 +36,11 @@ export default function middleware(request: NextRequest) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload & { role?: string };
             // Nếu token đã hết hạn → redirect về login 
-            /*if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
-                console.log("👉 Token expired");
-                return NextResponse.redirect(new URL("/", request.url));
-            }*/
+            if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
+                // console.log("👉 Token expired");
+                // return NextResponse.redirect(new URL("/", request.url));
+                isExpired = true;
+            }
             if (["admin", "staff", "user"].includes(decoded?.role || "")) {//if (decoded?.role === "admin" || decoded?.role === "staff" || decoded?.role === "user") {
                 // Nếu đã ở /admin thì cho đi tiếp, không redirect nữa 
                 if (pathname.startsWith("/admin")) {
@@ -48,7 +55,8 @@ export default function middleware(request: NextRequest) {
             }
         } catch (err: any) {
             if (err.name === "TokenExpiredError") {
-                console.log("👉 Token expired");
+                // console.log("👉 Token expired");
+                isExpired = true;
                 const response = NextResponse.redirect(new URL("/", request.url));
                 response.cookies.delete("accessToken");
                 return response;
@@ -57,16 +65,7 @@ export default function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/login", request.url));
         }
     }
-    // if (token && pathname === "/login") {
-    //     return NextResponse.redirect(new URL("/admin", request.url));
-    // }
-    console.log("👉 Middleware check cuối:", { token, pathname });
-    /*if (pathname.startsWith("/login") && (token)) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/admin"; // trang account của đệ
-        return NextResponse.redirect(url);
-    }*/
-    // Các route khác (có token) → cho phép
+
     return NextResponse.next();
 }
 export const config = {
