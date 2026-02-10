@@ -34,7 +34,7 @@ export const swrFetcher = async (path: string) => {
     return res.data;
 };*/
 
-import { error } from "console";
+// import { error } from "console";
 
 // src/lib/api.ts
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
@@ -70,7 +70,7 @@ export async function fetchProducts(): Promise<Product[]> {
 // Fetch chi tiết sản phẩm theo id
 export async function fetchProductById(id: string): Promise<Product> {
     const res = await fetch(`${API_BASE || API_BASE_L}${id}`, { next: { revalidate: 3600 }, });
-    if (!res.ok) console.error(error)//throw new Error("Không thể fetch dữ liệu sản phẩm");
+    if (!res.ok) console.log("Lỗi fetchProductById")//.error(error)//throw new Error("Không thể fetch dữ liệu sản phẩm");
     const json = await res.json();
     return json.data;
 }
@@ -119,18 +119,37 @@ export async function fetchRelatedProductsLocal(
         // console.log(typeof p.subCategoryId, p.subCategoryId);
         // console.log(typeof subCategoryId, subCategoryId);
         // console.table(allProducts.map(p => ({ id: p.id, subCategoryId: p.subCategoryId })));
-
-
         return p.subCategoryId === subCategoryId;
     });
     console.log("✅ Số sản phẩm sau khi lọc:", filtered.length);
     // console.log("👉 stock param nhận vào:", categories);
     // console.log("📦 JSON trả về từ API:", json);
     // console.log("🔍 Sản phẩm đầu tiên:", allProducts?.[0]);
-
-
     return allProducts.filter((p) => p.subCategoryId === subCategoryId);
 }
+// src/lib/api.ts
+export async function searchProduct(name: string) {
+    const res = await fetch(
+        `${API_BASE || API_BASE_L}/subcategories/search/like/${encodeURIComponent(
+            name
+        )}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch categories");
+    }
+    // console.log("Res...   ", res);
+    const data = await res.json();
+    // console.log(data); // đây mới là dữ liệu JSON từ API
+    return data;
+}
+
 
 // =========================
 // ========================= // Kiểu 2: Gọi API backend (khi có endpoint riêng) // =========================

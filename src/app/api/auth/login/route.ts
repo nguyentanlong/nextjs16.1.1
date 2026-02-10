@@ -11,7 +11,7 @@ export async function POST(req: Request) {
         credentials: "include", // bắt buộc để cookie được lưu
     });
     // console.log("API_BASE:", API_BASE);
-    console.log("👉 Backend response headers:", Array.from(res.headers.entries()));
+    // console.log("👉 Backend response headers:", Array.from(res.headers.entries()));
     // console.log("document.cookie:   ", document.cookie);
 
 
@@ -26,9 +26,26 @@ export async function POST(req: Request) {
     // Lấy cookie từ backend 
     const setCookie = res.headers.get("set-cookie");
     // Tạo response và set cookie bảo mật
-    const response = NextResponse.json({ data });//user: data.user
-    console.log("AccessToken:  ", response);
+    const response = NextResponse.json({ user: data.user });//user: data.user hoặc là data
+    // console.log("kết quả Respone:  ", response);
+    console.log("kết quả Data:  ", data);
     //forwward cookie
-    if (setCookie) { response.headers.set("set-cookie", setCookie); }
+    // if (setCookie) { response.headers.set("set-cookie", setCookie); } 
+    //đoạn trên chỉ láy accessToken 
+    // Set lại cookie ở đây 
+    response.cookies.set('accessToken', data.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+        path: '/',
+        maxAge: 60 * 15,
+    });
+    response.cookies.set('refreshToken', data.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7,
+    });
     return response;
 }

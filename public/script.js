@@ -109,3 +109,44 @@ if (mobileNav && navbar) {
 
   mobileNav.addEventListener("click", toggleNav);
 }
+document.addEventListener("DOMContentLoaded", function () {
+  const searchBox = document.getElementById("searchBox");
+  const suggestBox = document.getElementById("suggestBox");
+  // Hiện khung suggest khi gõ 
+  /*searchBox.addEventListener("input", function () {
+    if (this.value.trim().length > 0) {
+      suggestBox.style.display = "block";
+    }
+    else { suggestBox.style.display = "none"; }
+  });
+  // Ẩn khung suggest khi click/chạm ra ngoài 
+  document.addEventListener("mousedown", function (e) {
+    if (!suggestBox.contains(e.target) && e.target !== searchBox) {
+      suggestBox.style.display = "none";
+    }
+  });
+  document.addEventListener("touchstart", function (e) {
+    if (!suggestBox.contains(e.target) && e.target !== searchBox) {
+      suggestBox.style.display = "none";
+    }
+  });*/
+  if (!searchBox || !suggestBox) return;
+  // Hiện/ẩn khi nhập 
+  searchBox.addEventListener("input", function () {
+    if (this.value.trim().length > 0) {
+      suggestBox.style.display = "block";
+      suggestBox.classList.add("active");
+    }
+    else {
+      suggestBox.style.display = "none";
+      suggestBox.classList.remove("active");
+    }
+  });
+  // Ẩn khi click ra ngoài 
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest("#searchBox") && !e.target.closest("#suggestBox")) {
+      suggestBox.style.display = "none";
+      suggestBox.classList.remove("active");
+    }
+  });
+});

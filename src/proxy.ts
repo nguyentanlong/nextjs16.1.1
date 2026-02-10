@@ -38,8 +38,9 @@ export default function middleware(request: NextRequest) {
             // Nếu token đã hết hạn → redirect về login 
             if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
                 // console.log("👉 Token expired");
-                // return NextResponse.redirect(new URL("/", request.url));
                 isExpired = true;
+                // return NextResponse.redirect(new URL("/", request.url));
+
             }
             if (["admin", "staff", "user"].includes(decoded?.role || "")) {//if (decoded?.role === "admin" || decoded?.role === "staff" || decoded?.role === "user") {
                 // Nếu đã ở /admin thì cho đi tiếp, không redirect nữa 

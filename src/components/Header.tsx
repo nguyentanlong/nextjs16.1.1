@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import Navigation from './Navigation';
+import SearchBar from './SearchBar';
 
 export default function Header() {
     return (
@@ -68,7 +69,7 @@ export default function Header() {
                     <Navigation />
 
                     {/* Search Form */}
-                    <form className="search-form" role="search">
+                    {/* <form className="search-form" role="search">
                         <div className="search-wrapper">
                             <input
                                 type="text"
@@ -77,7 +78,8 @@ export default function Header() {
                             />
                             <button type="submit">Tìm</button>
                         </div>
-                    </form>
+                    </form> */}
+                    <SearchBar />
                 </div>
             </header>
         </>

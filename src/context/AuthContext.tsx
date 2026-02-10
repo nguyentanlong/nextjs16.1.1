@@ -94,12 +94,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
 
     const login = async (email: string, password: string) => {
+        console.log("Bắt đầu login...");
         const res = await fetch(`/api/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
             credentials: "include", // để cookie HTTP-only được lưu
         });
+
+        console.log("Response status:", res.status);
+        console.log("👉 Fetch response status:", res.status);
+        console.log("👉 Fetch response headers:", Array.from(res.headers.entries()));
 
         if (!res.ok) {
             throw new Error("Sai thông tin đăng nhập AC");
