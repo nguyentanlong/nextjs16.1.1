@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+    /*console.log("👉 API /api/auth/login hit");
+    const body = await req.json();
+    return NextResponse.json({ ok: true });*/
     const body = await req.json();
     // Gọi API backend
     const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
@@ -26,24 +29,24 @@ export async function POST(req: Request) {
     // Lấy cookie từ backend 
     const setCookie = res.headers.get("set-cookie");
     // Tạo response và set cookie bảo mật
-    const response = NextResponse.json({ user: data.user });//user: data.user hoặc là data
+    const response = NextResponse.json({ data });//user: data.user hoặc là data
     // console.log("kết quả Respone:  ", response);
-    console.log("kết quả Data:  ", data);
+    // console.log("kết quả Data:  ", data);
     //forwward cookie
     // if (setCookie) { response.headers.set("set-cookie", setCookie); } 
     //đoạn trên chỉ láy accessToken 
     // Set lại cookie ở đây 
     response.cookies.set('accessToken', data.accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        secure: false,//process.env.NODE_ENV === 'production',//https: true
+        sameSite: 'lax',//'none',//https: none
         path: '/',
         maxAge: 60 * 15,
     });
     response.cookies.set('refreshToken', data.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        secure: false,//process.env.NODE_ENV === 'production',
+        sameSite: 'lax',//'none',
         path: '/',
         maxAge: 60 * 60 * 24 * 7,
     });

@@ -92,28 +92,38 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
-
+    console.log("👉 Ngoài login");
     const login = async (email: string, password: string) => {
         console.log("Bắt đầu login...");
-        const res = await fetch(`/api/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-            credentials: "include", // để cookie HTTP-only được lưu
-        });
+        try {
+            const res = await fetch(`/api/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+                credentials: "include", // để cookie HTTP-only được lưu
+            });
 
-        console.log("Response status:", res.status);
-        console.log("👉 Fetch response status:", res.status);
-        console.log("👉 Fetch response headers:", Array.from(res.headers.entries()));
+            console.log("Response status:", res.status);
+            // 👉 Debug: in ra raw response trước khi parse JSON 
+            // const raw = await res.text();
+            // console.log("Raw response:", raw);
+            console.log("👉 Fetch response status:", res.status);
+            console.log("👉 Fetch response headers:", Array.from(res.headers.entries()));
 
-        if (!res.ok) {
-            throw new Error("Sai thông tin đăng nhập AC");
-        }
+            if (!res.ok) {
+                throw new Error("Sai thông tin đăng nhập AC");
+            }
 
-        const data = await res.json();
-        // ✅ cập nhật state user từ response
-        console.log("Login response:", data);
-        setUser(data.user);
+            const data = await res.json();
+            //hoặc 
+            //             const { data: { user } } = await res.json();
+            // setUser(user);
+
+            // ✅ cập nhật state user từ response
+            console.log("Login response data:", data);
+            setUser(data.data.user);
+
+        } catch (err) { console.error("❌ Login error:", err); }
     };
 
     const logout = async () => {

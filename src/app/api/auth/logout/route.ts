@@ -58,15 +58,30 @@ export async function POST(req: Request) {
 
     // Tạo response và xoá cookie ở frontend domain
     const response = NextResponse.json(data, { status: res.status });
-    const secure = process.env.NODE_ENV === "production";
+    // const secure = process.env.NODE_ENV === "production";
 
-    response.headers.set(
+    /*response.headers.set(
         "set-cookie",
         [
-            `accessToken=; Path=/; HttpOnly; ${secure ? "Secure;" : ""} SameSite=None; Max-Age=0`,
-            `refreshToken=; Path=/; HttpOnly; ${secure ? "Secure;" : ""} SameSite=None; Max-Age=0`,
+            `accessToken=; Path=/; HttpOnly; Secure=false; SameSite=lax; Max-Age=0`,//${secure ? "Secure;" : ""}
+            `refreshToken=; Path=/; HttpOnly; Secure=false; SameSite=lax; Max-Age=0`,
         ].join(", ")
-    );
+    );*/
+    response.cookies.set("refreshToken", "", {
+        path: "/",
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 0,
+    });
+    response.cookies.set("accessToken", "", {
+        path: "/",
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 0,
+    });
+
 
     return response;
 }

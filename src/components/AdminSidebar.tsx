@@ -10,6 +10,9 @@ export default function AdminSidebar() {
     const isAdminOrStaff = isAdmin || isStaff;
 
     // const isUser = user?.role === "user";
+    console.log("👉 User role in AdminSidebar:", user?.role);
+    console.log("👉 isAdmin:", isAdmin, "isStaff:", isStaff, "isAdminOrStaff:", isAdminOrStaff);
+
     return (<>
         <aside
             className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2"

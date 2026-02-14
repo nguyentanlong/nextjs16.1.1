@@ -6,7 +6,7 @@ export default function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     // Lấy token từ cookie
     const token = request.cookies.get("accessToken")?.value;
-    const refreshToken = request.cookies.get("refreshToken")?.value;
+    // const refreshToken = request.cookies.get("refreshToken")?.value;
     // Kiểm tra accessToken hết hạn (ví dụ decode JWT) 
     let isExpired = false;
 
@@ -23,8 +23,8 @@ export default function middleware(request: NextRequest) {
 
     // const token = localStorage.getItem("token");
     // Nếu đã đăng nhập mà vẫn vào /login → redirect sang /account
-    console.log("👉 Middleware bắt đầu:", { token, pathname });
-    console.log("RefreshToken:   ", refreshToken)
+    // console.log("👉 Middleware bắt đầu:", { token, pathname });
+    // console.log("RefreshToken:   ", refreshToken)
     // console.log("👉 Request cookies in middleware:", request.cookies.getAll());
 
     if (!token && pathname.startsWith("/admin")) {
