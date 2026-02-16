@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
+import { AuthProvider } from '@/context/AuthContext';
 // import AddProductForm from '@/components/ProductEditor';
 
 // Metadata chuẩn SEO—không dùng next-seo, dùng Metadata API của Next.js 16.1.1
@@ -75,7 +76,9 @@ export default function RootLayout({ children }: {
           {/* Header—lấy dữ liệu động theo locale */}
           {/* Nội dung trang */}
           {/* <ProductsHome /> */}
-          <main>{children}</main>
+          <AuthProvider>
+            <main>{children}</main>
+          </AuthProvider>
           {/* <ProductGrid products={products} /> */}
 
           {/* Footer sẽ thêm sau */}

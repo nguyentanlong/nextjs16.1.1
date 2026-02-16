@@ -74,7 +74,7 @@ export function useAuth() {
     if (!ctx) throw new Error("useAuth must be used within AuthProvider");
     return ctx;
 }*/
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
     id: string;
@@ -86,12 +86,39 @@ interface AuthContextType {
     user: User | null;
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
+    // loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Tạo context 
+/*export const AuthContext = createContext<AuthContextType>({
+    user: null,
+    login: async () => { },
+    logout: async () => { },
+});*/
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    // const [loading, setLoading] = useState(true);
+    // ✅ Tự động khôi phục user khi Provider mount 
+    const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
+    useEffect(() => {
+        const fetchMe = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/auth/profile`,
+                    { credentials: "include" });
+                if (res.ok) {
+                    const data = await res.json();
+                    const userObj = data.user || data.data?.user;
+                    if (userObj) {
+                        setUser(userObj);
+                        console.log("👉 User restored from /api/auth/me:", userObj);
+                    }
+                }
+            } catch (err) { console.error("❌ Error restoring user:", err); }
+        };
+        fetchMe();
+    }, []);
     console.log("👉 Ngoài login");
     const login = async (email: string, password: string) => {
         console.log("Bắt đầu login...");
@@ -121,6 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             // ✅ cập nhật state user từ response
             console.log("Login response data:", data);
+            console.log("👉 User set in context:", data.data.user);
             setUser(data.data.user);
 
         } catch (err) { console.error("❌ Login error:", err); }
@@ -137,7 +165,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, }}>
             {children}
         </AuthContext.Provider>
     );

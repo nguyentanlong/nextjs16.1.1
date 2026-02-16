@@ -2,15 +2,16 @@
 // "use client";
 
 
-import { AuthProvider } from "@/context/AuthContext";
+// import { AuthProvider } from "@/context/AuthContext";
 import Script from "next/script";
 import AdminHeader from '@/components/AdminHeader';
 import AdminSidebar from '@/components/AdminSidebar';
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
 
-    return (<>
-        <AuthProvider>
+    return (
+        // <AuthProvider>
+        <>
             <div className="g-sidenav-show  bg-gray-100">
                 <AdminSidebar />
                 <AdminHeader />
@@ -18,8 +19,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
             </div>
             <Script src="./material-dashdoard.min.js" />
             <Script src="./perfect-scrollbar.min.js" />
-        </AuthProvider>
-
-    </>
+        </>
+        // </AuthProvider>
     );
 }

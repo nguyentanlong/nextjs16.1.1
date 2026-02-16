@@ -1,10 +1,17 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import '../app/admin/font-css.css';
-import '../app/admin/material-dashboard.css'; import '../app/admin/nucleo-icons.css'; import '../app/admin/nucleo-svg.css';
+import '../app/admin/material-dashboard.css';
+import '../app/admin/nucleo-icons.css';
+import '../app/admin/nucleo-svg.css';
+// import { useContext } from "react";
 
 export default function AdminSidebar() {
     const { user } = useAuth();
+    // if (loading) return <div>Loading...</div>;
+    // const { user } = useContext(AuthContext);
+    console.log("👉 User from context in AdminSidebar:", user);
+
     const isAdmin = user?.role === "admin";
     const isStaff = user?.role === "staff";
     const isAdminOrStaff = isAdmin || isStaff;
