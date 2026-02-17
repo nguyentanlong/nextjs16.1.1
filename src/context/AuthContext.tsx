@@ -101,11 +101,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     // const [loading, setLoading] = useState(true);
     // ✅ Tự động khôi phục user khi Provider mount 
-    const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
+    // const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
     useEffect(() => {
         const fetchMe = async () => {
             try {
-                const res = await fetch(`${API_BASE}/auth/profile`,
+                const res = await fetch(`/api/auth/me`,
                     { credentials: "include" });
                 if (res.ok) {
                     const data = await res.json();
@@ -119,9 +119,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         fetchMe();
     }, []);
-    console.log("👉 Ngoài login");
+    console.log("👉 AuthContext Ngoài login");
     const login = async (email: string, password: string) => {
-        console.log("Bắt đầu login...");
+        // console.log("AuthContext Bắt đầu login...");
         try {
             const res = await fetch(`/api/auth/login`, {
                 method: "POST",
@@ -130,15 +130,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 credentials: "include", // để cookie HTTP-only được lưu
             });
 
-            console.log("Response status:", res.status);
+            console.log("AuthContext Response status:", res.status);
             // 👉 Debug: in ra raw response trước khi parse JSON 
             // const raw = await res.text();
             // console.log("Raw response:", raw);
-            console.log("👉 Fetch response status:", res.status);
-            console.log("👉 Fetch response headers:", Array.from(res.headers.entries()));
+            console.log("👉 AuthContext Fetch response status:", res.status);
+            console.log("👉 AuthContext Fetch response headers:", Array.from(res.headers.entries()));
 
             if (!res.ok) {
-                throw new Error("Sai thông tin đăng nhập AC");
+                throw new Error("AuthContext Sai thông tin đăng nhập AC");
             }
 
             const data = await res.json();
@@ -147,8 +147,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // setUser(user);
 
             // ✅ cập nhật state user từ response
-            console.log("Login response data:", data);
-            console.log("👉 User set in context:", data.data.user);
+            console.log("AuthContext Login response data:", data);
+            console.log("👉 AuthContext User set in context:", data.data.user);
             setUser(data.data.user);
 
         } catch (err) { console.error("❌ Login error:", err); }

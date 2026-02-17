@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 
-const API_BASE = process.env.API_BASE; // nhớ set trong .env
+const API_BASE = process.env.API_BASE;
 
 export async function GET(req: Request) {
     try {
-        // Lấy cookie hoặc token từ request
+        // Lấy cookie từ request
         const cookieHeader = req.headers.get("cookie") || "";
+
+        // Nếu token lưu trong cookie accessToken
         const token = cookieHeader
             .split(";")
             .find((c) => c.trim().startsWith("accessToken="))
@@ -15,16 +17,17 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "No token found" }, { status: 401 });
         }
 
-        // Giải mã token để lấy id (ví dụ JWT)
+        // Giải mã JWT để lấy id
         const payload = JSON.parse(
             Buffer.from(token.split(".")[1], "base64").toString()
         );
-        const userId = payload.sub; // id nằm trong sub
-        console.log("User Id:   ", userId)
-        // Gọi API backend để lấy profile
-        const res = await fetch(`${API_BASE}/auth/profile?id=${userId}`, {
+        const userId = payload.sub;
+        console.log("userId trong api me:   ", userId);
+        // Forward request sang backend kèm Authorization và cookie
+        const res = await fetch(`${API_BASE}/auth/profile`, {//?id=${userId}
             headers: {
                 Authorization: `Bearer ${token}`,
+                Cookie: cookieHeader, // forward luôn cookie nếu backend dùng session
             },
             cache: "no-store",
         });
@@ -34,9 +37,7 @@ export async function GET(req: Request) {
         }
 
         const data = await res.json();
-
-        // Trả về user cho frontend
-        return NextResponse.json({ user: data.user });
+        return NextResponse.json({ user: data });
     } catch (err) {
         console.error("❌ Error in /api/auth/me:", err);
         return NextResponse.json({ error: "Server error" }, { status: 500 });

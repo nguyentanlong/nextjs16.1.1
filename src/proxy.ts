@@ -6,6 +6,15 @@ export default function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     // Lấy token từ cookie
     const token = request.cookies.get("accessToken")?.value;
+    // Flag để skip middleware khi test 
+    /*if (process.env.SKIP_MIDDLEWARE === "true") {
+        console.log("👉 Middleware skipped for testing");
+        return NextResponse.next();
+    }*/
+    // Chỉ chạy middleware cho /admin/* 
+    /*if (request.nextUrl.pathname.startsWith("/admin")) {
+        console.log("👉 Middleware chạy cho admin route:",
+            request.nextUrl.pathname);}*/
     // const refreshToken = request.cookies.get("refreshToken")?.value;
     // Kiểm tra accessToken hết hạn (ví dụ decode JWT) 
     let isExpired = false;
@@ -14,7 +23,7 @@ export default function middleware(request: NextRequest) {
     /*if (pathname === "/home" || pathname === "/trang-chu") {
         return NextResponse.redirect(new URL("/", request.url));
     }
-
+ 
     // Các route public không cần token
     const publicPaths = ["/login", "/register", "/", "/product", "/:slug.html"];
     if (publicPaths.some((path) => pathname.startsWith(path))) {
@@ -66,7 +75,6 @@ export default function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/login", request.url));
         }
     }
-
     return NextResponse.next();
 }
 export const config = {
