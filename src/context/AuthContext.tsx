@@ -102,23 +102,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // const [loading, setLoading] = useState(true);
     // ✅ Tự động khôi phục user khi Provider mount 
     // const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
-    useEffect(() => {
-        const fetchMe = async () => {
-            try {
-                const res = await fetch(`/api/auth/me`,
-                    { credentials: "include" });
-                if (res.ok) {
-                    const data = await res.json();
-                    const userObj = data.user || data.data?.user;
-                    if (userObj) {
-                        setUser(userObj);
-                        console.log("👉 User restored from /api/auth/me:", userObj);
+    if (user) {
+        useEffect(() => {
+            const fetchMe = async () => {
+                try {
+                    const res = await fetch(`/api/auth/me`,
+                        { credentials: "include" });
+                    if (res.ok) {
+                        const data = await res.json();
+                        const userObj = data.user || data.data?.user;
+                        if (userObj) {
+                            setUser(userObj);
+                            console.log("👉 User restored from /api/auth/me:", userObj);
+                        }
                     }
-                }
-            } catch (err) { console.error("❌ Error restoring user:", err); }
-        };
-        fetchMe();
-    }, []);
+                } catch (err) { console.error("❌ Error restoring user:", err); }
+            };
+            fetchMe();
+        }, []);
+    }
     console.log("👉 AuthContext Ngoài login");
     const login = async (email: string, password: string) => {
         // console.log("AuthContext Bắt đầu login...");
