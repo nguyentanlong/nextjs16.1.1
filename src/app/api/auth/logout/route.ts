@@ -44,7 +44,7 @@ export async function POST(req: Request) {
         refreshToken = cookies["refreshToken"];
     }
 
-    console.log("👉 RefreshToken logut:", refreshToken);
+    // console.log("👉 RefreshToken logut:", refreshToken);
 
     // Gọi backend logout với refreshToken
     const res = await fetch(`${API_BASE}/auth/logout`, {

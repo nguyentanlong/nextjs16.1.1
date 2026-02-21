@@ -87,6 +87,7 @@ export default function RootLayout({ children }: {
           <Script src="./script-alt.js" strategy="afterInteractive" />
           <Script src="./product-script.js" strategy="afterInteractive" />
           <Script src="/script-login.js" strategy="afterInteractive" />
+          {/* <script src="/tinymce/tinymce.min.js"></script> */}
         </>
       </body>
     </html>

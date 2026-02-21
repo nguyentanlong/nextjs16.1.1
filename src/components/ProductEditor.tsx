@@ -79,16 +79,15 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
                 <Editor
                     apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} // cần đăng ký API key miễn phí
                     value={product.description}
-                    tinymceScriptSrc={tinymceCDN}
+                    tinymceScriptSrc={tinymceCDN}//"https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.0/tinymce.min.js"
                     init={{
                         height: 500,
                         menubar: true,
-                        //base_url: "/tinymce", // nơi chứa plugins, skins, themes//
-                        base_url: `https://cdn.tiny.cloud/1/${process.env.NEXT_PUBLIC_TINYMCE_API_KEY}/tinymce/6`,
-                        plugins: [
-                            "advlist autolink lists link image media charmap print preview anchor",
-                            "searchreplace visualblocks code fullscreen",
-                            "insertdatetime table paste help wordcount emoticons", "image"],
+                        // base_url: "/tinymce", // nơi chứa plugins, skins, themes//
+                        base_url: `https://cdn.tiny.cloud/1/${process.env.NEXT_PUBLIC_TINYMCE_API_KEY}/tinymce/6`,//"https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.0/",
+                        plugins: "advlist autolink lists link image media charmap print preview anchor " +
+                            "searchreplace visualblocks code fullscreen " +
+                            "insertdatetime table paste help wordcount emoticons",
                         toolbar: "undo redo | formatselect | bold italic underline forecolor backcolor | " +
                             "alignleft aligncenter alignright alignjustify | " +
                             "bullist numlist outdent indent | link image media | " +

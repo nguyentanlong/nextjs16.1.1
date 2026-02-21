@@ -21,7 +21,7 @@ const csp = `
 `.replace(/\s{2,}/g, ' ').trim();
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,// true khi build
   poweredByHeader: false, // Ẩn header X-Powered-By để giảm fingerprinting
   async headers() {
     return [

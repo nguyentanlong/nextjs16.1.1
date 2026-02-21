@@ -10,15 +10,15 @@ export default function AdminSidebar() {
     const { user } = useAuth();
     // if (loading) return <div>Loading...</div>;
     // const { user } = useContext(AuthContext);
-    console.log("👉 User from context in AdminSidebar:", user);
+    // console.log("👉 User from context in AdminSidebar:", user);
 
     const isAdmin = user?.role === "admin";
     const isStaff = user?.role === "staff";
     const isAdminOrStaff = isAdmin || isStaff;
 
     // const isUser = user?.role === "user";
-    console.log("👉 User role in AdminSidebar:", user?.role);
-    console.log("👉 isAdmin:", isAdmin, "isStaff:", isStaff, "isAdminOrStaff:", isAdminOrStaff);
+    // console.log("👉 User role in AdminSidebar:", user?.role);
+    // console.log("👉 isAdmin:", isAdmin, "isStaff:", isStaff, "isAdminOrStaff:", isAdminOrStaff);
 
     return (<>
         <aside
