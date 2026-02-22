@@ -104,19 +104,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
     useEffect(() => {
         const fetchMe = async () => {
-            // if (!user) return;
-            // try {
-            const res = await fetch(`/api/auth/me`,
-                { credentials: "include", });// bắt buộc để gửi cookie  
-            if (res.ok) {
+            /*const cookieHeader = document.cookie || "";
+            const token = cookieHeader
+                .split(";")
+                .find((c) => c.trim().startsWith("accessToken="))
+                ?.split("=")[1];
+
+            if (!token) {
+                console.error("No token found");
+                return null;
+            }*/
+            try {
+                const res = await fetch(`/api/auth/me`, {
+                    /*headers: {
+                        Authorization: `Bearer ${token}`,
+                    },*/
+                    credentials: "include",
+                });
+
+                if (!res.ok) {
+                    console.error("AuthContext Profile fetch failed", res.status);
+                    return;
+                }
                 const data = await res.json();
-                console.log("👉 AuthContext data User restored:", data.user);
-                console.log("👉 AuthContext data.data User restored:", data.data.user);
+                console.log("👉 AuthContext restored user:", data.user);
+                console.log("👉 Debug token:", data.debugToken);
                 setUser(data.user);
+            } catch (err) {
+                console.error("❌ Error restoring user:", err);
             }
-            else { console.log("❌ Không khôi phục được user:", res.status); }
-            /*} catch (err) { console.error("❌ Error restoring user:", err); }*/
         };
+
         fetchMe();
     }, []);
     console.log("👉 AuthContext Ngoài login");
