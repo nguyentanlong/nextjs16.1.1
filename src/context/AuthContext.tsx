@@ -86,7 +86,7 @@ interface AuthContextType {
     user: User | null;
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
-    // loading: boolean;
+    loading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -99,9 +99,11 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
     // const [loading, setLoading] = useState(true);
     // ✅ Tự động khôi phục user khi Provider mount 
     // const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
+    console.log("AuthContext flag bắt đầu:   ", loading);
     useEffect(() => {
         const fetchMe = async () => {
             /*const cookieHeader = document.cookie || "";
@@ -119,24 +121,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     /*headers: {
                         Authorization: `Bearer ${token}`,
                     },*/
+                    method: "GET",
                     credentials: "include",
                 });
 
-                if (!res.ok) {
+                /*if (!res.ok) {
                     console.error("AuthContext Profile fetch failed", res.status);
                     return;
-                }
+                }*/
                 const data = await res.json();
                 console.log("👉 AuthContext restored user:", data.user);
                 console.log("👉 Debug token:", data.debugToken);
                 setUser(data.user);
             } catch (err) {
                 console.error("❌ Error restoring user:", err);
-            }
+            } finally { setLoading(false); }
         };
-
         fetchMe();
     }, []);
+    console.log("AuthContext flag kết thúc:   ", loading);
     console.log("👉 AuthContext Ngoài login");
     const login = async (email: string, password: string) => {
         // console.log("AuthContext Bắt đầu login...");
@@ -169,7 +172,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // console.log("👉 AuthContext User set in context (data.data.user):", data.data.user);
             setUser(data.data.user);
 
-        } catch (err) { console.error("❌ Login error:", err); }
+        } catch (err) {
+            console.error("❌ Login error:", err);
+        } finally { setLoading(false); }
     };
 
     const logout = async () => {
@@ -183,7 +188,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, }}>
+        <AuthContext.Provider value={{ user, login, logout, loading, }}>
             {children}
         </AuthContext.Provider>
     );

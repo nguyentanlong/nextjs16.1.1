@@ -7,11 +7,26 @@ import '../app/admin/nucleo-svg.css';
 // import { useContext } from "react";
 
 export default function AdminSidebar() {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     // if (loading) return <div>Loading...</div>;
     // const { user } = useContext(AuthContext);
     // console.log("👉 User from context in AdminSidebar:", user);
-
+    // Nếu đang loading, hiển thị trạng thái chờ 
+    console.log("AdminSidebar user bắt đầu:   ", user);
+    console.log("AdminSidebar loadding bắt đầu:   ", loading);
+    if (loading) {
+        return (
+            <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2">
+                <div>Đang tải thông tin người dùng...</div>
+            </aside>);
+    }
+    // Nếu không có user (chưa login), có thể ẩn sidebar hoặc báo lỗi 
+    if (!user) {
+        return (
+            <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2">
+                <div>Bạn chưa đăng nhập</div>
+            </aside>);
+    }
     const isAdmin = user?.role === "admin";
     const isStaff = user?.role === "staff";
     const isAdminOrStaff = isAdmin || isStaff;

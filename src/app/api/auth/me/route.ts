@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+// import { cookies } from "next/headers";
 
 export async function GET(req: Request) {
     const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
@@ -6,6 +7,11 @@ export async function GET(req: Request) {
         // Lấy cookie từ request
         // console.log("api me link backend:  ", API_BASE);
         const cookieHeader = req.headers.get("cookie") || "";
+        // const cookieStore = await cookies();
+        // In ra toàn bộ cookie key-value 
+        // console.log("👉 CookieStore entries:");
+        // cookieStore.getAll().forEach(c => { console.log(`- ${c.name}: ${c.value}`); });
+        // const accessToken = cookieStore.get("accessToken")?.value;
         console.log("👉 api me CookieHeader:", cookieHeader);
 
         // Nếu token lưu trong cookie accessToken
@@ -27,10 +33,12 @@ export async function GET(req: Request) {
         console.log("userId trong api me:   ", userId);*/
         // Forward request sang backend kèm Authorization và cookie
         const res = await fetch(`${API_BASE}/auth/profile`, {//?id=${userId}
+            method: "GET",
             headers: {
                 // Authorization: `Bearer ${token}`,
                 // build nesjs mới thì bật cookie lên!
                 cookie: cookieHeader, // forward luôn cookie nếu backend dùng session
+                // cookie: `accessToken=${accessToken}`, // forward token rõ ràng
             },
             // credentials: 'include',
             cache: "no-store",
@@ -44,6 +52,7 @@ export async function GET(req: Request) {
 
         const data = await res.json();
         console.log("Api me data", data);
+        console.log("👉 api me Debug token:", data.debugToken);
         return NextResponse.json({ user: data.user, debugToken: data.debugToken });//user:data
     } catch (err) {
         console.error("❌ Error in /api/auth/me:", err);
