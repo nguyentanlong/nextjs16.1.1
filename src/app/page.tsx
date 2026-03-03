@@ -10,7 +10,6 @@ import ReBanner from '@/components/ReBanner';
 import { fetchProducts } from '@/lib/api';
 import Footer from '@/components/Footer';
 import HomeNavbar from '@/components/HomeNavbar';
-import ProductEditorClient from './ProductEditorClient';
 
 
 export default async function HomePage() {
@@ -24,7 +23,6 @@ export default async function HomePage() {
       <Category />
       <PopularCategory />
       <ProductsHome products={products} />
-      <ProductEditorClient />
       <ReBanner />
       <Footer />
     </main>

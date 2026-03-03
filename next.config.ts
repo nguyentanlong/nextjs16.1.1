@@ -10,16 +10,22 @@ const securityHeaders = [
 ];
 
 // Content Security Policy—giới hạn nguồn tài nguyên được phép tải
-const csp = `
-  default-src 'self';
+const csp = `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tiny.cloud https://*.tinymce.com; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://*.tinymce.com; img-src 'self' blob: data: https: https://cdn.tiny.cloud https://*.tinymce.com; font-src 'self' https: https://cdn.tiny.cloud https://*.tinymce.com; connect-src 'self' https://api.tonkliplock1000.com https://cdn.tiny.cloud https://*.tinymce.com blob:; media-src 'self' blob: data: https:; frame-ancestors 'self';
+`.replace(/\s{2,}/g, ' ').trim();
+/*default-src 'self';
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tiny.cloud https://*.tinymce.com;
+              style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://*.tinymce.com;
+              img-src 'self' blob: data: https: https://cdn.tiny.cloud https://*.tinymce.com;
+              font-src 'self' https: https://cdn.tiny.cloud https://*.tinymce.com;
+              connect-src 'self' https://api.tonkliplock1000.com https://cdn.tiny.cloud https://*.tinymce.com 
+              media-src 'self' blob: data: https:; frame-ancestors 'self';*/
+/* default-src 'self';
   script-src 'self' 'unsafe-inline' 'unsafe-eval';
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: https:;
   font-src 'self' https:;
   connect-src 'self' https://api.tonkliplock1000.com;
-  frame-ancestors 'self';
-`.replace(/\s{2,}/g, ' ').trim();
-
+  frame-ancestors 'self'*/
 const nextConfig: NextConfig = {
   reactStrictMode: false,// true khi build
   poweredByHeader: false, // Ẩn header X-Powered-By để giảm fingerprinting

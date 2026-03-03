@@ -1530,3 +1530,64 @@ nav ul li a:hover {
     display: none;
   }
 }
+
+/* them san pham */
+/* Ẩn mũi tên trên Chrome, Safari, Edge */
+.formaddproduct input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ẩn mũi tên trên Firefox */
+.formaddproduct input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.formaddproduct {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+label {
+  display: block;
+}
+
+.formaddproduct input[type=text],
+input[type=number],
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  box-sizing: border-box;
+}
+
+.otimizeselect {
+  max-height: 10rem;
+}
+
+select {
+  max-height: 20px;
+  /* giới hạn chiều cao */
+  overflow-y: auto;
+  /* bật thanh cuộn */
+}
+
+.formaddproduct button[type=submit] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.formaddproduct input[type=submit]:hover {
+  background-color: #45a049;
+}

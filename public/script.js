@@ -91,14 +91,14 @@ function initCarousel(carousel) {
 document
   .querySelectorAll(".categories-carousel, .shops-carousel")
   .forEach(initCarousel);
-console.log("Custom script loaded!");
+// console.log("Custom script loaded!");
 // });
 //navbar
 const mobileNav = document.querySelector(".hamburger");
 const navbar = document.querySelector(".menubar");
 
 if (!mobileNav && !navbar) {
-  console.log("không phải giao diện điện thoại");
+  // console.log("không phải giao diện điện thoại");
 }
 
 if (mobileNav && navbar) {

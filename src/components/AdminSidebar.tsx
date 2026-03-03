@@ -4,6 +4,7 @@ import '../app/admin/font-css.css';
 import '../app/admin/material-dashboard.css';
 import '../app/admin/nucleo-icons.css';
 import '../app/admin/nucleo-svg.css';
+import Link from "next/link";
 // import { useContext } from "react";
 
 export default function AdminSidebar() {
@@ -12,8 +13,8 @@ export default function AdminSidebar() {
     // const { user } = useContext(AuthContext);
     // console.log("👉 User from context in AdminSidebar:", user);
     // Nếu đang loading, hiển thị trạng thái chờ 
-    console.log("AdminSidebar user bắt đầu:   ", user);
-    console.log("AdminSidebar loadding bắt đầu:   ", loading);
+    // console.log("AdminSidebar user bắt đầu:   ", user);
+    // console.log("AdminSidebar loadding bắt đầu:   ", loading);
     if (loading) {
         return (
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2">
@@ -34,6 +35,8 @@ export default function AdminSidebar() {
     // const isUser = user?.role === "user";
     // console.log("👉 User role in AdminSidebar:", user?.role);
     // console.log("👉 isAdmin:", isAdmin, "isStaff:", isStaff, "isAdminOrStaff:", isAdminOrStaff);
+    const linkHref = isAdminOrStaff ? "/product-editor-client" : "/comments";
+    const linkText = isAdminOrStaff ? "Danh mục" : "Lượt comment";
 
     return (<>
         <aside
@@ -77,10 +80,11 @@ export default function AdminSidebar() {
                         </a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link text-dark" href="../pages/tables.html">
+                        <Link className="nav-link text-dark"
+                            href={linkHref}>
                             <i className="material-symbols-rounded opacity-5">table_view</i>
-                            <span className="nav-link-text ms-1">{(isAdminOrStaff) ? "Danh mục" : "Lượt comment"}</span>
-                        </a>
+                            <span className="nav-link-text ms-1">{linkText}</span>
+                        </Link>
                     </li>
                     <li className="nav-item">
                         <a className="nav-link text-dark" href="../pages/billing.html">

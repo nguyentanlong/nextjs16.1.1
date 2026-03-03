@@ -12,7 +12,7 @@ export async function GET(req: Request) {
         // console.log("👉 CookieStore entries:");
         // cookieStore.getAll().forEach(c => { console.log(`- ${c.name}: ${c.value}`); });
         // const accessToken = cookieStore.get("accessToken")?.value;
-        console.log("👉 api me CookieHeader:", cookieHeader);
+        // console.log("👉 api me CookieHeader:", cookieHeader);
 
         // Nếu token lưu trong cookie accessToken
         /*const token = cookieHeader
@@ -33,7 +33,6 @@ export async function GET(req: Request) {
         console.log("userId trong api me:   ", userId);*/
         // Forward request sang backend kèm Authorization và cookie
         const res = await fetch(`${API_BASE}/auth/profile`, {//?id=${userId}
-            method: "GET",
             headers: {
                 // Authorization: `Bearer ${token}`,
                 // build nesjs mới thì bật cookie lên!
@@ -52,8 +51,8 @@ export async function GET(req: Request) {
 
         const data = await res.json();
         console.log("Api me data", data);
-        console.log("👉 api me Debug token:", data.debugToken);
-        return NextResponse.json({ user: data.user, debugToken: data.debugToken });//user:data
+        // console.log("👉 api me Debug token:", data.debugToken);
+        return NextResponse.json({ user: data.user });//user:data
     } catch (err) {
         console.error("❌ Error in /api/auth/me:", err);
         return NextResponse.json({ error: "Server error" }, { status: 500 });
