@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     // Tạo response và set cookie bảo mật
     const response = NextResponse.json({ data });//user: data.user hoặc là data
     // console.log("kết quả Respone:  ", response);
-    // console.log("kết quả Data:  ", data);
+    console.log("kết quả api login Data:  ", data);
     //forwward cookie
     // if (setCookie) { response.headers.set("set-cookie", setCookie); } 
     //đoạn trên chỉ láy accessToken 

@@ -1,45 +1,3 @@
-// src/app/login/page.tsx
-/*"use client";
-import { useAuth } from "@/context/AuthContext";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-export default function LoginPage() {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const router = useRouter();
-    const { login } = useAuth(); // lấy hàm login từ AuthContext
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
-        const formData = new FormData(e.currentTarget);
-        const email = formData.get("email");
-        const password = formData.get("password");
-        try {
-            const res = await fetch(`/api/auth/login`,
-                {
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password }),
-                });
-            if (!res.ok) { throw new Error("Sai tài khoản hoặc mật khẩu"); }
-            const data = await res.json();
-            // Lưu token vào cookie (client-side demo) 
-            // document.cookie = `authToken=${data.accessToken}; path=/;`;
-            // SetCookie: authToken=`${data.accessToken}; path=/;`; HttpOnly; Secure; SameSite=Strict
-            // Redirect sang account 
-            // window.location.href = "/admin";
-            router.push("/admin");
-
-        }
-        catch (err: any) {
-            setError(err.message);
-        }
-        finally { setLoading(false); }
-    }*/
 "use client";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -52,7 +10,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    async function handleSubmit(e: React.FormEvent) {
+    async function handleSubmitLogin(e: React.FormEvent) {
         e.preventDefault();
         // if (loading) return; // chặn double click 
         // setLoading(true);
@@ -70,7 +28,7 @@ export default function LoginPage() {
                     <h2>Xin Chào!!</h2>
                     <p>Đăng nhập tài khoản</p>
                 </div>
-                <form className="login-form" id="loginForm" onSubmit={handleSubmit}>
+                <form className="login-form" id="loginForm" onSubmit={handleSubmitLogin}>
                     <div className="form-group">
                         <div className="input-wrapper">
                             <input

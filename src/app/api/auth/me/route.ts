@@ -50,7 +50,7 @@ export async function GET(req: Request) {
         }*/
 
         const data = await res.json();
-        console.log("Api me data", data);
+        console.log("Api me data", data.user);
         // console.log("👉 api me Debug token:", data.debugToken);
         return NextResponse.json({ user: data.user });//user:data
     } catch (err) {

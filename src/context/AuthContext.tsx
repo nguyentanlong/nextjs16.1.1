@@ -199,8 +199,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const resME = await fetch(`/api/auth/me`, { credentials: "include" });
             if (!resME.ok) throw new Error("Không lấy được thông tin user");
 
-            // const dataME = await resME.json();
-            // console.log("dataMe  ", dataME);
+            const dataME = await resME.json();
+            console.log("dataMe  ", dataME);
             const data = await res.json();
             // localStorage.setItem("user", JSON.stringify(user));
             // console.log("data.data.user  ", data.data.user);
