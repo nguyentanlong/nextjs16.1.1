@@ -70,26 +70,43 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
         formData.append("shortDescription", product.shortDescription);
         formData.append("description", product.description);
         // keywords là mảng → stringify để backend parse 
-        formData.append("keywords", JSON.stringify(product.keywords));
+        // formData.append("keywords", JSON.stringify(product.keywords));
+        product.keywords.forEach(k => {
+            formData.append("keywords", k);
+        });
+
         const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
         if (fileInput?.files) {
             for (const file of fileInput.files) {
                 formData.append("files", file);
             }
         }
+        // Log tất cả key/value trong FormData 
+        for (const [key, value] of formData.entries()) {
+            console.log("FormData:", key, value);
+        }
         const res = await fetch("/api/products", {
             method: "POST",
+            // headers: { Authorization: `Bearer ${token}` },
             body: formData,
             credentials: "include",
         });
+        console.log("Response status:", res.status);
+        const text = await res.text();
+        console.log("Response raw body:", text);
+        try {
+            const data = JSON.parse(text);
+            console.log("Parsed JSON:", data);
+        }
+        catch { console.log("Response is not JSON"); }
         if (res.ok) {
             const data = await res.json();
             console.log("✅ Product created:", data);
             alert("Thêm sản phẩm thành công!");
         }
         else {
-            const err = await res.json();
-            console.error("❌ Error:", err);
+            // const err = await res.json();
+            // console.error("❌ Error:", err);
             alert("Có lỗi khi thêm sản phẩm");
         }
     };
