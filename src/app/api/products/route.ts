@@ -1,35 +1,38 @@
 import { NextResponse } from "next/server";
-// import jwt, { JwtPayload } from "jsonwebtoken";
-// import type { NextRequest } from "next/server";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
 
 export async function POST(req: Request) {
-    const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
-    // const cookieHeader = req.headers.get("cookie") || "";
-    // const token = localStorage.getItem("accessToken"); // token đã lưu khi login
-    // const token = request.cookies.get("accessToken")?.value;
-    const token = req.headers.get("authorization"); // lấy từ request gốc
-    // const formData = await req.formData(); // vì backend dùng FilesInterceptor nên phải gửi multipart/form-data
-
     try {
+        // lấy accessToken từ request browser
+        const authorization = req.headers.get("authorization");
+        console.log("authorization trong api/products:  ", authorization);
         const res = await fetch(`${API_BASE}/addProduct`, {
             method: "POST",
             headers: {
-                // cookie: cookieHeader, // forward cookie để backend kiểm tra jwt + role
-                // "Content-Type": "application/json", //"Authorization":
-                // `Bearer ${token}`, // thêm dòng này
-                "Content-Type": req.headers.get("content-type") || "",
-                "Authorization": token ?? "",
+                ...(authorization ? { Authorization: authorization } : {})
+                // Authorization: authorization ?? "",
+                // forward nguyên content-type để giữ boundary
+                // "Content-Type": req.headers.get("content-type") || "",
             },
-            body: req.body, // ⭐ QUAN TRỌNG NHẤT
+            body: req.body, // ⭐ forward stream
             duplex: "half",
-        } as any);
-        // cache: "no-store",
-        // });
+        } as RequestInit & { duplex: "half" });
 
-        const data = await res.json();
-        return NextResponse.json(data, { status: res.status });
+        const text = await res.text();
+        console.log("text trong api products: ", text);
+        return new NextResponse(text, {
+            status: res.status,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
     } catch (err) {
-        console.error("❌ Error creating product:", err);
-        return NextResponse.json({ error: "Server error" }, { status: 500 });
+        console.error("Proxy error:", err);
+
+        return NextResponse.json(
+            { message: "Proxy server error" },
+            { status: 500 }
+        );
     }
 }

@@ -26,8 +26,20 @@ interface ProductEditorProps {
 }
 
 export default function ProductEditor({ initialProduct, onSave }: ProductEditorProps) {
-    const [product, setProduct] = useState<Product>(
-        initialProduct || { productName: "", price: 0, subCategoryId: undefined, shortDescription: "", description: "", keywords: [] }
+    const [product, setProduct] = useState<Product>(() =>
+        initialProduct ?? {
+            productName: "",
+            price: 0,
+            subCategoryId: undefined,
+            shortDescription: "",
+            description: "",
+            keywords: [],
+            files: []
+        }
+    );
+    const token = localStorage.getItem("accessToken");
+    const [keywordInput, setKeywordInput] = useState(
+        (initialProduct?.keywords || []).join(", ")
     );
     const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
     // Fetch subcategories khi mount 
@@ -71,8 +83,13 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
         formData.append("description", product.description);
         // keywords là mảng → stringify để backend parse 
         // formData.append("keywords", JSON.stringify(product.keywords));
+        /*product.keywords.forEach(k => {
+            formData.append("keywords", k.trim());
+        });*/
         product.keywords.forEach(k => {
-            formData.append("keywords", k);
+            if (k.trim()) {
+                formData.append("keywords", k.trim());
+            }
         });
 
         const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
@@ -87,18 +104,18 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
         }
         const res = await fetch("/api/products", {
             method: "POST",
-            // headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}` },
             body: formData,
             credentials: "include",
         });
-        console.log("Response status:", res.status);
-        const text = await res.text();
-        console.log("Response raw body:", text);
-        try {
-            const data = JSON.parse(text);
-            console.log("Parsed JSON:", data);
-        }
-        catch { console.log("Response is not JSON"); }
+        console.log("AccessToken in ProductEditor:", token);
+        // const text = await res.text();
+        // console.log("Response raw body:", text);
+        // try {
+        //     const data = JSON.parse(text);
+        //     console.log("Parsed JSON:", data);
+        // }
+        // catch { console.log("Response is not JSON"); }
         if (res.ok) {
             const data = await res.json();
             console.log("✅ Product created:", data);
@@ -216,11 +233,21 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
             {/* key word */}
             <div>
                 <label className="block font-medium">Keywords</label>
-                <input type="text"
-                    placeholder="Nhập từ khóa, cách nhau bởi dấu phẩy"
-                    value={product.keywords.join(", ")}
-                    onChange={(e) => handleChange("keywords", e.target.value.split(",").map(k => k.trim()))}
-                    className="border rounded px-2 py-1 w-full" />
+                <input type="text" placeholder='Nhập: "từ khóa 1", "từ khóa 2"'
+                    value={keywordInput}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setKeywordInput(value);
+                        // convert sang array nhưng KHÔNG phá input
+                        const arr = value
+                            .split(",")
+                            .map(k => k.trim())
+                            .filter(Boolean);
+
+                        handleChange("keywords", arr);
+                    }}
+                    className="border rounded px-2 py-1 w-full"
+                />
             </div>
             {/* short description */}
             <div>
