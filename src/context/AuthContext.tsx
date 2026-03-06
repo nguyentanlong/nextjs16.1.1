@@ -167,6 +167,7 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
     loading: boolean;
+    accessToken: string | null;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -174,6 +175,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [accessToken, setAccessToken] = useState<string | null>(null);
 
     // Khôi phục user từ localStorage khi mount
     useEffect(() => {
@@ -183,6 +185,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         setLoading(false);
     }, []);
+
+    /* useEffect(() => {
+         async function restoreUser() {
+             try {
+                 const res = await fetch("/api/auth/me", {
+                     method: "GET",
+                     credentials: "include",
+                 });
+ 
+                 if (!res.ok) {
+                     setUser(null);
+                     return;
+                 }
+ 
+                 const data = await res.json();
+                 setUser(data.data.user);
+ 
+             } catch (err) {
+                 console.error("restore user error", err);
+             } finally {
+                 setLoading(false);
+             }
+         }
+ 
+         restoreUser();
+     }, []);*/
 
     const login = async (email: string, password: string) => {
         try {
@@ -199,12 +227,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const resME = await fetch(`/api/auth/me`, { credentials: "include" });
             if (!resME.ok) throw new Error("Không lấy được thông tin user");
 
-            const dataME = await resME.json();
-            console.log("dataMe  ", dataME);
+            // const dataME = await resME.json();
+            // console.log("dataMe  ", dataME);
             const data = await res.json();
             // localStorage.setItem("user", JSON.stringify(user));
             // console.log("data.data.user  ", data.data.user);
+            console.log("data AuthContext  ", data);
             setUser(data.data.user);
+            setAccessToken(data.data.accessToken);
             localStorage.setItem("user", JSON.stringify(data.data.user)); // ✅ lưu đúng user
         } catch (err) {
             console.error("❌ Login error:", err);
@@ -215,12 +245,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const logout = async () => {
         await fetch(`/api/auth/logout`, { method: "POST", credentials: "include" });
+        setAccessToken(null); // ✅ clear token khi logout
         localStorage.removeItem("user");
         setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, logout, loading, accessToken }}>
             {children}
         </AuthContext.Provider>
     );

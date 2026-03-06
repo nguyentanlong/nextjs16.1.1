@@ -7,6 +7,8 @@ export async function POST(req: Request) {
         // lấy accessToken từ request browser
         const authorization = req.headers.get("authorization");
         console.log("authorization trong api/products:  ", authorization);
+        // Đọc formData từ request
+        const formData = await req.formData();
         const res = await fetch(`${API_BASE}/addProduct`, {
             method: "POST",
             headers: {
@@ -15,12 +17,13 @@ export async function POST(req: Request) {
                 // forward nguyên content-type để giữ boundary
                 // "Content-Type": req.headers.get("content-type") || "",
             },
-            body: req.body, // ⭐ forward stream
+            body: formData,//req.body, // ⭐ forward stream
             duplex: "half",
         } as RequestInit & { duplex: "half" });
 
         const text = await res.text();
         console.log("text trong api products: ", text);
+        console.log("content-type:", req.headers.get("content-type"));
         return new NextResponse(text, {
             status: res.status,
             headers: {

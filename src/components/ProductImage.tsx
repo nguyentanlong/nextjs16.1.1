@@ -10,21 +10,38 @@ interface ProductImagesProps {
 
 export default function ProductImages({ productName, media }: ProductImagesProps) {
     const [mainImg, setMainImg] = useState(media[0]);
-
+    // Lấy phần mở rộng để kiểm tra
+    const ext = mainImg?.split(".").pop()?.toLowerCase();
+    const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
     return (
 
         <div className="product-images">
             <div className="main-image">
-                <Image
+                {/*<Image
                     src={mainImg}
                     alt={productName}
                     id="main-img"
                     width={578}
                     height={578}
-                />
+                />*/}
+                {isVideo ? (
+                    <video
+                        src={mainImg}//.startsWith("/") ? mainImg : `/${mainImg}`
+                        controls
+                        width={578}
+                        height={578}
+                    />
+                ) : (
+                    <Image
+                        src={mainImg}//.startsWith("/") ? mainImg : `/${mainImg}`
+                        alt={productName}
+                        width={578}
+                        height={578}
+                    />
+                )}
             </div>
             <div className="thumbnail-list">
-                {media.map((img, i) => (
+                {/*media.map((img, i) => (
                     <Image
                         key={i}
                         src={img}
@@ -34,7 +51,29 @@ export default function ProductImages({ productName, media }: ProductImagesProps
                         className={`thumb ${img === mainImg ? "active" : ""}`}
                         onClick={() => setMainImg(img)}
                     />
-                ))}
+                ))*/}
+                {media.map((m, idx) => {
+                    const extThumb = m.split(".").pop()?.toLowerCase();
+                    const isVideoThumb = ["mp4", "webm", "ogg"].includes(extThumb || "");
+                    return (
+                        <div key={idx} onClick={() => setMainImg(m)}>
+                            {isVideoThumb ? (
+                                <video
+                                    src={m}//.startsWith("/") ? m : `/${m}`
+                                    width={100}
+                                    height={100}
+                                />
+                            ) : (
+                                <Image
+                                    src={m}//.startsWith("/") ? m : `/${m}`
+                                    alt={`${productName}-${idx}`}
+                                    width={100}
+                                    height={100}
+                                />
+                            )}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

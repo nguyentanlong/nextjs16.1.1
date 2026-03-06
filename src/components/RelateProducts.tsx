@@ -48,28 +48,90 @@ export default function RelatedProducts({ subCategoryId, products }: RelatedProd
         setIndex((prev) => (prev > 0 ? prev - 1 : items - visible));
     };
 
+    // return (
+    //     <div className="related-products">
+    //         <h2>Sản phẩm cùng danh mục</h2>
+    //         <div className="related-carousel">
+    //             <div className="carousel-track" ref={trackRef}>
+    //                 {products.map((p, i) => (
+    //                     <Link key={p.id} href={`/${slugifyProduct(p.productName)}`}>
+    //                         <div className="related-card">
+    //                             <Image
+    //                                 src={p.media[0]}
+    //                                 alt={`Sản phẩm liên quan ${i}`}
+    //                                 width={100}
+    //                                 height={100}
+    //                             />
+    //                             <h4>{p.productName}</h4>
+    //                             <p className="price">{Number(p.price).toLocaleString("vi-VN")} ₫</p>
+    //                         </div>
+    //                     </Link>
+    //                 ))}
+    //             </div>
+    //             <button className="carousel-prev" onClick={handlePrev}>&lt;</button>
+    //             <button className="carousel-next" onClick={handleNext}>{">"}</button>
+    //             <span
+    //                 style={{
+    //                     display: "flex",
+    //                     justifyContent: "end",
+    //                     color: "orange",
+    //                     paddingTop: 15,
+    //                 }}
+    //             >
+    //                 Xem Tất cả
+    //             </span>
+    //         </div>
+
+    //     </div>
+    // );
     return (
         <div className="related-products">
             <h2>Sản phẩm cùng danh mục</h2>
             <div className="related-carousel">
                 <div className="carousel-track" ref={trackRef}>
-                    {products.map((p, i) => (
-                        <Link key={p.id} href={`/${slugifyProduct(p.productName)}`}>
-                            <div className="related-card">
-                                <Image
-                                    src={p.media[0]}
-                                    alt={`Sản phẩm liên quan ${i}`}
-                                    width={100}
-                                    height={100}
-                                />
-                                <h4>{p.productName}</h4>
-                                <p className="price">{Number(p.price).toLocaleString("vi-VN")} ₫</p>
-                            </div>
-                        </Link>
-                    ))}
+                    {products.map((p, i) => {
+                        const src = p.media && p.media.length > 0 ? p.media[0] : null;
+                        const ext = src?.split(".").pop()?.toLowerCase();
+                        const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
+
+                        return (
+                            <Link key={p.id} href={`/${slugifyProduct(p.productName)}`}>
+                                <div className="related-card">
+                                    {src ? (
+                                        isVideo ? (
+                                            <video
+                                                src={p.media[0]}//.startsWith("/") ? src : `/${src}`
+                                                controls
+                                                width={100}
+                                                height={100}
+                                            />
+                                        ) : (
+                                            <Image
+                                                src={p.media[0]}//src.startsWith("/") ? src : `/${src}`
+                                                alt={`Sản phẩm liên quan ${i}`}
+                                                width={100}
+                                                height={100}
+                                            />
+                                        )
+                                    ) : (
+                                        <div className="placeholder" />
+                                    )}
+
+                                    <h4>{p.productName}</h4>
+                                    <p className="price">
+                                        {Number(p.price).toLocaleString("vi-VN")} ₫
+                                    </p>
+                                </div>
+                            </Link>
+                        );
+                    })}
                 </div>
-                <button className="carousel-prev" onClick={handlePrev}>&lt;</button>
-                <button className="carousel-next" onClick={handleNext}>{">"}</button>
+                <button className="carousel-prev" onClick={handlePrev}>
+                    &lt;
+                </button>
+                <button className="carousel-next" onClick={handleNext}>
+                    {">"}
+                </button>
                 <span
                     style={{
                         display: "flex",
@@ -81,7 +143,7 @@ export default function RelatedProducts({ subCategoryId, products }: RelatedProd
                     Xem Tất cả
                 </span>
             </div>
-
         </div>
     );
+
 }

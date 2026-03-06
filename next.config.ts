@@ -29,6 +29,7 @@ const csp = `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'
 const nextConfig: NextConfig = {
   reactStrictMode: false,// true khi build
   poweredByHeader: false, // Ẩn header X-Powered-By để giảm fingerprinting
+  // cacheComponents: true,
   async headers() {
     return [
       {
@@ -54,15 +55,23 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdn.jsdelivr.net' },
       { protocol: 'https', hostname: 'cameramattroi.com' },
+      // {
+      //   protocol: "https",
+      //   hostname: "api.tonkliplock1000.com",
+      //   pathname: "/mediaasset/**",
+      // },
     ],
   },
-  // next.config.js
-  // next.config.js
   async rewrites() {
     return [{
       source: "/api/:path*",
       destination: "https://api.tonkliplock1000.com/:path*",
-    },];
+    },
+    {
+      source: "/mediaasset/:path*",
+      destination: "https://api.tonkliplock1000.com/api/mediaasset/:path*",
+    },
+    ];
   },
 
 };

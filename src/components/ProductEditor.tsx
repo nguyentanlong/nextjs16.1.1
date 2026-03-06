@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 // import { Editor } from "@tinymce/tinymce-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { AuthContext } from "@/context/AuthContext";
 const Editor = dynamic(() => import("@tinymce/tinymce-react").then(mod => mod.Editor),
     { ssr: false, });
 
@@ -10,11 +11,12 @@ interface SubCategory { id: number; categoryName: string; }
 interface Product {
     id?: string;              // id là varchar(36)
     productName: string;      // ✅ đúng tên cột
-    price: number;            // decimal(10,2)
-    subCategoryId?: number;   // int
+    price: number | 2676;            // decimal(10,2)
+    subCategoryId?: number | 2;   // int
     shortDescription: string;
     description: string;      // text
     keywords: string[]; // ✅ mảng string
+    stock: number | 3;
     // có thể thêm shortDescription, keywords, stock… nếu cần
     files?: File[]; // ✅ thêm để lưu danh sách file
 }
@@ -29,15 +31,21 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
     const [product, setProduct] = useState<Product>(() =>
         initialProduct ?? {
             productName: "",
-            price: 0,
+            price: 2676,
             subCategoryId: undefined,
             shortDescription: "",
             description: "",
             keywords: [],
+            stock: 3,
             files: []
         }
     );
-    const token = localStorage.getItem("accessToken");
+    const auth = useContext(AuthContext);
+    if (!auth) {
+        throw new Error("AuthContext chưa được wrap bằng Provider");
+    }
+
+    const { accessToken } = auth;
     const [keywordInput, setKeywordInput] = useState(
         (initialProduct?.keywords || []).join(", ")
     );
@@ -74,18 +82,24 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
         e.preventDefault();
         // onSave(product);
         const formData = new FormData();
-        formData.append("productName", product.productName);
-        formData.append("price", product.price.toString());
+        formData.append("productName", product.productName ?? "từ nextjs");
+        formData.append("price", product.price.toString() ?? "2676");
         if (product.subCategoryId) {
-            formData.append("subCategoryId", product.subCategoryId.toString());
+            formData.append("subCategoryId", product.subCategoryId.toString() ?? "2");
         }
-        formData.append("shortDescription", product.shortDescription);
-        formData.append("description", product.description);
+        formData.append("shortDescription", product.shortDescription ?? "từ nextjs");
+        formData.append("description", product.description) ?? "từ nextjs";
         // keywords là mảng → stringify để backend parse 
         // formData.append("keywords", JSON.stringify(product.keywords));
         /*product.keywords.forEach(k => {
             formData.append("keywords", k.trim());
         });*/
+        formData.append("stock", product.stock?.toString() ?? "0"); // ✅ thêm dòng này
+        if (product.files && product.files.length > 0) {
+            product.files.forEach(file => {
+                formData.append("files", file); // ✅ đúng key cho Multer FilesInterceptor
+            });
+        }
         product.keywords.forEach(k => {
             if (k.trim()) {
                 formData.append("keywords", k.trim());
@@ -99,16 +113,17 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
             }
         }
         // Log tất cả key/value trong FormData 
-        for (const [key, value] of formData.entries()) {
+        /*for (const [key, value] of formData.entries()) {
             console.log("FormData:", key, value);
-        }
+        }*/
+
         const res = await fetch("/api/products", {
             method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${accessToken}` },
             body: formData,
             credentials: "include",
         });
-        console.log("AccessToken in ProductEditor:", token);
+        console.log("AccessToken in ProductEditor:", accessToken);
         // const text = await res.text();
         // console.log("Response raw body:", text);
         // try {
@@ -204,6 +219,17 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
                     placeholder="Ví dụ 1250000"
                     value={product.price === 0 ? "ví dụ: 1250000" : product.price}
                     onChange={(e) => handleChange("price", Number(e.target.value))}
+                    className="border rounded px-2 py-1 w-full"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block font-medium">Kho</label>
+                <input
+                    type="number"
+                    placeholder="5"
+                    value={product.price === 0 ? "5" : product.stock}
+                    onChange={(e) => handleChange("stock", Number(e.target.value))}
                     className="border rounded px-2 py-1 w-full"
                     required
                 />
