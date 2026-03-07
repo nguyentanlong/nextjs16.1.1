@@ -35,8 +35,8 @@ export default function ProductTabs({ description }: ProductTabsProps) {
 
             <div className="tab-content">
                 {activeTab === "desc" && (
-                    <div id="desc" className="tab-pane active">
-                        <p>{description}</p>
+                    <div id="desc" className="tab-pane active" dangerouslySetInnerHTML={{ __html: description }}>
+                        {/* <p>{description}</p> */}
                     </div>
                 )}
 

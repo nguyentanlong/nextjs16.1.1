@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { normalizeImage } from "@/lib/api";
 
 interface ProductImagesProps {
     productName: string;
@@ -26,14 +27,14 @@ export default function ProductImages({ productName, media }: ProductImagesProps
                 />*/}
                 {isVideo ? (
                     <video
-                        src={mainImg}//.startsWith("/") ? mainImg : `/${mainImg}`
+                        src={normalizeImage(mainImg)}//.startsWith("/") ? mainImg : `/${mainImg}`
                         controls
                         width={578}
                         height={578}
                     />
                 ) : (
                     <Image
-                        src={mainImg}//.startsWith("/") ? mainImg : `/${mainImg}`
+                        src={normalizeImage(mainImg)}//.startsWith("/") ? mainImg : `/${mainImg}`
                         alt={productName}
                         width={578}
                         height={578}
@@ -59,13 +60,13 @@ export default function ProductImages({ productName, media }: ProductImagesProps
                         <div key={idx} onClick={() => setMainImg(m)}>
                             {isVideoThumb ? (
                                 <video
-                                    src={m}//.startsWith("/") ? m : `/${m}`
+                                    src={normalizeImage(m)}//.startsWith("/") ? m : `/${m}`
                                     width={100}
                                     height={100}
                                 />
                             ) : (
                                 <Image
-                                    src={m}//.startsWith("/") ? m : `/${m}`
+                                    src={normalizeImage(m)}//.startsWith("/") ? m : `/${m}`
                                     alt={`${productName}-${idx}`}
                                     width={100}
                                     height={100}

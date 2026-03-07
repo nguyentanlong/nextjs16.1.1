@@ -1,4 +1,4 @@
-import { Product } from "@/lib/api";
+import { normalizeImage, Product } from "@/lib/api";
 import { slugifyProduct } from "@/lib/slugify";
 import Image from "next/image";
 import Link from "next/link"
@@ -38,10 +38,10 @@ export default function ProductsHome({ products }: { products: Product[] }) {
                                                 const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
 
                                                 return isVideo ? (
-                                                    <video src={src} controls width={100} height={90} />
+                                                    <video src={normalizeImage(src)} controls width={100} height={90} />
                                                 ) : (
                                                     <Image
-                                                        src={src}
+                                                        src={normalizeImage(src)}
                                                         alt={p.productName}
                                                         width={100}
                                                         height={90}

@@ -42,11 +42,11 @@ const nextConfig: NextConfig = {
     ];
   },
   // Cấu hình đa ngôn ngữ—routing theo locale
-  i18n: {
+  /*i18n: {
     locales: ['vi', 'en'],
     defaultLocale: 'vi',
     localeDetection: false,
-  },
+  },*/
   // Cho phép tải ảnh từ các domain cần thiết
   images: {
     domains: ['cameramattroi.com'], // 👈 thêm ảnh từ domain này

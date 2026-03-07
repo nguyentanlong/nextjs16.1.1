@@ -110,8 +110,8 @@ async function ProductDetail({ slug }: { slug: string }) {
                             </span>
                             <span className="discount">-20%</span>
                         </div>
-                        <div className="short-desc">
-                            <p>{product.shortDescription}</p>
+                        <div className="short-desc" dangerouslySetInnerHTML={{ __html: product.shortDescription }}>
+                            {/* <p>{product.shortDescription}</p> */}
                         </div>
                         <div className="actions">
                             <button className="btn-buy">Mua ngay</button>

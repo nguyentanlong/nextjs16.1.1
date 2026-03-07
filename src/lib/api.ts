@@ -124,3 +124,13 @@ export async function searchProduct(name: string) {
 // throw new Error("Không lấy được sản phẩm liên quan"); }
 // const data = await res.json();
 // return data.products as Product[]; }
+export function normalizeImage(image: string) {
+    const img = image.trim();
+    if (img.startsWith("http://") || img.startsWith("https://")) {
+        return img;
+    }
+    if (img.startsWith("/")) {
+        return img;
+    }
+    return `/${img}`;
+}

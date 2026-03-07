@@ -80,10 +80,7 @@ export default function RootLayout({ children }: {
           {/* Nội dung trang */}
           {/* <ProductsHome /> */}
           <AuthProvider>
-            <Header />
-            <HomeNavbar />
             <main>{children}</main>
-            <Footer />
           </AuthProvider>
           {/* <ProductGrid products={products} /> */}
 

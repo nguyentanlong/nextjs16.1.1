@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { AuthContext } from "@/context/AuthContext";
+import { ca } from "zod/locales";
 const Editor = dynamic(() => import("@tinymce/tinymce-react").then(mod => mod.Editor),
     { ssr: false, });
 
@@ -41,6 +42,7 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
         }
     );
     const auth = useContext(AuthContext);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     if (!auth) {
         throw new Error("AuthContext chưa được wrap bằng Provider");
     }
@@ -81,65 +83,71 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // onSave(product);
+        if (isSubmitting) return; // chặn double submit
+        setIsSubmitting(true);
         const formData = new FormData();
-        formData.append("productName", product.productName ?? "từ nextjs");
-        formData.append("price", product.price.toString() ?? "2676");
-        if (product.subCategoryId) {
-            formData.append("subCategoryId", product.subCategoryId.toString() ?? "2");
-        }
-        formData.append("shortDescription", product.shortDescription ?? "từ nextjs");
-        formData.append("description", product.description) ?? "từ nextjs";
-        // keywords là mảng → stringify để backend parse 
-        // formData.append("keywords", JSON.stringify(product.keywords));
-        /*product.keywords.forEach(k => {
-            formData.append("keywords", k.trim());
-        });*/
-        formData.append("stock", product.stock?.toString() ?? "0"); // ✅ thêm dòng này
-        if (product.files && product.files.length > 0) {
-            product.files.forEach(file => {
-                formData.append("files", file); // ✅ đúng key cho Multer FilesInterceptor
-            });
-        }
-        product.keywords.forEach(k => {
-            if (k.trim()) {
+        try {
+            formData.append("productName", product.productName ?? "từ nextjs");
+            formData.append("price", product.price.toString() ?? "2676");
+            if (product.subCategoryId) {
+                formData.append("subCategoryId", product.subCategoryId.toString() ?? "2");
+            }
+            formData.append("shortDescription", product.shortDescription ?? "từ nextjs");
+            formData.append("description", product.description) ?? "từ nextjs";
+            // keywords là mảng → stringify để backend parse 
+            // formData.append("keywords", JSON.stringify(product.keywords));
+            /*product.keywords.forEach(k => {
                 formData.append("keywords", k.trim());
+            });*/
+            formData.append("stock", product.stock?.toString() ?? "0"); // ✅ thêm dòng này
+            if (product.files && product.files.length > 0) {
+                product.files.forEach(file => {
+                    formData.append("files", file); // ✅ đúng key cho Multer FilesInterceptor
+                });
             }
-        });
+            product.keywords.forEach(k => {
+                if (k.trim()) {
+                    formData.append("keywords", k.trim());
+                }
+            });
 
-        const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
-        if (fileInput?.files) {
-            for (const file of fileInput.files) {
-                formData.append("files", file);
+            const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
+            if (fileInput?.files) {
+                for (const file of fileInput.files) {
+                    formData.append("files", file);
+                }
             }
-        }
-        // Log tất cả key/value trong FormData 
-        /*for (const [key, value] of formData.entries()) {
-            console.log("FormData:", key, value);
-        }*/
+            // Log tất cả key/value trong FormData 
+            /*for (const [key, value] of formData.entries()) {
+                console.log("FormData:", key, value);
+            }*/
 
-        const res = await fetch("/api/products", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${accessToken}` },
-            body: formData,
-            credentials: "include",
-        });
-        console.log("AccessToken in ProductEditor:", accessToken);
-        // const text = await res.text();
-        // console.log("Response raw body:", text);
-        // try {
-        //     const data = JSON.parse(text);
-        //     console.log("Parsed JSON:", data);
-        // }
-        // catch { console.log("Response is not JSON"); }
-        if (res.ok) {
-            const data = await res.json();
-            console.log("✅ Product created:", data);
-            alert("Thêm sản phẩm thành công!");
-        }
-        else {
-            // const err = await res.json();
-            // console.error("❌ Error:", err);
-            alert("Có lỗi khi thêm sản phẩm");
+            const res = await fetch("/api/products", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${accessToken}` },
+                body: formData,
+                credentials: "include",
+            });
+            // console.log("AccessToken in ProductEditor:", accessToken);
+            // const text = await res.text();
+            // console.log("Response raw body:", text);
+            // try {
+            //     const data = JSON.parse(text);
+            //     console.log("Parsed JSON:", data);
+            // }
+            // catch { console.log("Response is not JSON"); }
+            if (res.ok) {
+                const data = await res.json();
+                console.log("✅ Product created:", data);
+                alert("Thêm sản phẩm thành công!");
+            }
+            else {
+                // const err = await res.json();
+                // console.error("❌ Error:", err);
+                alert("Có lỗi khi thêm sản phẩm");
+            }
+        } finally {
+            setIsSubmitting(false);
         }
     };
     // const handleSave = (data: any) => { console.log("Saved product:", data); }
@@ -169,6 +177,8 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
                     className="border rounded px-2 py-1 w-full"
                     onChange={(e) => {
                         const files = e.target.files;
+                        const arr = files ? Array.from(files) : [];
+                        console.log("FILES:", arr.length)
                         if (files && files.length > 10) {
                             alert("Bạn chỉ được chọn tối đa 10 file!");
                             e.target.value = ""; return;
@@ -343,6 +353,8 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
                             "alignleft aligncenter alignright alignjustify | " +
                             "bullist numlist outdent indent | link image media | " +
                             "table charmap emoticons | removeformat | preview fullscreen help",
+                        // images_upload_url: 'https://api.tonkliplock1000.com/api/mediaasset',
+                        // automatic_uploads: true,
                         // Cho phép chọn ảnh từ local 
                         file_picker_types: "image",
                         /*file_picker_callback: (callback: (url: string, meta?: { alt?: string }) => void,

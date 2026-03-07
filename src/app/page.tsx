@@ -6,18 +6,23 @@ import PopularCategory from '@/components/PopularCategory';
 import ProductsHome from '@/components/ProductsHome';
 import ReBanner from '@/components/ReBanner';
 import { fetchProducts } from '@/lib/api';
+import Header from '@/components/Header';
+import HomeNavbar from '@/components/HomeNavbar';
+import Footer from '@/components/Footer';
 
 export default async function HomePage() {
   const products = await fetchProducts();
 
   return (
     <main>
+      <Header />
+      <HomeNavbar />
       <HeroBanner />
       <Category />
       <PopularCategory />
       <ProductsHome products={products} />
       <ReBanner />
-      {/* <Footer /> */}
+      <Footer />
     </main>
   );
 }

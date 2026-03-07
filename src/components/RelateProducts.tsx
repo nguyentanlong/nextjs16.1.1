@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { slugifyProduct } from "@/lib/slugify";
+import { normalizeImage } from "@/lib/api";
 
 interface Product {
     id: string;
@@ -100,14 +101,14 @@ export default function RelatedProducts({ subCategoryId, products }: RelatedProd
                                     {src ? (
                                         isVideo ? (
                                             <video
-                                                src={p.media[0]}//.startsWith("/") ? src : `/${src}`
+                                                src={normalizeImage(p.media[0])}//.startsWith("/") ? src : `/${src}`
                                                 controls
                                                 width={100}
                                                 height={100}
                                             />
                                         ) : (
                                             <Image
-                                                src={p.media[0]}//src.startsWith("/") ? src : `/${src}`
+                                                src={normalizeImage(p.media[0])}//src.startsWith("/") ? src : `/${src}`
                                                 alt={`Sản phẩm liên quan ${i}`}
                                                 width={100}
                                                 height={100}
