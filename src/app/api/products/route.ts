@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     try {
         // lấy accessToken từ request browser
         const authorization = req.headers.get("authorization");
-        console.log("authorization trong api/products:  ", authorization);
+        // console.log("authorization trong api/products:  ", authorization);
         // Đọc formData từ request
         const formData = await req.formData();
         const res = await fetch(`${API_BASE}/addProduct`, {

@@ -1116,33 +1116,21 @@ body {
   grid-template-columns: 1fr;
   gap: 30px;
   margin-bottom: 50px;
-  /*display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  /*  -webkit-line-clamp: 2 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: normal !important;
-  max-width: 100% !important; */
 }
 
 .product-info {
   width: 100%;
   max-width: 100%;
-  /* ngăn tràn */
   padding: 0 8px;
-  /* thu hẹp padding nếu cần */
   word-wrap: break-word;
-  /* chữ dài wrap */
   overflow-wrap: break-word;
-  /* hiện đại hơn word-wrap */
   hyphens: auto;
-  /* tự động ngắt từ tiếng Việt */
 }
 
 .product-info h1 {
   font-size: clamp(20px, 5vw, 28px);
   /* chữ tiêu đề nhỏ lại */
-  word-break: break-all;
+  word-break: normal;
   /* ép break nếu quá dài */
   hyphens: auto;
 }
@@ -1155,6 +1143,18 @@ body {
   overflow-wrap: break-word;
   white-space: normal;
   /* cho phép wrap tự nhiên */
+}
+
+.short-desc,
+.product-meta,
+.price-box,
+.product-info p,
+.product-info span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .price-box {
@@ -1176,19 +1176,14 @@ body {
   /* nút full width */
 }
 
-/* .product-info p,
-.product-info span,
-.product-info h1 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-  max-width: 100%; 
-}*/
-
-.product-images {
+/* .product-images {
   order: 1;
+} */
+.product-images {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  /* cắt phần tràn nếu có */
 }
 
 .main-image img {
@@ -1207,11 +1202,24 @@ body {
   gap: 12px;
   margin-top: 16px;
   overflow-x: auto;
+  /* vẫn cho phép cuộn ngang */
   padding: 8px 0;
+  scroll-snap-type: x mandatory;
+  /* vuốt mượt như app */
+  -webkit-overflow-scrolling: touch;
+  /* cuộn mượt trên iOS */
+  scrollbar-width: none;
+  /* ẩn thanh cuộn Firefox */
+  max-width: 100%;
+  /* ← QUAN TRỌNG: giới hạn không vượt viewport */
+}
+
+.thumbnail-list::-webkit-scrollbar {
+  display: none;
+  /* ẩn thanh cuộn Chrome/Safari */
 }
 
 .thumb {
-  position: relative;
   width: 80px;
   height: 80px;
   object-fit: cover;
@@ -1220,6 +1228,9 @@ body {
   opacity: 0.6;
   transition: 0.3s;
   flex-shrink: 0;
+  /* không co lại */
+  scroll-snap-align: start;
+  /* mỗi thumbnail snap vào đầu viewport */
 }
 
 .thumb.active,
@@ -1228,20 +1239,7 @@ body {
   outline: 3px solid #8839ef;
 }
 
-/*thêm*/
-/* .product-info {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
 
-.product-info img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-} */
-
-/*thêm*/
 .product-info h1 {
   font-size: clamp(24px, 5vw, 32px);
   margin-bottom: 12px;
@@ -1347,12 +1345,20 @@ body {
     gap: 50px;
   }
 
-  .product-images {
+  /* .product-images {
     order: 0;
   }
 
   .thumbnail-list {
     justify-content: left;
+  } */
+  .product-images {
+    margin-bottom: 16px;
+  }
+
+  .thumbnail-list {
+    justify-content: flex-start;
+    /* căn trái cho đẹp */
   }
 
 

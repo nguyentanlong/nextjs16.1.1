@@ -15,14 +15,13 @@ export default async function HomePage() {
 
   return (
     <main>
-      <Header />
-      <HomeNavbar />
+
       <HeroBanner />
       <Category />
       <PopularCategory />
       <ProductsHome products={products} />
       <ReBanner />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }

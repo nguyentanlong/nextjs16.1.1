@@ -52,6 +52,18 @@ export async function generateMetadata({
         title: product.productName,
         description: product.shortDescription,
         keywords: product.keywords,
+        openGraph: {
+            title: product.productName,
+            description: product.shortDescription,
+            url: `https://tanlong.cameramattroi.com/${slug}`,
+            images: [{ url: product.media[0] }],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: product.productName,
+            description: product.shortDescription,
+            images: [product.media[0]],
+        },
     };
 }
 

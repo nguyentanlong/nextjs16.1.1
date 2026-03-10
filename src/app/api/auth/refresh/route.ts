@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
 // API route để refresh token
-export async function POST(req: Request) {
+/*export async function POST(req: Request) {
     try {
         // Lấy refreshToken từ cookie
         const cookieHeader = req.headers.get('cookie') || '';
@@ -53,4 +53,28 @@ export async function POST(req: Request) {
         console.error('Refresh error:', err);
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
+}*/
+// src/app/api/refresh/route.ts
+
+export async function POST(req: Request) {
+    try {
+        const { refreshToken } = await req.json();
+
+        // Gọi sang backend NestJS để refresh token
+        const res = await fetch(`${API_BASE}/auth/refresh`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refreshToken }),
+        });
+
+        if (!res.ok) {
+            return NextResponse.json({ message: "Refresh failed" }, { status: 401 });
+        }
+
+        const data = await res.json();
+        return NextResponse.json(data);
+    } catch (err) {
+        return NextResponse.json({ message: "Server error" }, { status: 500 });
+    }
 }
+

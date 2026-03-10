@@ -176,6 +176,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
     // Khôi phục user từ localStorage khi mount
     useEffect(() => {
@@ -228,13 +229,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (!resME.ok) throw new Error("Không lấy được thông tin user");
 
             // const dataME = await resME.json();
-            // console.log("dataMe  ", dataME);
+            // console.log("dataMe  ", dataME.data);
             const data = await res.json();
             // localStorage.setItem("user", JSON.stringify(user));
             // console.log("data.data.user  ", data.data.user);
             console.log("data AuthContext  ", data);
             setUser(data.data.user);
             setAccessToken(data.data.accessToken);
+            setRefreshToken(data.data.refreshToken);
+            // localStorage.setItem("refreshToken", data.refreshToken);
             localStorage.setItem("user", JSON.stringify(data.data.user)); // ✅ lưu đúng user
         } catch (err) {
             console.error("❌ Login error:", err);
@@ -242,7 +245,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setLoading(false);
         }
     };
+    // Hàm refresh token
+    const refresh = async () => {
+        const res = await fetch("/api/refresh", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                refreshToken: localStorage.getItem("refreshToken"),
+            }),
+        });
 
+        if (!res.ok) throw new Error("Refresh failed");
+        const data = await res.json();
+        setAccessToken(data.data.accessToken);
+        localStorage.setItem("accessToken", data.data.accessToken);
+        return data.accessToken;
+    };
+
+
+    // Hàm fetch wrapper có auto refresh
+    const authFetch = async (url: string, options: any = {}) => {
+        const token = localStorage.getItem("accessToken");
+        const headers = {
+            ...(options.headers || {}),
+            Authorization: `Bearer ${token}`,
+        };
+
+        let res = await fetch(url, { ...options, headers });
+
+        if (res.status === 401) {
+            alert("Refresh token");
+            try {
+                const newToken = await refresh();
+                const retryHeaders = {
+                    ...(options.headers || {}),
+                    Authorization: `Bearer ${newToken}`,
+                };
+                res = await fetch(url, { ...options, headers: retryHeaders });
+            } catch (err) {
+                // Refresh fail → logout
+                setAccessToken(null);
+                setRefreshToken(null);
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                throw err;
+            }
+        }
+
+        return res;
+    };
     const logout = async () => {
         await fetch(`/api/auth/logout`, { method: "POST", credentials: "include" });
         setAccessToken(null); // ✅ clear token khi logout

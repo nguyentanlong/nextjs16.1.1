@@ -7,6 +7,29 @@ import { AuthContext } from "@/context/AuthContext";
 import { ca } from "zod/locales";
 const Editor = dynamic(() => import("@tinymce/tinymce-react").then(mod => mod.Editor),
     { ssr: false, });
+// Tự định nghĩa type cho handler
+type TinyMCEUploadHandler = (
+    blobInfo: { blob: () => Blob; filename: () => string },
+    success: (url: string) => void,
+    failure: (err: string) => void
+) => void | Promise<void>;
+const uploadHandler: TinyMCEUploadHandler = async (blobInfo, success, failure) => {
+    try {
+        const formData = new FormData();
+        formData.append('filesDesc', blobInfo.blob(), blobInfo.filename());
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/upload-description`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await res.json();
+        success(data[0].location); // hoặc success(data.location) nếu backend trả object
+    } catch (err: any) {
+        failure("Upload failed: " + err.message);
+    }
+};
+
 
 interface SubCategory { id: number; categoryName: string; }
 interface Product {
@@ -100,11 +123,11 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
                 formData.append("keywords", k.trim());
             });*/
             formData.append("stock", product.stock?.toString() ?? "0"); // ✅ thêm dòng này
-            if (product.files && product.files.length > 0) {
-                product.files.forEach(file => {
-                    formData.append("files", file); // ✅ đúng key cho Multer FilesInterceptor
-                });
-            }
+            /*            if (product.files && product.files.length > 0) {
+                            product.files.forEach(file => {
+                                formData.append("files", file); // ✅ đúng key cho Multer FilesInterceptor
+                            });
+                        }*/
             product.keywords.forEach(k => {
                 if (k.trim()) {
                     formData.append("keywords", k.trim());
@@ -114,6 +137,7 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
             const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
             if (fileInput?.files) {
                 for (const file of fileInput.files) {
+                    // console.log("APPEND:", file.name);
                     formData.append("files", file);
                 }
             }
@@ -356,31 +380,58 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
                         // images_upload_url: 'https://api.tonkliplock1000.com/api/mediaasset',
                         // automatic_uploads: true,
                         // Cho phép chọn ảnh từ local 
-                        file_picker_types: "image",
+                        // file_picker_types: "image",
                         /*file_picker_callback: (callback: (url: string, meta?: { alt?: string }) => void,
                             value: string,
                             meta: { filetype: string }*/
-                        file_picker_callback: (callback: (url: string, meta?: Record<string, any>) => void,
-                            value: string,
-                            meta: Record<string, any>) => {
-                            const input = document.createElement("input");
-                            input.setAttribute("type", "file");
-                            input.setAttribute("accept", "image/*");
+                        /* file_picker_callback: (callback: (url: string, meta?: Record<string, any>) => void,
+                             value: string,
+                             meta: Record<string, any>) => {
+                             const input = document.createElement("input");
+                             input.setAttribute("type", "file");
+                             input.setAttribute("accept", "image/*");
+ 
+                             input.onchange = (event: Event) => {
+                                 const target = event.target as HTMLInputElement;
+                                 const file = target.files?.[0]; if (!file) return;
+ 
+                                 const reader = new FileReader();
+                                 reader.onload = function () {
+                                     // Chèn ảnh dạng Base64 vào nội dung
+                                     callback(reader.result as string, { alt: file.name });
+                                 };
+                                 reader.readAsDataURL(file);
+                             };
+ 
+                             input.click();
+                         }*/
+                        automatic_uploads: true,
+                        images_upload_handler: uploadHandler,
+                        // Viết hàm với type đã định nghĩa
 
-                            input.onchange = (event: Event) => {
-                                const target = event.target as HTMLInputElement;
-                                const file = target.files?.[0]; if (!file) return;
+                        /*images_upload_handler: async (
+                            blobInfo: { blob: () => Blob; filename: () => string },
+                            success: (url: string) => void,
+                            failure: (err: string) => void
+                        ) => {
+                            try {
+                                const formData = new FormData();
+                                // chú ý: key phải là 'filesDesc' để khớp với interceptor
+                                formData.append('filesDesc', blobInfo.blob(), blobInfo.filename());
 
-                                const reader = new FileReader();
-                                reader.onload = function () {
-                                    // Chèn ảnh dạng Base64 vào nội dung
-                                    callback(reader.result as string, { alt: file.name });
-                                };
-                                reader.readAsDataURL(file);
-                            };
+                                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/upload-description`, {
+                                    method: 'POST',
+                                    body: formData,
+                                    // credentials: 'include',
+                                });
 
-                            input.click();
-                        }
+                                const data = await res.json();
+                                // API trả về [{ location: '/uploads/YYYY-MM-DD/filename.png' }]
+                                success(data[0].location);
+                            } catch (err: any) {
+                                failure("Upload failed: " + err.message);
+                            }
+                        },*/
                     }}
                     onEditorChange={(content) => handleChange("description", content)}
                 />
