@@ -1,62 +1,81 @@
-// src/components/ProductGrid.tsx
-import Link from 'next/link';
-
-interface Product {
-    id: string;
-    productName: string;
-    shortDescription: string;
-    description: string;
-    media: string[];
-    price: string;
-    stock: number;
-    // nếu API có thêm trường discountPercent thì mình dùng, còn không thì bỏ qua
-    discountPercent?: number;
-    subCategoryId: number;
-}
-
-export default function ProductGrid({ products }: { products: Product[] }) {
-    if (!products || products.length === 0) {
+import { fetchAllProducts, normalizeImage } from "@/lib/api";
+import { slugifyProduct } from "@/lib/slugify";
+import Image from "next/image";
+import Link from "next/link"
+import { Suspense } from "react";
+export default async function ProductsPage() {
+    const productAll = await fetchAllProducts();
+    if (!productAll || productAll.length === 0) {
         return <div>Chưa có sản phẩm nào</div>;
     }
-
     return (
-        <section aria-label="Danh sách sản phẩm" className="product-grid">
-            <div className="grid">
-                {products.map((p) => (
-                    <div key={p.id} className="suggestion-card">
-                        <Link href={`/product/${p.id}`} className="product-link">
-                            {/* Badge phần trăm giảm giá nếu có */}
-                            {p.discountPercent && (
-                                <div className="badge-percent">-{p.discountPercent}%</div>
-                            )}
+        <>
+            {/* ==================== CÓ THỂ BẠN THÍCH – GRID THẬT SỰ ==================== */}
+            <Suspense fallback={<div>Loading products...</div>}>
+                <section className="suggestion-section">
+                    <div className="container">
+                        <div className="section-header">
+                            <h4>Tất cả sản phẩm</h4>
+                            {/* <div className="tabs">
+                                <Link href={""} className="tab-active">Xem tất cả</Link>
+                            </div> */}
+                        </div>
+                        {/* GRID 5 CỘT (desktop) */}
+                        <div className="suggestion-grid">
+                            {/* Sản phẩm 1 */}
+                            {productAll.map((p) => (
+                                <div key={p.id} className="suggestion-card">
+                                    <Link href={`/${slugifyProduct(p.productName)}`} className="product-link">
+                                        {p.discountPercent && (
+                                            <div className="badge-percent">
+                                                -50%-{/*p.discountPercent*/}%
+                                            </div>
+                                        )}
 
-                            {/* Hình ảnh sản phẩm */}
-                            {p.media && p.media.length > 0 ? (
-                                <img src={p.media[0]} alt={p.productName} />
-                            ) : (
-                                <div className="placeholder" />
-                            )}
+                                        {p.media && p.media.length > 0 ? (
+                                            (() => {
+                                                const src = p.media[0];
+                                                const ext = src.split(".").pop()?.toLowerCase();
+                                                const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
 
-                            {/* Badges cố định (đệ có thể thay đổi sau) */}
-                            <div className="badges">
-                                <span className="badge-discount">Discount Extra</span>
-                                <span className="badge-official">Official Sale</span>
-                            </div>
+                                                return isVideo ? (
+                                                    <video src={normalizeImage(src)} controls width={100} height={90} />
+                                                ) : (
+                                                    <Image
+                                                        src={normalizeImage(src)}
+                                                        alt={p.productName}
+                                                        width={100}
+                                                        height={90}
+                                                    />
+                                                );
+                                            })()
+                                        ) : (
+                                            <div className="placeholder" />
+                                        )}
 
-                            {/* Tên sản phẩm */}
-                            <h3>{p.productName}</h3>
+                                        <div className="badges">
+                                            <span className="badge-discount">Discount Extra</span>
+                                            <span className="badge-official">Official Sale</span>
+                                        </div>
+                                        <h3>{p.productName}</h3>
+                                        <div className="price">
+                                            <span className="price-new">
+                                                {Number(p.price).toLocaleString("vi-VN")} ₫
+                                            </span>
+                                            <span className="sold">{p.stock} sản phẩm</span>
+                                        </div>
+                                    </Link>
+                                </div>
+                            ))}
+                            {/* Copy thêm 18 cái nữa (tổng 20 sp cho đẹp) */}
+                            {/* Sư phụ làm sẵn 18 cái dưới đây rồi, đệ chỉ cần dán vào */}
+                        </div>
 
-                            {/* Giá và số lượng tồn kho */}
-                            <div className="price">
-                                <span className="price-new">
-                                    {Number(p.price).toLocaleString('vi-VN')} ₫
-                                </span>
-                                <span className="sold">Còn {p.stock} sản phẩm</span>
-                            </div>
-                        </Link>
+                        {/* <Link href={'/login'}>Test Login</Link> */}
                     </div>
-                ))}
-            </div>
-        </section>
-    );
+                </section>
+            </Suspense>
+        </>
+
+    )
 }

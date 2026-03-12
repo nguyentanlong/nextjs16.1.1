@@ -9,24 +9,30 @@ const Editor = dynamic(() => import("@tinymce/tinymce-react").then(mod => mod.Ed
     { ssr: false, });
 // Tự định nghĩa type cho handler
 type TinyMCEUploadHandler = (
-    blobInfo: { blob: () => Blob; filename: () => string },
-    success: (url: string) => void,
-    failure: (err: string) => void
-) => void | Promise<void>;
-const uploadHandler: TinyMCEUploadHandler = async (blobInfo, success, failure) => {
+    blobInfo: { blob: () => Blob; filename: () => string }
+) => Promise<string>;
+
+const uploadHandler: TinyMCEUploadHandler = async (blobInfo) => {
     try {
-        const formData = new FormData();
-        formData.append('filesDesc', blobInfo.blob(), blobInfo.filename());
+        const formData1 = new FormData();
+        formData1.append('filesDesc', blobInfo.blob(), blobInfo.filename());
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/upload-description`, {
             method: 'POST',
-            body: formData,
+            body: formData1,
         });
 
         const data = await res.json();
-        success(data[0].location); // hoặc success(data.location) nếu backend trả object
+        // Nếu backend trả về mảng [{ location: '...' }]
+        // Nếu backend trả về mảng
+        if (!Array.isArray(data) || data.length === 0) {
+            throw new Error("Upload failed: no file returned");
+        }
+
+        // Vì backend trả về mảng [{ location: '...' }]
+        return data[0].location;
     } catch (err: any) {
-        failure("Upload failed: " + err.message);
+        throw new Error("Upload failed: " + err.message);
     }
 };
 

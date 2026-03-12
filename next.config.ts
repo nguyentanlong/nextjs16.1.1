@@ -71,6 +71,10 @@ const nextConfig: NextConfig = {
       source: "/mediaasset/:path*",
       destination: "https://api.tonkliplock1000.com/api/mediaasset/:path*",
     },
+    {
+      source: "/uploads/:path*",
+      destination: "https://api.tonkliplock1000.com/api/uploads/:path*",
+    },
     ];
   },
 

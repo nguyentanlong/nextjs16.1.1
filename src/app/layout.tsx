@@ -5,7 +5,6 @@ import Script from 'next/script';
 import { AuthProvider } from '@/context/AuthContext';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import HomeNavbar from '@/components/HomeNavbar';
 // import AddProductForm from '@/components/ProductEditor';
 
 // Metadata chuẩn SEO—không dùng next-seo, dùng Metadata API của Next.js 16.1.1
@@ -81,7 +80,6 @@ export default function RootLayout({ children }: {
           {/* <ProductsHome /> */}
           <AuthProvider>
             <Header />
-            <HomeNavbar />
             <main>{children}</main>
             <Footer />
           </AuthProvider>

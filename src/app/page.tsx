@@ -15,7 +15,7 @@ export default async function HomePage() {
 
   return (
     <main>
-
+      <HomeNavbar />
       <HeroBanner />
       <Category />
       <PopularCategory />

@@ -14,9 +14,9 @@ export default function ProductsHome({ products }: { products: Product[] }) {
                 <section className="suggestion-section">
                     <div className="container">
                         <div className="section-header">
-                            <h2>Có thể bạn thích</h2>
+                            <h4>Sản phẩm nổi bật</h4>
                             <div className="tabs">
-                                <button className="tab-active">Đề xuất cá nhân</button>
+                                <Link href={"/tat-ca-san-pham"} className="tab-active">Xem tất cả</Link>
                             </div>
                         </div>
                         {/* GRID 5 CỘT (desktop) */}

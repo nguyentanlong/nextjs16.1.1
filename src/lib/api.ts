@@ -1,6 +1,7 @@
 // src/lib/api.ts
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
+const API_BASE_A = process.env.NEXT_PUBLIC_API_BASE_A;
 
 export interface Product {
     id: string;
@@ -15,10 +16,23 @@ export interface Product {
     discountPercent: number;
     subCategoryId: number;
 }
-
-// Fetch tất cả sản phẩm cho trang chủ
+export interface SubCategory { id: number; categoryName: string; image: string; }
+// Fetch sản phẩm cho trang chủ
 export async function fetchProducts(): Promise<Product[]> {
     const res = await fetch(`${API_BASE || API_BASE_L}`, {
+        cache: "no-store",// next: { revalidate: 3600 },
+    });
+
+    if (!res.ok) {
+        const text = await res.text(); // log nội dung lỗi từ backend 
+        console.error("Fetch products error:", res.status, text);
+    }//throw new Error("Không thể fetch dữ liệu sản phẩm");
+    const json = await res.json();
+    return json.data;
+}
+// Fetch tất cả sản phẩm 
+export async function fetchAllProducts(): Promise<Product[]> {
+    const res = await fetch(`${API_BASE_A}`, {
         cache: "no-store",// next: { revalidate: 3600 },
     });
 
@@ -133,4 +147,19 @@ export function normalizeImage(image: string) {
         return img;
     }
     return `/${img}`;
+}
+
+//fetch subcategories
+export async function fetchSubCategories(): Promise<SubCategory[]> {
+    try {
+        const res = await fetch("/api/subcategories"); // có thể thêm { credentials: "include" } nếu cần
+        if (!res.ok) {
+            throw new Error(`Failed to fetch subcategories: ${res.status}`);
+        }
+        const data = await res.json();
+        return data; // backend trả về mảng subcategories
+    } catch (err) {
+        console.error("❌ Error fetching subcategories:", err);
+        return []; // hoặc throw err nếu muốn xử lý bên ngoài
+    }
 }
