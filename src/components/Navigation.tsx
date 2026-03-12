@@ -1,10 +1,8 @@
 // src/components/Navigation.tsx
 'use client';
-import { useSubCategories } from '@/hook/useSubcategories';
-import { fetchSubCategories, SubCategory } from '@/lib/api';
 import { slugifyProduct } from '@/lib/slugify';
+import { SubCategory } from '@/styles/types';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 /*const categories = [
     { id: 1, name: 'Điện thoại & Phụ kiện', href: '/category/phone' },
@@ -28,10 +26,7 @@ import { useEffect, useState } from 'react';
         };
         loadData();
     }, []);*/
-export default function Navigation() {
-    const { subCategories, loading } = useSubCategories();
-
-    if (loading) return <div>Loading...</div>;
+export default function Navigation({ subCategories }: { subCategories: SubCategory[] }) {
     return (
         <div className="category-dropdown" id="category-dropdown">
             <button className="category-btn">

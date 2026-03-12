@@ -4,8 +4,11 @@
 import Link from 'next/link';
 import Navigation from './Navigation';
 import SearchBar from './SearchBar';
+import { SubCategory } from '@/styles/types';
+import { fetchSubCategories } from "@/lib/api";
 
-export default function Header() {
+export default async function Header() {
+    const subCategories: SubCategory[] = await fetchSubCategories();
     return (
         <>
             {/* topbar */}
@@ -66,7 +69,7 @@ export default function Header() {
                     </Link>
 
                     {/* Navigation tách riêng */}
-                    <Navigation />
+                    <Navigation subCategories={subCategories} />
 
                     {/* Search Form */}
                     {/* <form className="search-form" role="search">

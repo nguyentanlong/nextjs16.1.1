@@ -8,20 +8,24 @@ import ReBanner from '@/components/ReBanner';
 import { fetchProducts } from '@/lib/api';
 import Header from '@/components/Header';
 import HomeNavbar from '@/components/HomeNavbar';
+import { fetchSubCategories } from '@/lib/api';
+import type { SubCategory } from "@/styles/types";
 import Footer from '@/components/Footer';
 
 export default async function HomePage() {
   const products = await fetchProducts();
+  const subCategories = await fetchSubCategories(); // chạy trên server
 
   return (
     <main>
       <HomeNavbar />
       <HeroBanner />
-      <Category />
+      <Category subCategories={subCategories} />
       <PopularCategory />
       <ProductsHome products={products} />
       <ReBanner />
       {/* <Footer /> */}
     </main>
   );
+
 }

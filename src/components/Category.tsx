@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import AppImage from "./ImageCatagory";
 
-export default function Category({ SubCategory }: { SubCategory: SubCategory[] }) {
+export default function Category({ subCategories }: { subCategories: SubCategory[] }) {
     // interface SubCategory { id: number; categoryName: string; image: string; }
-    const [subCategoriesHome, setSubCategoriesHome] = useState<SubCategory[]>([]);
+    /*const [subCategoriesHome, setSubCategoriesHome] = useState<SubCategory[]>([]);
     useEffect(() => {
         const loadData = async () => {
             const data = await fetchSubCategories();
@@ -21,7 +21,7 @@ export default function Category({ SubCategory }: { SubCategory: SubCategory[] }
     const categoriesToRender = subCategoriesHome.length > 0 ? subCategoriesHome : SubCategory;
     if (!categoriesToRender || categoriesToRender.length === 0) {
         return <div>Chưa có Danh Mục</div>;
-    }
+    }*/
     return (
         <>
             {/* ==================== DANH MỤC + PHỐ MUA SẮM ==================== */}
@@ -30,7 +30,7 @@ export default function Category({ SubCategory }: { SubCategory: SubCategory[] }
                     <h2>Danh mục</h2>
                     <div className="categories-carousel">
                         <div className="carousel-track">
-                            {subCategoriesHome.map((sc) => (
+                            {subCategories.map((sc) => (
                                 <Link key={sc.id} href={`/${slugifyProduct(sc.categoryName)}`}>
                                     <AppImage src={normalizeImage(sc.image)}
                                         alt={sc.categoryName}
