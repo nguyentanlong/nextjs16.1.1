@@ -2,6 +2,7 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
 const API_BASE_A = process.env.NEXT_PUBLIC_API_BASE_A;
+const API_BASE_SUBCATA = `/subcategories/subcate`
 
 export interface Product {
     id: string;
@@ -152,12 +153,19 @@ export function normalizeImage(image: string) {
 //fetch subcategories
 export async function fetchSubCategories(): Promise<SubCategory[]> {
     try {
-        const res = await fetch("/api/subcategories"); // có thể thêm { credentials: "include" } nếu cần
+        const res = await fetch(`${API_BASE || API_BASE_L}/subcategories/subcate`); // có thể thêm { credentials: "include" } nếu cần
         if (!res.ok) {
             throw new Error(`Failed to fetch subcategories: ${res.status}`);
         }
         const data = await res.json();
-        return data; // backend trả về mảng subcategories
+        // console.log("data trong lib/api:  ", data);
+        if (Array.isArray(data)) {
+            return data;
+        }
+
+        // Nếu backend trả về object có field subcategories
+        return data.subcategories ?? [];
+        // return data//data.subcategories ?? []; // đảm bảo trả về mảng
     } catch (err) {
         console.error("❌ Error fetching subcategories:", err);
         return []; // hoặc throw err nếu muốn xử lý bên ngoài
