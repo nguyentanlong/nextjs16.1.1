@@ -158,7 +158,7 @@ export async function fetchSubCategories(): Promise<SubCategory[]> {
             throw new Error(`Failed to fetch subcategories: ${res.status}`);
         }
         const data = await res.json();
-        // console.log("data trong lib/api:  ", data);
+        console.log("data trong lib/api:  ", data);
         if (Array.isArray(data)) {
             return data;
         }

@@ -1,5 +1,6 @@
 // src/components/Navigation.tsx
 'use client';
+import { useSubCategories } from '@/hook/useSubcategories';
 import { fetchSubCategories, SubCategory } from '@/lib/api';
 import { slugifyProduct } from '@/lib/slugify';
 import Link from 'next/link';
@@ -17,7 +18,7 @@ import { useEffect, useState } from 'react';
     { id: 9, name: 'Xem tất cả Danh mục', href: '/categories' },
 ];*/
 
-export default function Navigation({ SubCategory }: { SubCategory: SubCategory[] }) {
+/*export default function Navigation({ SubCategory }: { SubCategory: SubCategory[] }) {
     const [subCategoriesHome, setSubCategoriesHome] = useState<SubCategory[]>([]);
     useEffect(() => {
         const loadData = async () => {
@@ -26,14 +27,18 @@ export default function Navigation({ SubCategory }: { SubCategory: SubCategory[]
             setSubCategoriesHome(data);
         };
         loadData();
-    }, []);
+    }, []);*/
+export default function Navigation() {
+    const { subCategories, loading } = useSubCategories();
+
+    if (loading) return <div>Loading...</div>;
     return (
         <div className="category-dropdown" id="category-dropdown">
             <button className="category-btn">
                 Danh Mục<span className="arrow">v</span>
             </button>
             <div className="category-menu">
-                {subCategoriesHome.map((sc) => (
+                {subCategories.map((sc) => (
                     <Link key={sc.id} href={`/${slugifyProduct(sc.categoryName)}`}>
                         {sc.categoryName}
                     </Link>
