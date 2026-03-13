@@ -4,16 +4,16 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { slugifyProduct } from "@/lib/slugify";
-import { normalizeImage } from "@/lib/api";
+import { normalizeImage, Product } from "@/lib/api";
 
-interface Product {
+/*interface Product {
     id: string;
     productName: string;
     price: number;
     media: string[];
     stock: number;
     subCategoryId: number;
-}
+}*/
 
 interface RelatedProductsProps {
     subCategoryId: number;

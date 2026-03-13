@@ -1,6 +1,6 @@
 // src/components/Navigation.tsx
 'use client';
-import { slugifyProduct } from '@/lib/slugify';
+import { slugifyCategory } from '@/lib/slugify';
 import { SubCategory } from '@/styles/types';
 import Link from 'next/link';
 
@@ -34,7 +34,7 @@ export default function Navigation({ subCategories }: { subCategories: SubCatego
             </button>
             <div className="category-menu">
                 {subCategories.map((sc) => (
-                    <Link key={sc.id} href={`/${slugifyProduct(sc.categoryName)}`}>
+                    <Link key={sc.id} href={`/danh-muc/${slugifyCategory(sc.categoryName)}-${sc.id}.html`}>
                         {sc.categoryName}
                     </Link>
                 ))}

@@ -14,3 +14,25 @@ export function slugifyProduct(name: string): string {
 
     return slug + ".html";
 }
+export function slugifyCategory(categoryName: string): string {
+    return categoryName
+        .toLowerCase()
+        .replace(/đ/g, "d") // xử lý chữ đ
+        .replace(/Đ/g, "D") // xử lý chữ Đ
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // bỏ dấu tiếng Việt
+        .replace(/[^a-z0-9\s-]/g, "") // bỏ ký tự đặc biệt
+        .trim()
+        .replace(/\s+/g, "-"); // thay space bằng -
+    // + ".html";
+}
+const subCategoryMap: Record<string, number> = {
+    "thiet-bi-an-ninh.html": 1,
+    "binh-chua-chay.html": 2,
+    "camera-quan-sat.html": 3,
+};
+
+export function getSubCategoryIdBySlug(slug: string): number {
+    return subCategoryMap[slug] || 0;
+}
+
