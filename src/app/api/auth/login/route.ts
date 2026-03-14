@@ -20,8 +20,8 @@ export async function POST(req: Request) {
 
     if (!res.ok) {
         return NextResponse.json({ error: "Sai tài khoản hoặc mật khẩu R" }, { status: res.status });
-        console.log("Login response status:", res.status);
-        console.log("Login response body:", await res.text());
+        // console.log("Login response status:", res.status);
+        // console.log("Login response body:", await res.text());
 
     }
 
@@ -29,9 +29,13 @@ export async function POST(req: Request) {
     // Lấy cookie từ backend 
     const setCookie = res.headers.get("set-cookie");
     // Tạo response và set cookie bảo mật
-    const response = NextResponse.json({ data });//user: data.user hoặc là data
+    // const response = NextResponse.json({ data });//user: data.user hoặc là data
+    const response = NextResponse.json({
+        user: data.user,
+    });
     // console.log("kết quả Respone:  ", response);
-    console.log("kết quả api login Data:  ", data);
+    // console.log("kết quả api login Data:  ", data);
+    // console.log("user trong api login Data:  ", response);
     //forwward cookie
     // if (setCookie) { response.headers.set("set-cookie", setCookie); } 
     //đoạn trên chỉ láy accessToken 

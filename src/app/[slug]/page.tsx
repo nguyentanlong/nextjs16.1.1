@@ -1,7 +1,7 @@
 // src/app/[slug]/page.tsx
 // "use client";
 import { Metadata } from "next";
-import { slugifyProduct } from "@/lib/slugify";
+import { generateStaticParams, slugifyProduct } from "@/lib/slugify";
 import Link from "next/link";
 import { fetchProducts, Product, fetchRelatedProductsLocal } from "@/lib/api";
 import Image from "next/image";
@@ -78,6 +78,7 @@ export async function generateMetadata({
     if (!product) return <div>Không tìm thấy sản phẩm</div>;*/
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params; // unwrap Promise
+    generateStaticParams();
     return (<ProductDetail slug={slug} />);
 
 }
@@ -151,7 +152,4 @@ async function ProductDetail({ slug }: { slug: string }) {
 }
 
 // ✅ generateStaticParams để build sẵn slug cho SEO
-export async function generateStaticParams() {
-    const products = await fetchProducts();
-    return products.map((p) => ({ slug: slugifyProduct(p.productName) }));
-}
+

@@ -15,8 +15,8 @@ export default async function CategoryPage({
   const subCategoryId = Number(parts[parts.length - 1]);
   const slugName = parts.slice(0, -1).join("-");
 
-  console.log("slugName 👉", slugName);
-  console.log("subCategoryId 👉", subCategoryId);
+  // console.log("slugName 👉", slugName);
+  // console.log("subCategoryId 👉", subCategoryId);
 
   const products = await fetchRelatedProductsLocal(subCategoryId);
 

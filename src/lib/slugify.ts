@@ -1,3 +1,5 @@
+import { fetchAllProducts } from "./api";
+
 export function slugifyProduct(name: string): string {
     // Chuyển về lowercase
     const lower = name.toLowerCase();
@@ -35,4 +37,7 @@ const subCategoryMap: Record<string, number> = {
 export function getSubCategoryIdBySlug(slug: string): number {
     return subCategoryMap[slug] || 0;
 }
-
+export async function generateStaticParams() {
+    const products = await fetchAllProducts();
+    return products.map((p) => ({ slug: slugifyProduct(p.productName) }));
+}
