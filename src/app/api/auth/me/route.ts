@@ -43,6 +43,7 @@ export async function GET() {
     }
 
     const data = await res.json();
+    console.log("Data trong api/me:  ", data)
 
     return Response.json({ user: data.user });
 }

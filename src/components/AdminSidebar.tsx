@@ -8,19 +8,13 @@ import Link from "next/link";
 // import { useContext } from "react";
 
 export default function AdminSidebar() {
-    const { user } = useAuth();
-    // if (loading) return <div>Loading...</div>;
-    // const { user } = useContext(AuthContext);
-    // console.log("👉 User from context in AdminSidebar:", user);
-    // Nếu đang loading, hiển thị trạng thái chờ 
-    // console.log("AdminSidebar user bắt đầu:   ", user);
-    // console.log("AdminSidebar loadding bắt đầu:   ", loading);
-    /*if (loading) {
+    const { user, loading } = useAuth();
+    if (loading) {
         return (
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2">
                 <div>Đang tải thông tin người dùng...</div>
             </aside>);
-    }*/
+    }
     // Nếu không có user (chưa login), có thể ẩn sidebar hoặc báo lỗi 
     if (!user) {
         return (
@@ -32,9 +26,7 @@ export default function AdminSidebar() {
     const isStaff = user?.role === "staff";
     const isAdminOrStaff = isAdmin || isStaff;
 
-    // const isUser = user?.role === "user";
-    // console.log("👉 User role in AdminSidebar:", user?.role);
-    // console.log("👉 isAdmin:", isAdmin, "isStaff:", isStaff, "isAdminOrStaff:", isAdminOrStaff);
+
     const linkHref = isAdminOrStaff ? "/product-editor-client" : "/comments";
     const linkText = isAdminOrStaff ? "Danh mục" : "Lượt comment";
 

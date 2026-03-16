@@ -54,10 +54,10 @@ interface Product {
 
 interface ProductEditorProps {
     initialProduct?: Product;
-    onSave: (product: Product) => void;
+    // onSave: (product: Product) => void;
 }
 
-export default function ProductEditor({ initialProduct, onSave }: ProductEditorProps) {
+export default function ProductEditor({ initialProduct }: ProductEditorProps) {//sau initalProduct , onSave
     const [product, setProduct] = useState<Product>(() =>
         initialProduct ?? {
             productName: "",
@@ -154,9 +154,9 @@ export default function ProductEditor({ initialProduct, onSave }: ProductEditorP
 
             const res = await fetch("/api/products", {
                 method: "POST",
-                headers: { Authorization: `Bearer ${accessToken}` },
+                // headers: { Authorization: `Bearer ${accessToken}` },
                 body: formData,
-                credentials: "include",
+                // credentials: "include",
             });
             // console.log("AccessToken in ProductEditor:", accessToken);
             // const text = await res.text();

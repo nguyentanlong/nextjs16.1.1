@@ -3,7 +3,7 @@
 import ProductEditor from "@/components/ProductEditor";
 
 export default function ProductEditorClient() {
-    const handleSave = async (product: any) => {
+    /*const handleSave = async (product: any) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/addProduct`, {
             method: product.id ? "PUT" : "POST",
             headers: { "Content-Type": "application/json" },
@@ -18,7 +18,7 @@ export default function ProductEditorClient() {
 
         const data = await res.json();
         console.log("Sản phẩm đã lưu:", data);
-    };
+    };*/
 
-    return <ProductEditor onSave={handleSave} />;
+    return <ProductEditor />;// onSave={handleSave} 
 }

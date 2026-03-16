@@ -26,11 +26,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Khôi phục user từ localStorage khi mount
     useEffect(() => {
-        fetch("/api/auth/me", {
-            credentials: "include",
-        })
-            .then(res => res.json())
-            .then(data => setUser(data.user));
+
+        async function loadUser() {
+            try {
+                const res = await fetch("/api/auth/me", {
+                    credentials: "include",
+                });
+                if (!res.ok) {
+                    setUser(null);
+                    return;
+                }
+                const data = await res.json();
+                setUser(data.user ?? null);
+                setLoading(false);
+            } catch (err) {
+                console.error("Load user error:", err);
+                setUser(null);
+            }
+        }
+        loadUser();
     }, []);
 
     /* useEffect(() => {
@@ -150,7 +164,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const logout = async () => {
         await fetch(`/api/auth/logout`, { method: "POST", credentials: "include" });
         setAccessToken(null); // ✅ clear token khi logout
-        localStorage.removeItem("user");
+        // localStorage.removeItem("user");
         setUser(null);
     };
 
