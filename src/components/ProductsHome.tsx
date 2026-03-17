@@ -1,5 +1,5 @@
 import { normalizeImage, Product } from "@/lib/api";
-import { generateStaticParams, slugifyProduct } from "@/lib/slugify";
+import { slugifyProduct } from "@/lib/slugify";
 import Image from "next/image";
 import Link from "next/link"
 import { Suspense } from "react";
@@ -7,7 +7,6 @@ export default function ProductsHome({ products }: { products: Product[] }) {
     if (!products || products.length === 0) {
         return <div>Chưa có sản phẩm nào</div>;
     }
-    generateStaticParams();
     return (
         <>
             {/* ==================== CÓ THỂ BẠN THÍCH – GRID THẬT SỰ ==================== */}

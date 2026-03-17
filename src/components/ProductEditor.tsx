@@ -156,7 +156,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                 method: "POST",
                 // headers: { Authorization: `Bearer ${accessToken}` },
                 body: formData,
-                // credentials: "include",
+                credentials: "include",
             });
             // console.log("AccessToken in ProductEditor:", accessToken);
             // const text = await res.text();

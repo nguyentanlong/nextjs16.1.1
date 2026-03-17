@@ -9,6 +9,7 @@ import Link from "next/link";
 
 export default function AdminSidebar() {
     const { user, loading } = useAuth();
+    console.log("SIDEBAR USER:", user);
     if (loading) {
         return (
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2">

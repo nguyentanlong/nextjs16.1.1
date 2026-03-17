@@ -133,9 +133,7 @@ a {
     margin-top: 8px;
   }
 
-  .tab-content img {
-    width: -webkit-fill-available;
-  }
+
 }
 
 @media (max-width: 480px) {
@@ -1368,10 +1366,6 @@ ul#suggestBox a {
     /* căn trái cho đẹp */
   }
 
-  .tab-content img {
-    width: -webkit-fill-available;
-  }
-
 }
 
 @media (min-width: 1024px) {
@@ -1622,9 +1616,6 @@ nav ul li a:hover {
     display: none;
   }
 
-  .tab-content img {
-    width: -webkit-fill-available;
-  }
 }
 
 /* them san pham */

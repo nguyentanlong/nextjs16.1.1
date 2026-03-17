@@ -22,8 +22,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [accessToken, setAccessToken] = useState<string | null>(null);
-    const [refreshToken, setRefreshToken] = useState<string | null>(null);
-
+    // const [refreshToken, setRefreshToken] = useState<string | null>(null);
+    function normalizeUser(data: any) {
+        return data?.user?.user ?? data?.user ?? data ?? null;
+    }
     // Khôi phục user từ localStorage khi mount
     useEffect(() => {
 
@@ -37,8 +39,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     return;
                 }
                 const data = await res.json();
-                setUser(data.user ?? null);
+                setUser(normalizeUser(data));//(data.user ?? null);
                 setLoading(false);
+                console.log("Data USEEFFECT AuthContext  ", normalizeUser(data));
             } catch (err) {
                 console.error("Load user error:", err);
                 setUser(null);
@@ -88,7 +91,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // const resME = await fetch(`/api/auth/me`, { credentials: "include" });
             // if (!resME.ok) throw new Error("Không lấy được thông tin user");
             const res1 = await fetch("/api/auth/me", {
-                credentials: "include"
+                credentials: "include",
+                cache: "no-store"
             })
             fetch('/api/auth/me').then(r => r.json()).then(console.log)
             const data1 = await res.json()
@@ -99,8 +103,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             // localStorage.setItem("user", JSON.stringify(user));
             // console.log("data.data.user  ", data.data.user);
-            console.log("data AuthContext  ", data1);
-            setUser(data1.user);
+            console.log("Data LOGIN AuthContext:  ", data1);
+            setUser(normalizeUser(data1));
+            console.log("Data LOGIN AuthContext normalizeUser:  ", normalizeUser(data1));
             // setAccessToken(data.data.accessToken);
             // setRefreshToken(data.data.refreshToken);
             // localStorage.setItem("refreshToken", data.refreshToken);

@@ -27,6 +27,7 @@ import Link from 'next/link';
         loadData();
     }, []);*/
 export default function Navigation({ subCategories }: { subCategories: SubCategory[] }) {
+
     return (
         <div className="category-dropdown" id="category-dropdown">
             <button className="category-btn">

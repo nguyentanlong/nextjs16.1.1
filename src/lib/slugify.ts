@@ -1,4 +1,4 @@
-import { fetchAllProducts } from "./api";
+import { fetchAllProducts, fetchSubCategories } from "./api";
 
 export function slugifyProduct(name: string): string {
     // Chuyển về lowercase
@@ -28,16 +28,12 @@ export function slugifyCategory(categoryName: string): string {
         .replace(/\s+/g, "-"); // thay space bằng -
     // + ".html";
 }
-const subCategoryMap: Record<string, number> = {
-    "thiet-bi-an-ninh.html": 1,
-    "binh-chua-chay.html": 2,
-    "camera-quan-sat.html": 3,
-};
 
-export function getSubCategoryIdBySlug(slug: string): number {
-    return subCategoryMap[slug] || 0;
-}
-export async function generateStaticParams() {
+/*export async function getAllSlugProduct() {
     const products = await fetchAllProducts();
     return products.map((p) => ({ slug: slugifyProduct(p.productName) }));
 }
+export async function generateStaticSubcateories() {
+    const products = await fetchSubCategories();
+    return products.map((p) => ({ slug: slugifyCategory(p.categoryName) }));
+}*/

@@ -1,10 +1,9 @@
 // src/app/[slug]/page.tsx
 // "use client";
 import { Metadata } from "next";
-import { generateStaticParams, slugifyProduct } from "@/lib/slugify";
+import { slugifyProduct } from "@/lib/slugify";
 import Link from "next/link";
-import { fetchProducts, Product, fetchRelatedProductsLocal } from "@/lib/api";
-import Image from "next/image";
+import { fetchProducts, Product, fetchRelatedProductsLocal, fetchAllProducts } from "@/lib/api";
 import ProductImages from "@/components/ProductImage";
 import ProductTabs from "@/components/ProductTab";
 import RelatedProducts from "@/components/RelateProducts";
@@ -78,7 +77,6 @@ export async function generateMetadata({
     if (!product) return <div>Không tìm thấy sản phẩm</div>;*/
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params; // unwrap Promise
-    generateStaticParams();
     return (<ProductDetail slug={slug} />);
 
 }
@@ -132,7 +130,7 @@ async function ProductDetail({ slug }: { slug: string }) {
                         </div>
                         <div className="support">
                             <p>
-                                Hotline tư vấn: <strong>0934 181 151</strong>
+                                Hotline tư vấn: <Link href={"tel:+84328738676"}><strong>0328.73.2676</strong></Link>
                             </p>
                             <p>Giao hàng miễn phí nội thành HCM</p>
                         </div>
@@ -152,4 +150,7 @@ async function ProductDetail({ slug }: { slug: string }) {
 }
 
 // ✅ generateStaticParams để build sẵn slug cho SEO
-
+export async function generateStaticParams() {
+    const products = await fetchAllProducts();
+    return products.map((p) => ({ slug: slugifyProduct(p.productName) }));
+}

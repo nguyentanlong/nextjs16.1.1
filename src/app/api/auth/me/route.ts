@@ -27,7 +27,7 @@ export async function GET() {
 
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
-
+    console.log("TOKEN:", token);
     if (!token) {
         return Response.json({ user: null });
     }
@@ -36,6 +36,7 @@ export async function GET() {
         headers: {
             Authorization: `Bearer ${token}`,
         },
+        cache: "no-store",
     });
 
     if (!res.ok) {
@@ -44,6 +45,7 @@ export async function GET() {
 
     const data = await res.json();
     console.log("Data trong api/me:  ", data)
-
-    return Response.json({ user: data.user });
+    console.log("Token khi gửi:  ", token);
+    console.log("status:  ", res.status);
+    return Response.json({ user: data.user ?? data });
 }
