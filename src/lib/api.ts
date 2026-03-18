@@ -5,18 +5,31 @@ const API_BASE_A = process.env.NEXT_PUBLIC_API_BASE_A;
 const API_BASE_SUBCATA = `/subcategories/subcate`
 
 // ===== Helper =====
-async function fetcher(url: string, options?: RequestInit) {
-    const res = await fetch(url, {
-        ...options,
-        next: { revalidate: 3600 }, // ⭐ cache 1h
-    });
+export async function fetcher(url: string) {
+    try {
+        const res = await fetch(url, { cache: "no-store" });
 
-    if (!res.ok) {
-        console.error("API ERROR:", res.status, url);
-        throw new Error("Fetch failed");
+        const contentType = res.headers.get("content-type") || "";
+
+        // ❗ Nếu không phải JSON → bỏ
+        if (!contentType.includes("application/json")) {
+            const text = await res.text();
+            console.error("❌ Not JSON:", text);
+            return null;
+        }
+
+        const text = await res.text();
+
+        if (!text) {
+            console.warn("⚠️ Empty response:", url);
+            return null;
+        }
+
+        return JSON.parse(text);
+    } catch (err) {
+        console.error("❌ Fetch error:", err);
+        return null;
     }
-    const data = await res.json();
-    return data.data ?? [];//res.json();
 }
 
 export interface Product {
@@ -36,7 +49,8 @@ export interface Product {
 export interface SubCategory { id: number; categoryName: string; image: string; }
 // Fetch sản phẩm cho trang chủ
 export async function fetchProducts(): Promise<Product[]> {
-    return fetcher(`${API_BASE || API_BASE_L}`);
+    const data = await fetcher(`${API_BASE || API_BASE_L}`);
+    return data?.data ?? []; // ✅ luôn array
     /*const res = await fetch(`${API_BASE || API_BASE_L}`, {
         next: { revalidate: 259200 },//3 ngày
     });
@@ -50,7 +64,8 @@ export async function fetchProducts(): Promise<Product[]> {
 }
 // Fetch tất cả sản phẩm 
 export async function fetchAllProducts(): Promise<Product[]> {
-    return fetcher(`${API_BASE || API_BASE_L}/all`);
+    const data = await fetcher(`${API_BASE || API_BASE_L}/all`);
+    return data?.data ?? []
     /*const res = await fetch(`${API_BASE_A}/${slug}`, {
         next: { revalidate: 259200 }, // ⭐ quan trọng
     });

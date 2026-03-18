@@ -1,4 +1,4 @@
-import { fetchAllProducts, fetchSubCategories } from "./api";
+// import { fetchAllProducts, fetchSubCategories } from "./api";
 
 export function slugifyProduct(name: string): string {
     // Chuyển về lowercase

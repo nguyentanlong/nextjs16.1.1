@@ -34,7 +34,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const res = await fetch("/api/auth/me", {
                     credentials: "include",
                 });
+                // ❗ nếu không OK → bỏ qua
                 if (!res.ok) {
+                    console.warn("Not logged in:", res.status);
+                    setUser(null);
+                    return;
+                }
+                /*if (!res.ok) {
                     setUser(null);
                     return;
                 }
@@ -46,7 +52,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 console.error("Load user error:", err);
                 setUser(null);
             }
-        }
+        }*/
+                const text = await res.text();
+                if (!text) return;
+
+                const data = JSON.parse(text);
+
+                setUser(normalizeUser(data ?? null));//data.user
+            } catch (err) {
+                console.error("Auth error:", err);
+            }
+        };
         loadUser();
     }, []);
 

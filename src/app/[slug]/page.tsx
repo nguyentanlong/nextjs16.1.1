@@ -70,6 +70,7 @@ async function getProducts(): Promise<Product[]> {
 export async function generateMetadata({ params }: any) {
     const { slug } = await params;
     const product = await fetchProductBySlug(slug);
+    if (!product) return notFound();
 
     return {
         title: product.productName,
@@ -166,7 +167,7 @@ export default async function ProductDetail({ params }: any) {
 }
 
 // ✅ generateStaticParams để build sẵn slug cho SEO
-export async function generateStaticParams() {
+/*export async function generateStaticParams() {
     const products = await fetchProducts();
     return products.map((p) => ({ slug: slugifyProduct(p.productName) }));
-}
+}*/
