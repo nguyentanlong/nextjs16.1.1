@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { renderContent } from "./RenderContent";
+import RenderContent from "./RenderContent";
 
 
 interface ProductTabsProps {
@@ -38,8 +38,7 @@ export default function ProductTabs({ description }: ProductTabsProps) {
             <div className="tab-content">
                 {activeTab === "desc" && (
                     <div id="desc" className="tab-pane active">{/* dangerouslySetInnerHTML={{ __html: description }}>*/}
-                        {renderContent(description)}
-                        {/* <RenderContent html={description} /> */}
+                        <RenderContent content={description} />
                         {/* <p>{description}</p> */}
                     </div>
                 )}

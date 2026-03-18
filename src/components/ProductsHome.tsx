@@ -1,9 +1,10 @@
-import { normalizeImage, Product } from "@/lib/api";
+import { fetchProducts, normalizeImage } from "@/lib/api";
 import { slugifyProduct } from "@/lib/slugify";
 import Image from "next/image";
 import Link from "next/link"
 import { Suspense } from "react";
-export default function ProductsHome({ products }: { products: Product[] }) {
+export default async function ProductsHome() {
+    const products = await fetchProducts();
     if (!products || products.length === 0) {
         return <div>Chưa có sản phẩm nào</div>;
     }
@@ -24,7 +25,7 @@ export default function ProductsHome({ products }: { products: Product[] }) {
                             {/* Sản phẩm 1 */}
                             {products.map((p) => (
                                 <div key={p.id} className="suggestion-card">
-                                    <Link href={`/${slugifyProduct(p.productName)}`} className="product-link">
+                                    <Link href={`/${p.slugP}`} className="product-link">
                                         {p.discountPercent && (
                                             <div className="badge-percent">
                                                 -50%-{/*p.discountPercent*/}%

@@ -4,9 +4,25 @@ const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
 const API_BASE_A = process.env.NEXT_PUBLIC_API_BASE_A;
 const API_BASE_SUBCATA = `/subcategories/subcate`
 
+// ===== Helper =====
+async function fetcher(url: string, options?: RequestInit) {
+    const res = await fetch(url, {
+        ...options,
+        next: { revalidate: 3600 }, // ⭐ cache 1h
+    });
+
+    if (!res.ok) {
+        console.error("API ERROR:", res.status, url);
+        throw new Error("Fetch failed");
+    }
+    const data = await res.json();
+    return data.data ?? [];//res.json();
+}
+
 export interface Product {
     id: string;
     productName: string;
+    slugP: string;
     shortDescription: string;
     description: string;
     media: string[];
@@ -20,8 +36,9 @@ export interface Product {
 export interface SubCategory { id: number; categoryName: string; image: string; }
 // Fetch sản phẩm cho trang chủ
 export async function fetchProducts(): Promise<Product[]> {
-    const res = await fetch(`${API_BASE || API_BASE_L}`, {
-        cache: "no-store",// next: { revalidate: 3600 },
+    return fetcher(`${API_BASE || API_BASE_L}`);
+    /*const res = await fetch(`${API_BASE || API_BASE_L}`, {
+        next: { revalidate: 259200 },//3 ngày
     });
 
     if (!res.ok) {
@@ -29,28 +46,32 @@ export async function fetchProducts(): Promise<Product[]> {
         console.error("Fetch products error:", res.status, text);
     }//throw new Error("Không thể fetch dữ liệu sản phẩm");
     const json = await res.json();
-    return json.data;
+    return json.data;*/
 }
 // Fetch tất cả sản phẩm 
 export async function fetchAllProducts(): Promise<Product[]> {
-    const res = await fetch(`${API_BASE_A}`, {
-        cache: "no-store",// next: { revalidate: 3600 },
+    return fetcher(`${API_BASE || API_BASE_L}/all`);
+    /*const res = await fetch(`${API_BASE_A}/${slug}`, {
+        next: { revalidate: 259200 }, // ⭐ quan trọng
     });
 
     if (!res.ok) {
-        const text = await res.text(); // log nội dung lỗi từ backend 
-        console.error("Fetch products error:", res.status, text);
-    }//throw new Error("Không thể fetch dữ liệu sản phẩm");
-    const json = await res.json();
-    return json.data;
-}
+        throw new Error("Fetch product failed");
+    }
 
+    return res.json();*/
+}
+// ===== Lấy 1 sản phẩm theo slug =====
+export async function fetchProductBySlug(slug: string): Promise<Product> {
+    return fetcher(`${API_BASE || API_BASE_L}/product/${slug}`);
+}
 // Fetch chi tiết sản phẩm theo id
 export async function fetchProductById(id: string): Promise<Product> {
-    const res = await fetch(`${API_BASE || API_BASE_L}${id}`, { next: { revalidate: 3600 }, });
+    return fetcher(`${API_BASE || API_BASE_L}${id}`);
+    /*const res = await fetch(`${API_BASE || API_BASE_L}${id}`, { next: { revalidate: 3600 }, });
     if (!res.ok) console.log("Lỗi fetchProductById")//.error(error)//throw new Error("Không thể fetch dữ liệu sản phẩm");
     const json = await res.json();
-    return json.data;
+    return json.data;*/
 }
 
 // src/lib/api.tsx

@@ -8,6 +8,8 @@ import ProductImages from "@/components/ProductImage";
 import ProductTabs from "@/components/ProductTab";
 import RelatedProducts from "@/components/RelateProducts";
 import { notFound } from "next/navigation";
+export const revalidate = 259200;
+import { fetchProductBySlug } from "@/lib/api";
 
 /*interface Product {
     id: string;
@@ -28,14 +30,14 @@ async function getProducts(): Promise<Product[]> {
     return json.data;
 }
 */
-async function getProductBySlug(slug: string): Promise<Product | null> {
+/*async function getProductBySlug(slug: string): Promise<Product | null> {
     const products = await fetchProducts();
     return products.find((p) => slugifyProduct(p.productName) === slug) || null;
 
-}
+}*/
 
 // ✅ Fix: params là Promise, cần await
-export async function generateMetadata({
+/*export async function generateMetadata({
     params,
 }: {
     params: Promise<{ slug: string }>;
@@ -64,26 +66,40 @@ export async function generateMetadata({
             images: [product.media[0]],
         },
     };
+}*/
+export async function generateMetadata({ params }: any) {
+    const { slug } = await params;
+    const product = await fetchProductBySlug(slug);
+
+    return {
+        title: product.productName,
+        description: product.shortDescription,
+        keywords: product.keywords,
+        openGraph: {
+            title: product.productName,
+            description: product.shortDescription,
+            url: `https://tanlong.cameramattroi.com/${product.slugP}`,
+            images: [{ url: product.media[0] }],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: product.productName,
+            description: product.shortDescription,
+            images: [product.media[0]],
+        },
+    };
 }
 
-/*export default async function ProductDetailPage({
-    params,
-}: {
-    params: Promise<{ slug: string }>;
-}) {
-    const { slug } = await params;
-    const product = await getProductBySlug(slug);
-
-    if (!product) return <div>Không tìm thấy sản phẩm</div>;*/
-export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+/*export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params; // unwrap Promise
     return (<ProductDetail slug={slug} />);
 
-}
-async function ProductDetail({ slug }: { slug: string }) {
-    const products = await fetchProducts();
+}*/
+export default async function ProductDetail({ params }: any) {
+    const { slug } = await params;
+    const product = await fetchProductBySlug(slug);
     // const product = products.find((p) => slugifyProduct(p.productName) === params.slug);
-    const product = products.find((p) => slugifyProduct(p.productName) === slug);
+    /*const product = products.find((p) => slugifyProduct(p.productName) === slug);*/
     if (!product) { // xử lý trường hợp không tìm thấy sản phẩm 
         return notFound();
     } // hoặc redirect, hoặc render fallback }
@@ -151,6 +167,6 @@ async function ProductDetail({ slug }: { slug: string }) {
 
 // ✅ generateStaticParams để build sẵn slug cho SEO
 export async function generateStaticParams() {
-    const products = await fetchAllProducts();
+    const products = await fetchProducts();
     return products.map((p) => ({ slug: slugifyProduct(p.productName) }));
 }

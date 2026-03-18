@@ -5,15 +5,15 @@ import Category from '@/components/Category';
 import PopularCategory from '@/components/PopularCategory';
 import ProductsHome from '@/components/ProductsHome';
 import ReBanner from '@/components/ReBanner';
-import { fetchProducts } from '@/lib/api';
-import Header from '@/components/Header';
+// import { fetchProducts } from '@/lib/api';
+// import Header from '@/components/Header';
 import HomeNavbar from '@/components/HomeNavbar';
 import { fetchSubCategories } from '@/lib/api';
 import type { SubCategory } from "@/styles/types";
-import Footer from '@/components/Footer';
+// import Footer from '@/components/Footer';
 
 export default async function HomePage() {
-  const products = await fetchProducts();
+  // const products = await fetchProducts();
   const subCategories = await fetchSubCategories(); // chạy trên server
 
   return (
@@ -22,7 +22,7 @@ export default async function HomePage() {
       <HeroBanner />
       <Category subCategories={subCategories} />
       <PopularCategory />
-      <ProductsHome products={products} />
+      <ProductsHome />
       <ReBanner />
       {/* <Footer /> */}
     </main>

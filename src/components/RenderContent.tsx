@@ -1,52 +1,90 @@
+"use client";
+
+import parse from "html-react-parser";
 import Image from "next/image";
 
-export function renderContent(html: string) {
-    const regex = /<img([^>]*)>/g;
-    const parts: React.ReactNode[] = [];
-    let lastIndex = 0;
-    let match;
-    let key = 0;
+function normalizeSrc(src?: string) {
+    if (!src) return null;
 
-    while ((match = regex.exec(html)) !== null) {
-        // Nội dung trước <img>
-        if (match.index > lastIndex) {
-            parts.push(
-                <span
-                    key={key++}
-                    dangerouslySetInnerHTML={{ __html: html.slice(lastIndex, match.index) }}
-                />
-            );
-        }
+    if (src.startsWith("http")) return src;
 
-        // Parse thuộc tính
-        const attrs = match[1];
-        const srcMatch = attrs.match(/src="([^"]+)"/);
-        const altMatch = attrs.match(/alt="([^"]*)"/);
-        const widthMatch = attrs.match(/width="([^"]+)"/);
-        const heightMatch = attrs.match(/height="([^"]+)"/);
+    if (src.startsWith("//")) return `https:${src}`;
 
-        parts.push(
-            <Image
-                key={key++}
-                src={srcMatch ? srcMatch[1] : ""}
-                alt={altMatch ? altMatch[1] : ""}
-                width={widthMatch ? parseInt(widthMatch[1], 10) : 500}
-                height={heightMatch ? parseInt(heightMatch[1], 10) : 300}
-            />
-        );
+    if (src.startsWith("/")) return src;
 
-        lastIndex = regex.lastIndex;
+    return `/${src}`;
+}
+
+function isValidUrl(src: string) {
+    try {
+        new URL(src, "http://dummy.com");
+        return true;
+    } catch {
+        return false;
     }
+}
 
-    // Nội dung sau <img>
-    if (lastIndex < html.length) {
-        parts.push(
-            <span
-                key={key++}
-                dangerouslySetInnerHTML={{ __html: html.slice(lastIndex) }}
-            />
-        );
-    }
+export default function RenderContent({ content }: { content: string }) {
+    return (
+        <div className="prose max-w-none">
+            {parse(content, {
+                replace: (node: any) => {
+                    // ===== IMG =====
+                    if (node.name === "img") {
+                        const rawSrc = node.attribs?.src;
+                        const src = normalizeSrc(rawSrc);
 
-    return <div>{parts}</div>;
+                        if (!src || !isValidUrl(src)) {
+                            console.log("❌ INVALID IMG:", rawSrc);
+                            return null;
+                        }
+
+                        return (
+                            <Image
+                                src={src}
+                                alt={node.attribs?.alt || "image"}
+                                width={800}
+                                height={500}
+                                className="rounded-lg my-4"
+                            />
+                        );
+                    }
+
+                    // ===== VIDEO =====
+                    if (node.name === "video") {
+                        const src = normalizeSrc(node.attribs?.src);
+
+                        if (!src) return null;
+
+                        return (
+                            <video
+                                controls
+                                className="w-full rounded-lg my-4"
+                            >
+                                <source src={src} />
+                                Trình duyệt không hỗ trợ video
+                            </video>
+                        );
+                    }
+
+                    // ===== IFRAME (YouTube) =====
+                    if (node.name === "iframe") {
+                        const src = node.attribs?.src;
+
+                        if (!src) return null;
+
+                        return (
+                            <div className="my-4 aspect-video">
+                                <iframe
+                                    src={src}
+                                    className="w-full h-full rounded-lg"
+                                    allowFullScreen
+                                />
+                            </div>
+                        );
+                    }
+                },
+            })}
+        </div>
+    );
 }
