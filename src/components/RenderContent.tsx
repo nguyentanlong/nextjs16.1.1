@@ -26,7 +26,7 @@ function isValidUrl(src: string) {
 
 export default function RenderContent({ content }: { content: string }) {
     return (
-        <div className="prose max-w-none">
+        <div className="image-wrapper-l">
             {parse(content, {
                 replace: (node: any) => {
                     // ===== IMG =====
@@ -44,8 +44,8 @@ export default function RenderContent({ content }: { content: string }) {
                                 src={src}
                                 alt={node.attribs?.alt || "image"}
                                 width={800}
-                                height={500}
-                                className="rounded-lg my-4"
+                                height={600}
+                                className="product-image"
                             />
                         );
                     }

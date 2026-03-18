@@ -23,6 +23,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState(true);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     // const [refreshToken, setRefreshToken] = useState<string | null>(null);
+    /*if (typeof window === "undefined") {
+  console.warn("⚠️ Skip fetch on server:", url);
+  return null;
+}*/
     function normalizeUser(data: any) {
         return data?.user?.user ?? data?.user ?? data ?? null;
     }
@@ -36,14 +40,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 });
                 // ❗ nếu không OK → bỏ qua
                 if (!res.ok) {
-                    console.warn("Not logged in:", res.status);
-                    setUser(null);
+                    /*console.warn("Not logged in:", res.status);
+                    setUser(null);*/
                     return;
                 }
                 /*if (!res.ok) {
                     setUser(null);
                     return;
-                }
+                }*/
                 const data = await res.json();
                 setUser(normalizeUser(data));//(data.user ?? null);
                 setLoading(false);
@@ -52,17 +56,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 console.error("Load user error:", err);
                 setUser(null);
             }
-        }*/
-                const text = await res.text();
-                if (!text) return;
+        }
+        /*  const text = await res.text();
+          if (!text) return;
 
-                const data = JSON.parse(text);
+          const data = JSON.parse(text);
 
-                setUser(normalizeUser(data ?? null));//data.user
-            } catch (err) {
-                console.error("Auth error:", err);
-            }
-        };
+          setUser(normalizeUser(data ?? null));//data.user
+      } catch (err) {
+          console.error("Auth error:", err);
+      }
+  };*/
         loadUser();
     }, []);
 

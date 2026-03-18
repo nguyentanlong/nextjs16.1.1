@@ -1684,3 +1684,24 @@ video {
   height: 205px;
   border-radius: 15px;
 }
+
+/* ảnh trong nội dung chi tiết */
+.image-wrapper-l {
+  position: relative;
+  max-width: 100%;
+  /* padding-top: 75%; */
+  /* tỷ lệ 4:3, có thể đổi */
+}
+
+.product-image-l {
+  object-fit: contain;
+  /* hoặc cover */
+}
+
+/* .product-image-l {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  /* hoặc cover nếu muốn ảnh lấp đầy 
+  display: block;
+} */
