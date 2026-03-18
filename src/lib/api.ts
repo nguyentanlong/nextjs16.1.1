@@ -7,7 +7,7 @@ const API_BASE_SUBCATA = `/subcategories/subcate`
 // ===== Helper =====
 export async function fetcher(url: string) {
     try {
-        const res = await fetch(url, { cache: "no-store" });
+        const res = await fetch(url, { next: { revalidate: 259200 }, });
 
         const contentType = res.headers.get("content-type") || "";
 
@@ -49,7 +49,7 @@ export interface Product {
 export interface SubCategory { id: number; categoryName: string; image: string; }
 // Fetch sản phẩm cho trang chủ
 export async function fetchProducts(): Promise<Product[]> {
-    const data = await fetcher(`${API_BASE || API_BASE_L}`);
+    const data = await fetcher(`${API_BASE || API_BASE_L}/home`);
     return data?.data ?? []; // ✅ luôn array
     /*const res = await fetch(`${API_BASE || API_BASE_L}`, {
         next: { revalidate: 259200 },//3 ngày
@@ -66,15 +66,6 @@ export async function fetchProducts(): Promise<Product[]> {
 export async function fetchAllProducts(): Promise<Product[]> {
     const data = await fetcher(`${API_BASE || API_BASE_L}/all`);
     return data?.data ?? []
-    /*const res = await fetch(`${API_BASE_A}/${slug}`, {
-        next: { revalidate: 259200 }, // ⭐ quan trọng
-    });
-
-    if (!res.ok) {
-        throw new Error("Fetch product failed");
-    }
-
-    return res.json();*/
 }
 // ===== Lấy 1 sản phẩm theo slug =====
 export async function fetchProductBySlug(slug: string): Promise<Product> {
@@ -83,27 +74,35 @@ export async function fetchProductBySlug(slug: string): Promise<Product> {
 // Fetch chi tiết sản phẩm theo id
 export async function fetchProductById(id: string): Promise<Product> {
     return fetcher(`${API_BASE || API_BASE_L}${id}`);
-    /*const res = await fetch(`${API_BASE || API_BASE_L}${id}`, { next: { revalidate: 3600 }, });
-    if (!res.ok) console.log("Lỗi fetchProductById")//.error(error)//throw new Error("Không thể fetch dữ liệu sản phẩm");
-    const json = await res.json();
-    return json.data;*/
 }
 
-// src/lib/api.tsx
+export async function searchProduct(keyword: string) {
+    if (!keyword.trim()) return [];
 
-/*export interface ProductRelate {
-    id: string;
-    productName: string;
-    price: string;
-    media: string[];
-    categories: number;
+    const data = await fetcher(
+        `${API_BASE}/products/search/like/${encodeURIComponent(keyword)}`
+    );
+
+    return data?.data ?? []; // 🔥 luôn array
+}
+/*export async function searchProduct(name: string) {
+    const res = await fetch(
+        `${API_BASE || API_BASE_L}/search/like/${encodeURIComponent(
+            name
+        )}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+    if (!res.ok) {
+        throw new Error("Failed to fetch categories");
+    }
+    const data = await res.json();
+    return data;
 }*/
-
-// =========================
-// Kiểu 1: Lấy trực tiếp từ bảng products
-// =========================
-
-// Giả sử mình có sẵn danh sách products trong memory (mock data)
 export async function fetchRelatedProductsLocal(
     subCategoryId: number): Promise<Product[]> {
     console.log("👉 Bắt đầu fetch sản phẩm theo danh mục:", subCategoryId);
@@ -141,28 +140,7 @@ export async function fetchRelatedProductsLocal(
     // console.log("🔍 Sản phẩm đầu tiên:", allProducts?.[0]);
     return allProducts.filter((p) => p.subCategoryId === subCategoryId);
 }
-// src/lib/api.ts
-export async function searchProduct(name: string) {
-    const res = await fetch(
-        `${API_BASE || API_BASE_L}/subcategories/search/like/${encodeURIComponent(
-            name
-        )}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
 
-    if (!res.ok) {
-        throw new Error("Failed to fetch categories");
-    }
-    // console.log("Res...   ", res);
-    const data = await res.json();
-    // console.log(data); // đây mới là dữ liệu JSON từ API
-    return data;
-}
 
 
 // =========================

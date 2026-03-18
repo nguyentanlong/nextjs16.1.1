@@ -1,5 +1,5 @@
 // hooks/useSearchProduct.ts
-import { useState, useEffect } from "react";
+/*import { useState, useEffect } from "react";
 import { searchProduct } from "@/lib/api"; // giả sử bạn có hàm này
 
 export function useSearchProduct(query: string) {
@@ -23,4 +23,31 @@ export function useSearchProduct(query: string) {
     }, [query]);
 
     return results;
+}*/
+import { useEffect, useState } from "react";
+import { searchProduct } from "@/lib/api";
+
+export function useSearchProduct(keyword: string) {
+    const [products, setProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!keyword.trim()) {
+            setProducts([]);
+            return;
+        }
+
+        const timeout = setTimeout(async () => {
+            setLoading(true);
+
+            const res = await searchProduct(keyword);
+            setProducts(res);
+
+            setLoading(false);
+        }, 400); // 🔥 debounce 400ms
+
+        return () => clearTimeout(timeout);
+    }, [keyword]);
+
+    return { products, loading };
 }

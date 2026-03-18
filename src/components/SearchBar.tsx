@@ -4,12 +4,12 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchProduct } from "@/hook/useSearchProduct";
 import Link from "next/link";
-import { slugifyProduct } from "@/lib/slugify";
 
 export default function SearchBar() {
-    const [query, setQuery] = useState("");
+    const [keyword, setKeyword] = useState("");
     const [showSuggest, setShowSuggest] = useState(false);
-    const results = useSearchProduct(query);
+    // const results = useSearchProduct(query);
+    const { products, loading } = useSearchProduct(keyword);
     const suggestRef = useRef<HTMLUListElement>(null);
     const router = useRouter();
 
@@ -48,16 +48,20 @@ export default function SearchBar() {
                     type="text"
                     placeholder="Nhập từ khóa cần tìm"
                     aria-label="Tìm kiếm sản phẩm"
-                    value={query}
+                    value={keyword}
                     onChange={(e) => {
-                        setQuery(e.target.value);
+                        setKeyword(e.target.value.trimStart());
                         setShowSuggest(true);
                     }}
                 />
                 <button type="submit">🔍</button>
             </div>
+            {loading && <div>Đang tìm...</div>}
 
-            {showSuggest && results.length > 0 && (
+            {!loading && keyword && products.length === 0 && (
+                <div>Không tìm thấy sản phẩm</div>
+            )}
+            {showSuggest && products.length > 0 && (
                 <ul
                     id="suggestBox"
                     className="suggestBox"
@@ -76,13 +80,13 @@ export default function SearchBar() {
                         overflowY: "auto",        // bật thanh cuộn dọc
                     }}
                 >
-                    {results.map((item, idx) => (
+                    {products.map((item, idx) => (
                         <li
                             key={idx}
                             style={{ padding: "8px", cursor: "pointer" }}
                         // onClick={() => handleCategoryClick(item.categoryName)}
                         >
-                            <strong><Link href={`/${slugifyProduct(item.categoryName)}`}>{item.categoryName}</Link></strong>
+                            <strong><Link href={`/${item.slugP}`}>{item.categoryName}</Link></strong>
                             {item.products && item.products.length > 0 && (
                                 <ul style={{ marginLeft: 15 }}>
                                     {item.products.map((p: any, pIdx: number) => (
@@ -95,7 +99,7 @@ export default function SearchBar() {
                                             }}
                                         // onClick={() => handleProductClick(p.productName)}
                                         >
-                                            <Link href={`/${slugifyProduct(p.productName)}`} >{/*className="product-link"*/}
+                                            <Link href={`/${p.slugP}`} >{/*className="product-link"*/}
                                                 {p.productName}</Link>
                                         </li>
                                     ))}

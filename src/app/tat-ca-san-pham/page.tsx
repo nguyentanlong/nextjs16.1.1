@@ -5,5 +5,5 @@ export default async function AllProduct() {
     if (!productAll || productAll.length === 0) {
         return <div>Chưa có sản phẩm nào</div>;
     }
-    return <ProductsHome products={productAll} />;
+    return <ProductsHome />;
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { slugifyProduct } from "@/lib/slugify";
+// import { slugifyProduct } from "@/lib/slugify";
 import { normalizeImage, Product } from "@/lib/api";
 
 /*interface Product {
@@ -96,7 +96,7 @@ export default function RelatedProducts({ subCategoryId, products }: RelatedProd
                         const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
 
                         return (
-                            <Link key={p.id} href={`/${slugifyProduct(p.productName)}`}>
+                            <Link key={p.id} href={`/${p.slugP}`}>
                                 <div className="related-card">
                                     {src ? (
                                         isVideo ? (
