@@ -25,7 +25,7 @@ export function useSearchProduct(query: string) {
     return results;
 }*/
 import { useEffect, useState } from "react";
-import { searchProduct } from "@/lib/api";
+import { searchProducts } from "@/lib/api";
 
 export function useSearchProduct(keyword: string) {
     const [products, setProducts] = useState<any[]>([]);
@@ -37,16 +37,16 @@ export function useSearchProduct(keyword: string) {
             return;
         }
 
-        const timeout = setTimeout(async () => {
+        const delayDebounce = setTimeout(async () => {
             setLoading(true);
 
-            const res = await searchProduct(keyword);
-            setProducts(res);
+            const result = await searchProducts(keyword);
+            setProducts(result);
 
             setLoading(false);
-        }, 400); // 🔥 debounce 400ms
+        }, 400); // 🔥 debounce
 
-        return () => clearTimeout(timeout);
+        return () => clearTimeout(delayDebounce);
     }, [keyword]);
 
     return { products, loading };

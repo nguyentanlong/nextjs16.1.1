@@ -76,7 +76,7 @@ export async function fetchProductById(id: string): Promise<Product> {
     return fetcher(`${API_BASE || API_BASE_L}${id}`);
 }
 
-export async function searchProduct(keyword: string) {
+/*export async function searchProduct(keyword: string) {
     if (!keyword.trim()) return [];
 
     const data = await fetcher(
@@ -84,61 +84,51 @@ export async function searchProduct(keyword: string) {
     );
 
     return data?.data ?? []; // 🔥 luôn array
-}
-/*export async function searchProduct(name: string) {
-    const res = await fetch(
-        `${API_BASE || API_BASE_L}/search/like/${encodeURIComponent(
-            name
-        )}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
-    if (!res.ok) {
-        throw new Error("Failed to fetch categories");
-    }
-    const data = await res.json();
-    return data;
 }*/
-export async function fetchRelatedProductsLocal(
-    subCategoryId: number): Promise<Product[]> {
-    console.log("👉 Bắt đầu fetch sản phẩm theo danh mục:", subCategoryId);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}`,
-        {
-            method: "GET", headers: { "Content-Type": "application/json" },
-            cache: "no-store",//next: { revalidate: 3600 },
-        });
-    // console.log("📡 Status code từ API:", res.status);
-    if (!res.ok) {
-        throw new Error("Không lấy được danh sách sản phẩm");
+export async function searchProducts(keyword: string) {
+    if (!keyword.trim()) return [];
+
+    try {
+        const res = await fetch(
+            `${API_BASE}/search/like?q=${encodeURIComponent(keyword)}`,
+            {
+                cache: "no-store", // search không cache
+            }
+        );
+
+        const text = await res.text();
+
+        if (!text) return [];
+
+        const data = JSON.parse(text);
+
+        return data?.data ?? data ?? [];
+    } catch (err) {
+        console.error("Search error:", err);
+        return [];
     }
-    const json = await res.json();
-    // console.log("📦 JSON trả về từ API:", json);
-    // const allProducts: Product[] = await res.json();
-    // API trả về { data: [...] } 
-    const allProducts: Product[] = json.data;
-    // console.log("📊 Tổng số sản phẩm nhận được:", allProducts?.length);
-    // console.log("🔍 Sản phẩm mẫu (phần tử đầu tiên):", allProducts?.[0]);
-    if (!Array.isArray(allProducts)) {
-        // console.error("API không trả về mảng sản phẩm:", json); return [];
+}
+export async function fetchRelatedProducts(productId: string) {
+    if (!productId) return [];
+
+    try {
+        const res = await fetch(
+            `${API_BASE}/related/${productId}`,
+            {
+                cache: "no-store",
+            }
+        );
+
+        const text = await res.text();
+        if (!text) return [];
+
+        const data = JSON.parse(text);
+
+        return data?.data ?? data ?? [];
+    } catch (err) {
+        console.error("Related products error:", err);
+        return [];
     }
-    // allProducts.filter((p) => p.subCategoryId === subCategoryId)
-    const filtered = allProducts.filter((p) => {
-        // console.log("🧾 Kiểm tra sản phẩm:", p);
-        // console.log("➡️ p.subCategoryId:", p.subCategoryId, " | cần lọc:", subCategoryId);
-        // console.log(typeof p.subCategoryId, p.subCategoryId);
-        // console.log(typeof subCategoryId, subCategoryId);
-        // console.table(allProducts.map(p => ({ id: p.id, subCategoryId: p.subCategoryId })));
-        return p.subCategoryId === subCategoryId;
-    });
-    console.log("✅ Số sản phẩm sau khi lọc:", filtered.length);
-    // console.log("👉 stock param nhận vào:", categories);
-    // console.log("📦 JSON trả về từ API:", json);
-    // console.log("🔍 Sản phẩm đầu tiên:", allProducts?.[0]);
-    return allProducts.filter((p) => p.subCategoryId === subCategoryId);
 }
 
 

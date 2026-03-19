@@ -1,9 +1,9 @@
 // src/app/[slug]/page.tsx
 // "use client";
-import { Metadata } from "next";
-import { slugifyProduct } from "@/lib/slugify";
+// import { Metadata } from "next";
+// import { slugifyProduct } from "@/lib/slugify";
 import Link from "next/link";
-import { fetchProducts, Product, fetchRelatedProductsLocal, fetchAllProducts } from "@/lib/api";
+// import { fetchProducts, Product, fetchAllProducts } from "@/lib/api";
 import ProductImages from "@/components/ProductImage";
 import ProductTabs from "@/components/ProductTab";
 import RelatedProducts from "@/components/RelateProducts";
@@ -105,7 +105,7 @@ export default async function ProductDetail({ params }: any) {
         return notFound();
     } // hoặc redirect, hoặc render fallback }
     // Lấy sản phẩm cùng danh mục 
-    const relatedProducts = await fetchRelatedProductsLocal(product.subCategoryId);
+    // const relatedProducts = await fetchRelatedProductsLocal(product.subCategoryId);
     // const [mainImg, setMainImg] = useState(product?.media?.[0] ?? "/favicon.ico");
     if (!product) return <div>Không tìm thấy sản phẩm</div>;
 
@@ -159,7 +159,7 @@ export default async function ProductDetail({ params }: any) {
 
                 {/* Sản phẩm liên quan */}
                 {/* ... phần ảnh sản phẩm, tabs */}
-                <RelatedProducts subCategoryId={product.subCategoryId} products={relatedProducts} />
+                <RelatedProducts productId={product.id} />
             </div>
         </section>
 

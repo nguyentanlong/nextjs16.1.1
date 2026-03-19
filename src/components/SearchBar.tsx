@@ -7,9 +7,11 @@ import Link from "next/link";
 
 export default function SearchBar() {
     const [keyword, setKeyword] = useState("");
+    // const [show, setShow] = useState(false);
+
+    const { products, loading } = useSearchProduct(keyword);
     const [showSuggest, setShowSuggest] = useState(false);
     // const results = useSearchProduct(query);
-    const { products, loading } = useSearchProduct(keyword);
     const suggestRef = useRef<HTMLUListElement>(null);
     const router = useRouter();
 
@@ -20,6 +22,7 @@ export default function SearchBar() {
                 !suggestRef.current.contains(event.target as Node)
             ) {
                 setShowSuggest(false);
+                // setShow(false);
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
@@ -52,6 +55,7 @@ export default function SearchBar() {
                     onChange={(e) => {
                         setKeyword(e.target.value.trimStart());
                         setShowSuggest(true);
+                        // setShow(true);
                     }}
                 />
                 <button type="submit">🔍</button>
@@ -80,31 +84,21 @@ export default function SearchBar() {
                         overflowY: "auto",        // bật thanh cuộn dọc
                     }}
                 >
-                    {products.map((item, idx) => (
+                    {products.map((item) => (
                         <li
-                            key={idx}
+                            key={item.id}
                             style={{ padding: "8px", cursor: "pointer" }}
+                            onClick={(e) => e.stopPropagation()}
                         // onClick={() => handleCategoryClick(item.categoryName)}
                         >
-                            <strong><Link href={`/${item.slugP}`}>{item.categoryName}</Link></strong>
-                            {item.products && item.products.length > 0 && (
-                                <ul style={{ marginLeft: 15 }}>
-                                    {item.products.map((p: any, pIdx: number) => (
-                                        <li
-                                            key={pIdx}
-                                            style={{
-                                                fontSize: "1em",
-                                                color: "#ffffff",
-                                                cursor: "pointer",
-                                            }}
-                                        // onClick={() => handleProductClick(p.productName)}
-                                        >
-                                            <Link href={`/${p.slugP}`} >{/*className="product-link"*/}
-                                                {p.productName}</Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
+                            <strong
+                                style={{
+                                    marginLeft: 15,
+                                    fontSize: "1em",
+                                    color: "#ffffff",
+                                    cursor: "pointer",
+                                }}
+                            ><Link href={`/${item.slugP}`}>{item.productName}</Link></strong>
                         </li>
                     ))}
                 </ul>

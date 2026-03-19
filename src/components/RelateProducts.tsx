@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 // import { slugifyProduct } from "@/lib/slugify";
-import { normalizeImage, Product } from "@/lib/api";
+import { fetchRelatedProducts, normalizeImage } from "@/lib/api";
 
 /*interface Product {
     id: string;
@@ -16,21 +16,24 @@ import { normalizeImage, Product } from "@/lib/api";
 }*/
 
 interface RelatedProductsProps {
-    subCategoryId: number;
-    products: Product[];
+    productId: string;
+    // products: Product[];
 }
 
-export default function RelatedProducts({ subCategoryId, products }: RelatedProductsProps) {
+export default function RelatedProducts({ productId }: RelatedProductsProps) {
     const trackRef = useRef<HTMLDivElement>(null);
     const [index, setIndex] = useState(0);
+    const [related, setRelated] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
-    const items = products.length;
+
+    const items = related.length;
     const visible = 5; // số item hiển thị cùng lúc
 
     useEffect(() => {
+        if (!productId) return;
         const track = trackRef.current;
         if (!track || items === 0) return;
-
         const update = () => {
             const width = track.children[0].clientWidth + 20; // cộng margin
             track.style.transform = `translateX(-${index * width}px)`;
@@ -38,8 +41,16 @@ export default function RelatedProducts({ subCategoryId, products }: RelatedProd
 
         update();
         window.addEventListener("resize", update);
+
+        const fetchData = async () => {
+            setLoading(true);
+            const data = await fetchRelatedProducts(productId);
+            setRelated(data);
+            setLoading(false);
+        };
+        fetchData();
         return () => window.removeEventListener("resize", update);
-    }, [index, items]);
+    }, [productId]);//,index, items
 
     const handleNext = () => {
         setIndex((prev) => (prev < items - visible ? prev + 1 : 0));
@@ -48,84 +59,53 @@ export default function RelatedProducts({ subCategoryId, products }: RelatedProd
     const handlePrev = () => {
         setIndex((prev) => (prev > 0 ? prev - 1 : items - visible));
     };
-
-    // return (
-    //     <div className="related-products">
-    //         <h2>Sản phẩm cùng danh mục</h2>
-    //         <div className="related-carousel">
-    //             <div className="carousel-track" ref={trackRef}>
-    //                 {products.map((p, i) => (
-    //                     <Link key={p.id} href={`/${slugifyProduct(p.productName)}`}>
-    //                         <div className="related-card">
-    //                             <Image
-    //                                 src={p.media[0]}
-    //                                 alt={`Sản phẩm liên quan ${i}`}
-    //                                 width={100}
-    //                                 height={100}
-    //                             />
-    //                             <h4>{p.productName}</h4>
-    //                             <p className="price">{Number(p.price).toLocaleString("vi-VN")} ₫</p>
-    //                         </div>
-    //                     </Link>
-    //                 ))}
-    //             </div>
-    //             <button className="carousel-prev" onClick={handlePrev}>&lt;</button>
-    //             <button className="carousel-next" onClick={handleNext}>{">"}</button>
-    //             <span
-    //                 style={{
-    //                     display: "flex",
-    //                     justifyContent: "end",
-    //                     color: "orange",
-    //                     paddingTop: 15,
-    //                 }}
-    //             >
-    //                 Xem Tất cả
-    //             </span>
-    //         </div>
-
-    //     </div>
-    // );
     return (
         <div className="related-products">
             <h2>Sản phẩm cùng danh mục</h2>
+            {loading && <div>Đang tải sản phẩm liên quan...</div>}
+
+            {!loading && related.length === 0 && (
+                <div>Không có sản phẩm liên quan</div>
+            )}
             <div className="related-carousel">
                 <div className="carousel-track" ref={trackRef}>
-                    {products.map((p, i) => {
-                        const src = p.media && p.media.length > 0 ? p.media[0] : null;
-                        const ext = src?.split(".").pop()?.toLowerCase();
-                        const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
+                    {Array.isArray(related) &&
+                        related.map((p) => {
+                            const src = p.media && p.media.length > 0 ? p.media[0] : null;
+                            const ext = src?.split(".").pop()?.toLowerCase();
+                            const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
 
-                        return (
-                            <Link key={p.id} href={`/${p.slugP}`}>
-                                <div className="related-card">
-                                    {src ? (
-                                        isVideo ? (
-                                            <video
-                                                src={normalizeImage(p.media[0])}//.startsWith("/") ? src : `/${src}`
-                                                controls
-                                                width={100}
-                                                height={100}
-                                            />
+                            return (
+                                <Link key={p.id} href={`/${p.slugP}`}>
+                                    <div className="related-card">
+                                        {src ? (
+                                            isVideo ? (
+                                                <video
+                                                    src={normalizeImage(p.media[0])}//.startsWith("/") ? src : `/${src}`
+                                                    controls
+                                                    width={100}
+                                                    height={100}
+                                                />
+                                            ) : (
+                                                <Image
+                                                    src={normalizeImage(p.media[0])}//src.startsWith("/") ? src : `/${src}`
+                                                    alt={`Sản phẩm liên quan ${p.id}`}
+                                                    width={100}
+                                                    height={100}
+                                                />
+                                            )
                                         ) : (
-                                            <Image
-                                                src={normalizeImage(p.media[0])}//src.startsWith("/") ? src : `/${src}`
-                                                alt={`Sản phẩm liên quan ${i}`}
-                                                width={100}
-                                                height={100}
-                                            />
-                                        )
-                                    ) : (
-                                        <div className="placeholder" />
-                                    )}
+                                            <div className="placeholder" />
+                                        )}
 
-                                    <h4>{p.productName}</h4>
-                                    <p className="price">
-                                        {Number(p.price).toLocaleString("vi-VN")} ₫
-                                    </p>
-                                </div>
-                            </Link>
-                        );
-                    })}
+                                        <h4>{p.productName}</h4>
+                                        <p className="price">
+                                            {Number(p.price).toLocaleString("vi-VN")} ₫
+                                        </p>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                 </div>
                 <button className="carousel-prev" onClick={handlePrev}>
                     &lt;
