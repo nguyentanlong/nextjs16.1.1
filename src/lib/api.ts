@@ -1,13 +1,11 @@
 // src/lib/api.ts
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
-const API_BASE_A = process.env.NEXT_PUBLIC_API_BASE_A;
-const API_BASE_SUBCATA = `/subcategories/subcate`
 
 // ===== Helper =====
-export async function fetcher(url: string) {
+export async function fetcher(url: string, options?: RequestInit) {
     try {
-        const res = await fetch(url, { next: { revalidate: 259200 }, });
+        const res = await fetch(url, { ...options, next: { revalidate: 259200 }, });
 
         const contentType = res.headers.get("content-type") || "";
 
@@ -46,7 +44,7 @@ export interface Product {
     discountPercent: number;
     subCategoryId: number;
 }
-export interface SubCategory { id: number; categoryName: string; image: string; }
+export interface SubCategory { id: number; categoryName: string; slugSub: string; image: string; }
 // Fetch sản phẩm cho trang chủ
 export async function fetchProducts(): Promise<Product[]> {
     const data = await fetcher(`${API_BASE || API_BASE_L}/home`);
@@ -66,6 +64,30 @@ export async function fetchProducts(): Promise<Product[]> {
 export async function fetchAllProducts(): Promise<Product[]> {
     const data = await fetcher(`${API_BASE || API_BASE_L}/all`);
     return data?.data ?? []
+}
+export async function fetchProductsHome(page = 1, limit = 8) {
+    try {
+        const res = await fetch(
+            `${API_BASE}/home?page=${page}&limit=${limit}`,
+            {
+                cache: "no-store",
+            }
+        );
+        // const res = await fetcher(`${API_BASE || API_BASE_L}/home?page=${page}&limit=${limit}`);
+        // return data?.data ?? []
+        const text = await res.text();
+        if (!text) return { data: [], total: 0 };
+
+        const json = JSON.parse(text);
+
+        return {
+            data: json?.data ?? [],
+            total: json?.total ?? 0,
+        };
+    } catch (err) {
+        console.error("Fetch products error:", err);
+        return { data: [], total: 0 };
+    }
 }
 // ===== Lấy 1 sản phẩm theo slug =====
 export async function fetchProductBySlug(slug: string): Promise<Product> {
@@ -173,5 +195,30 @@ export async function fetchSubCategories(): Promise<SubCategory[]> {
     } catch (err) {
         console.error("❌ Error fetching subcategories:", err);
         return []; // hoặc throw err nếu muốn xử lý bên ngoài
+    }
+}
+export async function fetchProductsBySubCategory(
+    slug: string,
+    page = 1,
+    limit = 10
+) {
+    try {
+        const res = await fetch(
+            `${API_BASE}/subcategoryp/${slug}?page=${page}&limit=${limit}`,
+            { cache: "no-store" }
+        );
+
+        const text = await res.text();
+        if (!text) return { data: [], total: 0 };
+
+        const json = JSON.parse(text);
+
+        return {
+            data: json?.data ?? [],
+            total: json?.total ?? 0,
+        };
+    } catch (err) {
+        console.error("Fetch subcategory error:", err);
+        return { data: [], total: 0 };
     }
 }

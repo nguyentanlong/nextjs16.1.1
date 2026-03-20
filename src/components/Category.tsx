@@ -1,9 +1,7 @@
 "use client"
-import { fetchSubCategories, SubCategory, normalizeImage } from "@/lib/api";
-import { slugifyProduct } from "@/lib/slugify";
-import Image from "next/image";
+import { SubCategory, normalizeImage } from "@/lib/api";
+// import { slugifyProduct } from "@/lib/slugify";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import AppImage from "./ImageCatagory";
 
 export default function Category({ subCategories }: { subCategories: SubCategory[] }) {
@@ -31,7 +29,7 @@ export default function Category({ subCategories }: { subCategories: SubCategory
                     <div className="categories-carousel">
                         <div className="carousel-track">
                             {subCategories.map((sc) => (
-                                <Link key={sc.id} href={`/${slugifyProduct(sc.categoryName)}`}>
+                                <Link key={sc.id} href={`/${sc.slugSub}`}>
                                     <AppImage src={normalizeImage(sc.image)}
                                         alt={sc.categoryName}
                                         width={100}

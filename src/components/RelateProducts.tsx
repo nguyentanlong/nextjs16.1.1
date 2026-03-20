@@ -28,30 +28,36 @@ export default function RelatedProducts({ productId }: RelatedProductsProps) {
 
 
     const items = related.length;
-    const visible = 5; // số item hiển thị cùng lúc
-
+    const visible = 5; // số item hiển thị cùng lúcuseEffect(() => {
     useEffect(() => {
         if (!productId) return;
+
+        const fetchData = async () => {
+            setLoading(true);
+            const data = await fetchRelatedProducts(productId);
+            console.log("API related:", data); // 🔥 debug
+            setRelated(data);
+            setLoading(false);
+        };
+
+        fetchData();
+    }, [productId]);
+
+    //  console.log("related products:", related);
+    useEffect(() => {
         const track = trackRef.current;
-        if (!track || items === 0) return;
+        if (!track || related.length === 0) return;
+
         const update = () => {
-            const width = track.children[0].clientWidth + 20; // cộng margin
+            const width = track.children[0].clientWidth + 20;
             track.style.transform = `translateX(-${index * width}px)`;
         };
 
         update();
         window.addEventListener("resize", update);
 
-        const fetchData = async () => {
-            setLoading(true);
-            const data = await fetchRelatedProducts(productId);
-            setRelated(data);
-            setLoading(false);
-        };
-        fetchData();
         return () => window.removeEventListener("resize", update);
-    }, [productId]);//,index, items
-
+    }, [index, related]);
     const handleNext = () => {
         setIndex((prev) => (prev < items - visible ? prev + 1 : 0));
     };
@@ -61,11 +67,11 @@ export default function RelatedProducts({ productId }: RelatedProductsProps) {
     };
     return (
         <div className="related-products">
-            <h2>Sản phẩm cùng danh mục</h2>
+            <h2>Sản phẩm chung danh mục</h2>
             {loading && <div>Đang tải sản phẩm liên quan...</div>}
 
             {!loading && related.length === 0 && (
-                <div>Không có sản phẩm liên quan</div>
+                <div>Không có sản phẩm chung danh mục</div>
             )}
             <div className="related-carousel">
                 <div className="carousel-track" ref={trackRef}>

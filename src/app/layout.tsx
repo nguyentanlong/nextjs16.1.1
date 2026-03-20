@@ -1,5 +1,5 @@
 // src/app/[locale]/layout.tsx
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Script from 'next/script';
 import { AuthProvider } from '@/context/AuthContext';
@@ -16,12 +16,16 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico', // favicon chính 
     shortcut: '/favicon.png', // favicon phụ 
-    apple: '/apple-touch-icon.png',
+    apple: '/favicon.ico',
   },// cho iOS
   description: `Thi công điện dân dụng, công nghiệp, camera giám sát, năng lượng mặt trời, pccc, blhd, cơ điện tại HCM, Bình Dương, 
   Bình Phước, Đồng Nai, Tây Ninh, Vũng Tàu, DakNong, DakLak, toàn quốc. Nghiệm thu từng giai đoạn, chuyên
   nghiệp`,
-  keywords: ['camera giám sat', 'năng lượng mặt trời', 'thi công điện nước', 'pccc'],
+  keywords: ['camera giám sát', 'năng lượng mặt trời', 'thi công điện nước', 'pccc',
+    'camera giam sat', 'nang luong mat troi', 'thi cong dien nuoc', 'thiết bị pccc',
+    'thiet bi pccc', 'bình chữa cháy', 'binh chua chay', 'bảo hộ lao động',
+    'bao ho lao dong'
+  ],
   metadataBase: new URL('https://tanong.cameramattroi.com'),
   openGraph: {
     title: 'Camera giám sát - năng lượng mặt trời',
@@ -30,9 +34,15 @@ export const metadata: Metadata = {
   nghiệp`,
     url: 'https://tanlong.cameramattroi.com',
     siteName: 'Camera giám sát - năng lượng mặt trời',
-    images: [{ url: '/favicon.ico', width: 1200, height: 630, alt: 'Camera giám sát - năng lượng mặt trời' }],
-    // locale: 'vi_VN',
+    images: [{
+      url: '/favicon.ico', width: 1200, height: 630,
+      alt: 'Camera giám sát - năng lượng mặt trời'
+    }],
+    locale: 'vi_VN',
+    phoneNumbers: "0328732676",
+    emails: "hitlong.dinho.89@gmail.com",
     type: 'website',
+    countryName: "Việt Nam",
   },
   twitter: {
     card: 'summary_large_image',
@@ -40,17 +50,21 @@ export const metadata: Metadata = {
     description: `Thi công điện dân dụng, công nghiệp, camera giám sát, năng lượng mặt trời, pccc, blhd, cơ điện tại HCM, Bình Dương, 
   Bình Phước, Đồng Nai, Tây Ninh, Vũng Tàu, DakNong, DakLak, toàn quốc. Nghiệm thu từng giai đoạn, chuyên
   nghiệp`,
-    images: ['/og-cover.jpg'],
+    images: ['/favicon.icon'],
   },
-  /*alternates: {
-    canonical: 'https://cameramattroi.com',
-    languages: {
+  alternates: {
+    canonical: 'https://tanlong.cameramattroi.com',
+    /*languages: {
       vi: 'https://cameramattroi.com/vi',
       en: 'https://cameramattroi.com/en',
-    },
-  },*/
+    },*/
+  },
+  // metadataBase: new URL('https://tanlong.cameramattroi.com'),
 };
-
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+}
 export default function RootLayout({ children }: {
   children: React.ReactNode;
 

@@ -1,26 +1,21 @@
-import ProductsHome from "@/components/ProductsHome";
-import { fetchRelatedProductsLocal } from "@/lib/api";
+import ProductsHomeClientSub from "@/components/ProductsHomeClientSub";
+import { fetchProductsBySubCategory } from "@/lib/api";
+
 
 export default async function CategoryPage({
-  params,
+    params,
 }: {
-  params: Promise<{ slug: string }>;
+    params: { slug: string };
 }) {
-  // unwrap Promise
-  const { slug } = await params;
+    const { slug } = await params;
 
-  // slug dạng "dien-thoai-3.html"
-  const rawSlug = slug.replace(".html", "");
-  const parts = rawSlug.split("-");
-  const subCategoryId = Number(parts[parts.length - 1]);
-  const slugName = parts.slice(0, -1).join("-");
+    const res = await fetchProductsBySubCategory(slug, 1, 10);
 
-  // console.log("slugName 👉", slugName);
-  // console.log("subCategoryId 👉", subCategoryId);
-
-  const products = await fetchRelatedProductsLocal(subCategoryId);
-
-  return (
-    <ProductsHome products={products} />
-  );
+    return (
+        <ProductsHomeClientSub
+            initialProducts={res.data}
+            total={res.total}
+            slug={slug} // 🔥 thêm
+        />
+    );
 }

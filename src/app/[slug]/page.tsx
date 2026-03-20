@@ -1,9 +1,4 @@
-// src/app/[slug]/page.tsx
-// "use client";
-// import { Metadata } from "next";
-// import { slugifyProduct } from "@/lib/slugify";
 import Link from "next/link";
-// import { fetchProducts, Product, fetchAllProducts } from "@/lib/api";
 import ProductImages from "@/components/ProductImage";
 import ProductTabs from "@/components/ProductTab";
 import RelatedProducts from "@/components/RelateProducts";
@@ -91,11 +86,6 @@ export async function generateMetadata({ params }: any) {
     };
 }
 
-/*export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug } = await params; // unwrap Promise
-    return (<ProductDetail slug={slug} />);
-
-}*/
 export default async function ProductDetail({ params }: any) {
     const { slug } = await params;
     const product = await fetchProductBySlug(slug);
@@ -108,6 +98,7 @@ export default async function ProductDetail({ params }: any) {
     // const relatedProducts = await fetchRelatedProductsLocal(product.subCategoryId);
     // const [mainImg, setMainImg] = useState(product?.media?.[0] ?? "/favicon.ico");
     if (!product) return <div>Không tìm thấy sản phẩm</div>;
+    // console.log("ProductId nhận: ", product.id);
 
     return (
         <section className="product-detail">
