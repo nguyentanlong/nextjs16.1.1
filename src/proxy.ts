@@ -2,39 +2,19 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+    const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
     // Lấy token từ cookie
     const token = request.cookies.get("accessToken")?.value;
-    // Flag để skip middleware khi test 
-    /*if (process.env.SKIP_MIDDLEWARE === "true") {
-        console.log("👉 Middleware skipped for testing");
-        return NextResponse.next();
-    }*/
-    // Chỉ chạy middleware cho /admin/* 
-    /*if (request.nextUrl.pathname.startsWith("/admin")) {
-        console.log("👉 Middleware chạy cho admin route:",
-            request.nextUrl.pathname);}*/
-    // const refreshToken = request.cookies.get("refreshToken")?.value;
-    // Kiểm tra accessToken hết hạn (ví dụ decode JWT) 
-    let isExpired = false;
+    const refreshToken = request.cookies.get("refreshToken")?.value;
 
-    // Redirect "/" → "/home" 
-    /*if (pathname === "/home" || pathname === "/trang-chu") {
-        return NextResponse.redirect(new URL("/", request.url));
+    // 👉 không có token → bỏ qua
+    if (!token || !refreshToken) {
+        return NextResponse.next();
     }
- 
-    // Các route public không cần token
-    const publicPaths = ["/login", "/register", "/", "/product", "/:slug.html"];
-    if (publicPaths.some((path) => pathname.startsWith(path))) {
-        return NextResponse.next();
-    }*/
-
-    // const token = localStorage.getItem("token");
-    // Nếu đã đăng nhập mà vẫn vào /login → redirect sang /account
-    // console.log("👉 Middleware bắt đầu:", { token, pathname });
-    // console.log("RefreshToken:   ", refreshToken)
-    // console.log("👉 Request cookies in middleware:", request.cookies.getAll());
+    let isExpired = false;
 
     if (!token && pathname.startsWith("/admin")) {
         return NextResponse.redirect(new URL("/login", request.url));
@@ -75,6 +55,64 @@ export default function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/login", request.url));
         }
     }
+    try {
+        // 👉 test accessToken
+        const res = await fetch(`${API_BASE}/auth/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (res.status === 200) {
+            return NextResponse.next(); // ✅ token còn sống
+        }
+
+        // 🔥 nếu 401 → refresh
+        if (res.status === 401) {
+            const refreshRes = await fetch(`${API_BASE || API_BASE_L}/auth/refresh`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ refreshToken }),
+                credentials: "include",
+            });
+
+            if (!refreshRes.ok) {
+                return NextResponse.next(); // ❌ refresh fail
+            }
+
+            const data = await refreshRes.json();
+
+            const response = NextResponse.next();
+
+            // 🔥 set lại cookie
+            response.cookies.set("accessToken", data.accessToken, {
+                httpOnly: true,
+                secure: false,//process.env.NODE_ENV === 'production',//https: true
+                sameSite: 'lax',//'none',//https: none
+                path: '/',
+                maxAge: 60 * 15,
+            });
+
+            response.cookies.set("refreshToken", data.refreshToken, {
+                httpOnly: true,
+                secure: false,//process.env.NODE_ENV === 'production',//https: true
+                sameSite: 'lax',//'none',//https: none
+                path: '/',
+                maxAge: 60 * 15,
+            });
+
+            return response;
+        }
+
+        return NextResponse.next();
+    } catch (err) {
+        console.error("Middleware error:", err);
+        return NextResponse.next();
+    }
+
+
     return NextResponse.next();
 }
 export const config = {
@@ -82,6 +120,8 @@ export const config = {
         // "/",
         "/admin/:path*",
         "/admin",
+        "/product-editor-client",
+        "/api/products/:path*",
         // "/home",
         // "/login",
         // "/register",

@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 credentials: "include",
                 cache: "no-store"
             })
-            fetch('/api/auth/me').then(r => r.json()).then(console.log)
+            // fetch('/api/auth/me').then(r => r.json()).then(console.log)
             const data1 = await res.json()
 
             // setUser(data.user)

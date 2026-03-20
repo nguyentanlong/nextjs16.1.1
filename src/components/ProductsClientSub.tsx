@@ -1,39 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchProductsBySubCategory, fetchProductsHome, normalizeImage } from "@/lib/api";
-import Link from "next/link";
 import Image from "next/image";
+import { fetchProductsBySubCategory, normalizeImage } from "@/lib/api";
+import Link from "next/link";
 
-export default function ProductsHomeClientSub({
+export default function ProductsBySubCategoryClient({
     initialProducts,
     total,
     slug,
 }: {
     initialProducts: any[];
     total: number;
-    slug?: string;
+    slug: string;
 }) {
     const [products, setProducts] = useState(initialProducts);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
 
-    const limit = 8;
+    const limit = 10;
     const totalPages = Math.ceil(total / limit);
 
+    // 👉 fetch khi đổi page
     useEffect(() => {
         if (page === 1) {
-            setProducts(initialProducts); // 🔥 trả lại data ban đầu
+            setProducts(initialProducts);
             return;
         }
 
         const fetchData = async () => {
             setLoading(true);
-
-            const res = slug
-                ? await fetchProductsBySubCategory(slug, page, limit) // 🔥
-                : await fetchProductsHome(page, limit);
-
+            const res = await fetchProductsBySubCategory(slug, page, limit);
             setProducts(res.data);
             setLoading(false);
         };

@@ -2,7 +2,7 @@ import { fetchProductsHome } from "@/lib/api";
 import Link from "next/link"
 import { Suspense } from "react";
 import ProductsHomeClient from "./ProductHomeClient";
-import ProductsHomeClientSub from "./ProductsHomeClientSub";
+// import ProductsHomeClientSub from "./ProductsHomeClientSub";
 export default async function ProductsHome() {
 
     const res = await fetchProductsHome();
@@ -24,7 +24,7 @@ export default async function ProductsHome() {
                         {/* GRID 5 CỘT (desktop) */}
                         <div className="suggestion-grid">
                             {/* Sản phẩm 1 */}
-                            <ProductsHomeClientSub
+                            <ProductsHomeClient
                                 initialProducts={res.data}
                                 total={res.total}
                             />

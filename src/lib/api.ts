@@ -69,9 +69,7 @@ export async function fetchProductsHome(page = 1, limit = 8) {
     try {
         const res = await fetch(
             `${API_BASE}/home?page=${page}&limit=${limit}`,
-            {
-                cache: "no-store",
-            }
+            { next: { revalidate: 259200, } }
         );
         // const res = await fetcher(`${API_BASE || API_BASE_L}/home?page=${page}&limit=${limit}`);
         // return data?.data ?? []
@@ -113,9 +111,7 @@ export async function searchProducts(keyword: string) {
     try {
         const res = await fetch(
             `${API_BASE}/search/like?q=${encodeURIComponent(keyword)}`,
-            {
-                cache: "no-store", // search không cache
-            }
+            { next: { revalidate: 259200, } }
         );
 
         const text = await res.text();
@@ -136,9 +132,7 @@ export async function fetchRelatedProducts(productId: string) {
     try {
         const res = await fetch(
             `${API_BASE}/related/${productId}`,
-            {
-                cache: "no-store",
-            }
+            { next: { revalidate: 259200, } }
         );
 
         const text = await res.text();
@@ -160,7 +154,7 @@ export async function fetchRelatedProducts(productId: string) {
 // export async function fetchRelatedProductsAPI(categoryId: string): Promise<Product[]> {
 // const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/products/related?categoryId=${categoryId}`, {
 // method: "GET", headers: {
-//  "Content-Type": "application/json" }, cache: "no-store", });
+//  "Content-Type": "application/json" }, revalidate: 259200, });
 // if (!res.ok) {
 // throw new Error("Không lấy được sản phẩm liên quan"); }
 // const data = await res.json();
@@ -205,7 +199,7 @@ export async function fetchProductsBySubCategory(
     try {
         const res = await fetch(
             `${API_BASE}/subcategoryp/${slug}?page=${page}&limit=${limit}`,
-            { cache: "no-store" }
+            { next: { revalidate: 259200, } }
         );
 
         const text = await res.text();
