@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
-const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
 // 👉 decode JWT (không cần thư viện)
 function parseJwt(token: string) {
     try {
@@ -39,12 +37,13 @@ export default async function middleware(request: NextRequest) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload & { role?: string };
             // Nếu token đã hết hạn → redirect về login 
-            if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
+            /*if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
                 // console.log("👉 Token expired");
                 isExpired = true;
                 // return NextResponse.redirect(new URL("/", request.url));
 
-            }
+            }*/
+            // console.log("Vào if(Token)");
             if (["admin", "staff", "user"].includes(decoded?.role || "")) {//if (decoded?.role === "admin" || decoded?.role === "staff" || decoded?.role === "user") {
                 // Nếu đã ở /admin thì cho đi tiếp, không redirect nữa 
                 if (pathname.startsWith("/admin")) {
@@ -127,53 +126,8 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.next();
     }*/
 
-    const decoded = parseJwt(token ?? "");
 
-    if (!decoded?.exp) {
-        return NextResponse.next();
-    }
-
-    const now = Math.floor(Date.now() / 1000);
-
-    // 👉 nếu còn hạn > 60s thì bỏ qua
-    if (decoded.exp - now > 60) {
-        return NextResponse.next();
-    }
-
-    // 🔥 sắp hết hạn → refresh
-    try {
-        const refreshRes = await fetch(`${API_BASE || API_BASE_L}/auth/refresh`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ refreshToken }),
-        });
-
-        if (!refreshRes.ok) {
-            return NextResponse.next();
-        }
-
-        const data = await refreshRes.json();
-
-        const res = NextResponse.next();
-
-        res.cookies.set("accessToken", data.accessToken, {
-            httpOnly: true,
-            path: "/",
-        });
-
-        res.cookies.set("refreshToken", data.refreshToken, {
-            httpOnly: true,
-            path: "/",
-        });
-
-        return res;
-    } catch (err) {
-        console.error("Refresh token error:", err);
-        return NextResponse.next();
-    }
-    return NextResponse.next();
+    // return NextResponse.next();
 }
 export const config = {
     matcher: [

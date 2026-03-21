@@ -44,8 +44,8 @@ export async function GET() {
     }
 
     const data = await res.json();
-    console.log("Data trong api/me:  ", data)
+    /*console.log("Data trong api/me:  ", data)
     console.log("Token khi gửi:  ", token);
-    console.log("status:  ", res.status);
+    console.log("status:  ", res.status);*/
     return Response.json({ user: data.user ?? data });
 }

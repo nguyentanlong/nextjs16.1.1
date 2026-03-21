@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
 // API route để refresh token
-/*export async function POST(req: Request) {
+export async function POST(req: Request) {
     try {
         // Lấy refreshToken từ cookie
         const cookieHeader = req.headers.get('cookie') || '';
@@ -53,10 +53,10 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API
         console.error('Refresh error:', err);
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
-}*/
+}
 // src/app/api/refresh/route.ts
 
-export async function POST(req: Request) {
+/*export async function POST(req: Request) {
     try {
         const { refreshToken } = await req.json();
 
@@ -77,4 +77,4 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Server error" }, { status: 500 });
     }
 }
-
+*/
