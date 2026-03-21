@@ -27,7 +27,7 @@ export async function GET() {
 
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
-    console.log("TOKEN:", token);
+    // console.log("TOKEN:", token);
     if (!token) {
         return Response.json({ user: null });
     }

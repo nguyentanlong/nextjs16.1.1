@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const data = await res.json();
                 setUser(normalizeUser(data));//(data.user ?? null);
                 setLoading(false);
-                console.log("Data USEEFFECT AuthContext  ", normalizeUser(data));
+                // console.log("Data USEEFFECT AuthContext  ", normalizeUser(data));
             } catch (err) {
                 console.error("Load user error:", err);
                 setUser(null);
@@ -123,9 +123,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             // localStorage.setItem("user", JSON.stringify(user));
             // console.log("data.data.user  ", data.data.user);
-            console.log("Data LOGIN AuthContext:  ", data1);
+            // console.log("Data LOGIN AuthContext:  ", data1);
             setUser(normalizeUser(data1));
-            console.log("Data LOGIN AuthContext normalizeUser:  ", normalizeUser(data1));
+            // console.log("Data LOGIN AuthContext normalizeUser:  ", normalizeUser(data1));
             // setAccessToken(data.data.accessToken);
             // setRefreshToken(data.data.refreshToken);
             // localStorage.setItem("refreshToken", data.refreshToken);
