@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 // 👉 decode JWT (không cần thư viện)
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
 function parseJwt(token: string) {
     try {
         const base64 = token.split(".")[1];
@@ -68,78 +69,74 @@ export default async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/login", request.url));
         }
     }
-    // refresh nhưng phải gọi API profile
-    /*try {
-        // 👉 test accessToken
-        const res = await fetch(`${API_BASE}/auth/profile`, {
+
+    const decoded = parseJwt(token ?? "");
+    const now = Math.floor(Date.now() / 1000);
+
+    // 👉 còn hạn → đi tiếp
+    if (decoded?.exp && decoded.exp - now > 60) {
+        return NextResponse.next();
+    }
+
+    // 🔥 hết hạn → refresh
+    try {
+        const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
+            method: "POST",
             headers: {
-                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
             },
+            body: JSON.stringify({ refreshToken }),
         });
-
-        if (res.status === 200) {
-            return NextResponse.next(); // ✅ token còn sống
+        console.log("Token còn 1 phút");
+        if (!refreshRes.ok) {
+            return NextResponse.next();
         }
-
-        // 🔥 nếu 401 → refresh
-        if (res.status === 401) {
+        // 🔥 sắp hết hạn → refresh
+        try {
             const refreshRes = await fetch(`${API_BASE || API_BASE_L}/auth/refresh`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ refreshToken }),
-                credentials: "include",
             });
 
             if (!refreshRes.ok) {
-                return NextResponse.next(); // ❌ refresh fail
+                return NextResponse.next();
             }
 
             const data = await refreshRes.json();
 
-            const response = NextResponse.next();
+            const res = NextResponse.next();
 
-            // 🔥 set lại cookie
-            response.cookies.set("accessToken", data.accessToken, {
+            res.cookies.set("accessToken", data.accessToken, {
                 httpOnly: true,
-                secure: false,//process.env.NODE_ENV === 'production',//https: true
-                sameSite: 'lax',//'none',//https: none
-                path: '/',
-                maxAge: 60 * 15,
+                path: "/",
             });
 
-            response.cookies.set("refreshToken", data.refreshToken, {
+            res.cookies.set("refreshToken", data.refreshToken, {
                 httpOnly: true,
-                secure: false,//process.env.NODE_ENV === 'production',//https: true
-                sameSite: 'lax',//'none',//https: none
-                path: '/',
-                maxAge: 60 * 15,
+                path: "/",
             });
 
-            return response;
+            return res;
+        } catch (err) {
+            console.error("Refresh token error:", err);
+            return NextResponse.next();
         }
-
-        return NextResponse.next();
-    } catch (err) {
-        console.error("Middleware error:", err);
-        return NextResponse.next();
-    }*/
-
-
-    // return NextResponse.next();
-}
+        // return NextResponse.next();
+    }
 export const config = {
-    matcher: [
-        // "/",
-        "/admin/:path*",
-        "/admin",
-        "/product-editor-client",
-        "/api/products/:path*",
-        // "/home",
-        // "/login",
-        // "/register",
-        // "/product/:path*",
-        // "/:slug.html", // match product detail dạng slug.html
-    ],
-};
+        matcher: [
+            // "/",
+            "/admin/:path*",
+            "/admin",
+            "/product-editor-client",
+            "/api/products/:path*",
+            // "/home",
+            // "/login",
+            // "/register",
+            // "/product/:path*",
+            // "/:slug.html", // match product detail dạng slug.html
+        ],
+    };
