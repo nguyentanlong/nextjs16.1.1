@@ -9,10 +9,8 @@ const now = Math.floor(Date.now() / 1000);
 function parseJwt(token: string) {
     try {
         const base64 = token.split(".")[1];
-        const decoded = JSON.parse(
-            Buffer.from(base64, "base64").toString("utf-8")
-        );
-        return decoded;
+        const decodedEx = JSON.parse(atob(base64));
+        return decodedEx;
     } catch {
         return null;
     }
@@ -60,9 +58,11 @@ export default async function middleware(request: NextRequest) {
                 return NextResponse.redirect(new URL("/register", request.url)); // Không đủ quyền
             }
             // 👉 còn hạn → đi tiếp
-            if (decoded?.exp && decoded.exp - now > 60) {
+            const decodedEx = parseJwt(token ?? "");
+            if (decodedEx?.exp && decodedEx.exp - now > 60) {
                 return NextResponse.next();
             }
+            console.log("🔄 Token sắp hết hạn → refresh");
             const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
                 method: "POST",
                 headers: {
@@ -72,21 +72,30 @@ export default async function middleware(request: NextRequest) {
             });
 
             if (!refreshRes.ok) {
+                console.log("❌ Refresh fail");
                 return NextResponse.next();
             }
 
             const data = await refreshRes.json();
+            // 🔥 update request (QUAN TRỌNG)
+            const requestHeaders = new Headers(request.headers);
+            requestHeaders.set("Authorization", `Bearer ${data.accessToken}`);
 
-            const res = NextResponse.next();
-
-            res.cookies.set("accessToken", data.accessToken, {
+            const response = NextResponse.next({
+                request: {
+                    headers: requestHeaders,
+                },
+            });
+            console.log("accessToken -token:", token);
+            response.cookies.set("accessToken", data.accessToken, {
                 httpOnly: true,
                 secure: false,//process.env.NODE_ENV === 'production',//https: true
                 sameSite: 'lax',//'none',//https: none
                 path: '/',
                 maxAge: 60 * 15,
             });
-            return res;
+            console.log("accessToken - data.accessToken:", data.accessToken);
+            return response;
         } catch (err: any) {
             if (err.name === "TokenExpiredError") {
                 // console.log("👉 Token expired");
@@ -112,6 +121,7 @@ export const config = {
         "/admin",
         "/product-editor-client",
         "/api/products/:path*",
+        "/((?!api|_next/static|_next/image|favicon.ico).*)",
         // "/home",
         // "/login",
         // "/register",
