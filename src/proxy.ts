@@ -22,7 +22,9 @@ export default async function middleware(request: NextRequest) {
     // Lấy token từ cookie
     const token = request.cookies.get("accessToken")?.value;
     const refreshToken = request.cookies.get("refreshToken")?.value;
-
+    // 👉 còn hạn → đi tiếp
+    const decodedEx = parseJwt(token ?? "");
+    console.log("decodedEx:  ", decodedEx);
     // 👉 không có token → bỏ qua
     /*if (!token || !refreshToken) {
         return NextResponse.next();
@@ -32,36 +34,12 @@ export default async function middleware(request: NextRequest) {
     if (!token && pathname.startsWith("/admin")) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
-
-    // Nếu route là /admin → kiểm tra role
-    if (token) {
+    if (decodedEx?.exp && decodedEx.exp - now <= 60) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload & { role?: string };
-            // Nếu token đã hết hạn → redirect về login 
-            /*if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
-                // console.log("👉 Token expired");
-                isExpired = true;
-                // return NextResponse.redirect(new URL("/", request.url));
-
-            }*/
-            // console.log("Vào if(Token)");
-            if (["admin", "staff", "user"].includes(decoded?.role || "")) {//if (decoded?.role === "admin" || decoded?.role === "staff" || decoded?.role === "user") {
-                // Nếu đã ở /admin thì cho đi tiếp, không redirect nữa 
-                if (pathname.startsWith("/admin")) {
-                    return NextResponse.next();
-                }
-                // Nếu đang ở /login thì redirect sang /admin 
-                if (pathname.startsWith("/login")) {
-                    return NextResponse.redirect(new URL("/admin", request.url));
-                }
-            } else {
-                return NextResponse.redirect(new URL("/register", request.url)); // Không đủ quyền
-            }
             // 👉 còn hạn → đi tiếp
-            const decodedEx = parseJwt(token ?? "");
-            if (decodedEx?.exp && decodedEx.exp - now > 60) {
+            /*if (decodedEx?.exp && decodedEx.exp - now > 60) {
                 return NextResponse.next();
-            }
+            }*/
             console.log("🔄 Token sắp hết hạn → refresh");
             const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
                 method: "POST",
@@ -94,8 +72,44 @@ export default async function middleware(request: NextRequest) {
                 path: '/',
                 maxAge: 60 * 15,
             });
+            response.cookies.set("refreshToken", data.refreshToken, {
+                httpOnly: true,
+                secure: false,//process.env.NODE_ENV === 'production',//https: true
+                sameSite: 'lax',//'none',//https: none
+                path: '/',
+                maxAge: 60 * 15,
+            });
             console.log("accessToken - data.accessToken:", data.accessToken);
             return response;
+        }
+        catch (err) { console.error("Refresh error:", err); }
+    }
+
+    // Nếu route là /admin → kiểm tra role
+    if (token) {
+        try {
+            const decoded = jwt.verify(token ?? "", process.env.JWT_SECRET!) as JwtPayload & { role?: string };
+            // Nếu token đã hết hạn → redirect về login 
+            /*if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
+                // console.log("👉 Token expired");
+                isExpired = true;
+                // return NextResponse.redirect(new URL("/", request.url));
+
+            }*/
+            // console.log("Vào if(Token)");
+            if (["admin", "staff", "user"].includes(decoded?.role || "")) {//if (decoded?.role === "admin" || decoded?.role === "staff" || decoded?.role === "user") {
+                // Nếu đã ở /admin thì cho đi tiếp, không redirect nữa 
+                if (pathname.startsWith("/admin")) {
+                    return NextResponse.next();
+                }
+                // Nếu đang ở /login thì redirect sang /admin 
+                if (pathname.startsWith("/login")) {
+                    return NextResponse.redirect(new URL("/admin", request.url));
+                }
+            } else {
+                return NextResponse.redirect(new URL("/register", request.url)); // Không đủ quyền
+            }
+
         } catch (err: any) {
             if (err.name === "TokenExpiredError") {
                 // console.log("👉 Token expired");
