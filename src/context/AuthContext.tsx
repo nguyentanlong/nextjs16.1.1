@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
@@ -30,45 +31,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     function normalizeUser(data: any) {
         return data?.user?.user ?? data?.user ?? data ?? null;
     }
+    const pathname = usePathname();
     // Khôi phục user từ localStorage khi mount
     useEffect(() => {
+        if (pathname.startsWith("/admin") || pathname.startsWith("/product-editor-client")) {
 
-        async function loadUser() {
-            try {
-                const res = await fetch("/api/auth/me", {
-                    credentials: "include",
-                });
-                // ❗ nếu không OK → bỏ qua
-                if (!res.ok) {
-                    /*console.warn("Not logged in:", res.status);
-                    setUser(null);*/
-                    return;
-                }
-                /*if (!res.ok) {
+            async function loadUser() {
+                try {
+                    const res = await fetch("/api/auth/me", {
+                        credentials: "include",
+                    });
+                    // ❗ nếu không OK → bỏ qua
+                    if (!res.ok) {
+                        /*console.warn("Not logged in:", res.status);
+                        setUser(null);*/
+                        return;
+                    }
+                    /*if (!res.ok) {
+                        setUser(null);
+                        return;
+                    }*/
+                    const data = await res.json();
+                    setUser(normalizeUser(data));//(data.user ?? null);
+                    setLoading(false);
+                    // console.log("Data USEEFFECT AuthContext  ", normalizeUser(data));
+                } catch (err) {
+                    console.error("Load user error:", err);
                     setUser(null);
-                    return;
-                }*/
-                const data = await res.json();
-                setUser(normalizeUser(data));//(data.user ?? null);
+                } /*finally {
                 setLoading(false);
-                // console.log("Data USEEFFECT AuthContext  ", normalizeUser(data));
-            } catch (err) {
-                console.error("Load user error:", err);
-                setUser(null);
+            }*/
             }
+            /*  const text = await res.text();
+              if (!text) return;
+    
+              const data = JSON.parse(text);
+    
+              setUser(normalizeUser(data ?? null));//data.user
+          } catch (err) {
+              console.error("Auth error:", err);
+          }
+      };*/console.log("AuthContext Chạy");
+            loadUser();
         }
-        /*  const text = await res.text();
-          if (!text) return;
-
-          const data = JSON.parse(text);
-
-          setUser(normalizeUser(data ?? null));//data.user
-      } catch (err) {
-          console.error("Auth error:", err);
-      }
-  };*/
-        loadUser();
-    }, []);
+    }, [pathname]);
 
     /* useEffect(() => {
          async function restoreUser() {

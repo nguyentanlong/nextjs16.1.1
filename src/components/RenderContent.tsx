@@ -43,8 +43,7 @@ export default function RenderContent({ content }: { content: string }) {
                             <Image
                                 src={src}
                                 alt={node.attribs?.alt || "image"}
-                                width={800}
-                                height={600}
+                                fill
                                 className="product-image"
                             />
                         );

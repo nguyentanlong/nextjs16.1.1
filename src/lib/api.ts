@@ -11,8 +11,8 @@ export async function fetcher(url: string, options?: RequestInit) {
 
         // ❗ Nếu không phải JSON → bỏ
         if (!contentType.includes("application/json")) {
-            const text = await res.text();
-            console.error("❌ Not JSON:", text);
+            /*const text = await res.text();
+            console.error("❌ Not JSON:", text);*/
             return null;
         }
 

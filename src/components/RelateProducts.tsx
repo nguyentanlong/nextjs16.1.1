@@ -35,7 +35,7 @@ export default function RelatedProducts({ productId }: RelatedProductsProps) {
         const fetchData = async () => {
             setLoading(true);
             const data = await fetchRelatedProducts(productId);
-            console.log("API related:", data); // 🔥 debug
+            // console.log("API related:", data); // 🔥 debug
             setRelated(data);
             setLoading(false);
         };

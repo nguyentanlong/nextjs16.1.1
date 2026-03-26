@@ -2,7 +2,7 @@ import Link from "next/link";
 import ProductImages from "@/components/ProductImage";
 import ProductTabs from "@/components/ProductTab";
 import RelatedProducts from "@/components/RelateProducts";
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 export const revalidate = 259200;
 import { fetchProductBySlug } from "@/lib/api";
 
@@ -65,7 +65,10 @@ async function getProducts(): Promise<Product[]> {
 export async function generateMetadata({ params }: any) {
     const { slug } = await params;
     const product = await fetchProductBySlug(slug);
-    if (!product) return notFound();
+    if (!product) return {
+        title: "Không tìm thấy sản phẩm",
+        description: "Sản phẩm không tồn tại",
+    };
 
     return {
         title: product.productName,
@@ -81,7 +84,7 @@ export async function generateMetadata({ params }: any) {
             card: 'summary_large_image',
             title: product.productName,
             description: product.shortDescription,
-            images: [product.media[0]],
+            images: [product.media[0]],//media[0]
         },
     };
 }
@@ -91,9 +94,12 @@ export default async function ProductDetail({ params }: any) {
     const product = await fetchProductBySlug(slug);
     // const product = products.find((p) => slugifyProduct(p.productName) === params.slug);
     /*const product = products.find((p) => slugifyProduct(p.productName) === slug);*/
-    if (!product) { // xử lý trường hợp không tìm thấy sản phẩm 
-        return notFound();
-    } // hoặc redirect, hoặc render fallback }
+    /*if (!product) { // xử lý trường hợp không tìm thấy sản phẩm 
+        return {
+            title: "Không tìm thấy sản phẩm",
+            description: "Sản phẩm không tồn tại",
+        };
+    }*/ // hoặc redirect, hoặc render fallback }
     // Lấy sản phẩm cùng danh mục 
     // const relatedProducts = await fetchRelatedProductsLocal(product.subCategoryId);
     // const [mainImg, setMainImg] = useState(product?.media?.[0] ?? "/favicon.ico");

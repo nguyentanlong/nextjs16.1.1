@@ -24,7 +24,7 @@ export default async function middleware(request: NextRequest) {
     const refreshToken = request.cookies.get("refreshToken")?.value;
     // 👉 còn hạn → đi tiếp
     const decodedEx = parseJwt(token ?? "");
-    console.log("decodedEx:  ", decodedEx);
+    // console.log("decodedEx:  ", decodedEx);
     // 👉 không có token → bỏ qua
     /*if (!token || !refreshToken) {
         return NextResponse.next();
@@ -34,61 +34,68 @@ export default async function middleware(request: NextRequest) {
     if (!token && pathname.startsWith("/admin")) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
-    if (decodedEx?.exp && decodedEx.exp - now <= 60) {
-        try {
-            // 👉 còn hạn → đi tiếp
-            /*if (decodedEx?.exp && decodedEx.exp - now > 60) {
-                return NextResponse.next();
-            }*/
-            console.log("🔄 Token sắp hết hạn → refresh");
-            const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ refreshToken }),
-            });
-
-            if (!refreshRes.ok) {
-                console.log("❌ Refresh fail");
-                return NextResponse.next();
-            }
-
-            const data = await refreshRes.json();
-            // 🔥 update request (QUAN TRỌNG)
-            const requestHeaders = new Headers(request.headers);
-            requestHeaders.set("Authorization", `Bearer ${data.accessToken}`);
-
-            const response = NextResponse.next({
-                request: {
-                    headers: requestHeaders,
-                },
-            });
-            console.log("accessToken -token:", token);
-            response.cookies.set("accessToken", data.accessToken, {
-                httpOnly: true,
-                secure: false,//process.env.NODE_ENV === 'production',//https: true
-                sameSite: 'lax',//'none',//https: none
-                path: '/',
-                maxAge: 60 * 15,
-            });
-            response.cookies.set("refreshToken", data.refreshToken, {
-                httpOnly: true,
-                secure: false,//process.env.NODE_ENV === 'production',//https: true
-                sameSite: 'lax',//'none',//https: none
-                path: '/',
-                maxAge: 60 * 15,
-            });
-            console.log("accessToken - data.accessToken:", data.accessToken);
-            return response;
-        }
-        catch (err) { console.error("Refresh error:", err); }
+    // 👉 còn hạn → đi tiếp
+    /*if (decodedEx?.exp && decodedEx.exp - now > 60) {
+        return NextResponse.next();
+    }*/
+    /*console.log("exp:", decodedEx?.exp);
+    console.log("now:", now);
+    console.log("diff:", decodedEx?.exp - now);*/
+    if (decodedEx?.exp > now + 60) {
+        console.log("✅ Token còn hạn");
+        return NextResponse.next();
     }
+    try {
+
+        // console.log("🔄 Token sắp hết hạn → refresh");
+        const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ refreshToken }),
+        });
+
+        if (!refreshRes.ok) {
+            // console.log("❌ Refresh fail");
+            return NextResponse.next();
+        }
+
+        const data = await refreshRes.json();
+        // 🔥 update request (QUAN TRỌNG)
+        const requestHeaders = new Headers(request.headers);
+        requestHeaders.set("Authorization", `Bearer ${data.accessToken}`);
+
+        const response = NextResponse.next({
+            request: {
+                headers: requestHeaders,
+            },
+        });
+        // console.log("accessToken -token:", token);
+        response.cookies.set("accessToken", data.accessToken, {
+            httpOnly: true,
+            secure: false,//process.env.NODE_ENV === 'production',//https: true
+            sameSite: 'lax',//'none',//https: none
+            path: '/',
+            maxAge: 60 * 15,
+        });
+        response.cookies.set("refreshToken", data.refreshToken, {
+            httpOnly: true,
+            secure: false,//process.env.NODE_ENV === 'production',//https: true
+            sameSite: 'lax',//'none',//https: none
+            path: '/',
+            maxAge: 60 * 15,
+        });
+        // console.log("accessToken - data.accessToken:", data.accessToken);
+        return response;
+    }
+    catch (err) { console.error("Refresh error:", err); }
 
     // Nếu route là /admin → kiểm tra role
     if (token) {
         try {
-            const decoded = jwt.verify(token ?? "", process.env.JWT_SECRET!) as JwtPayload & { role?: string };
+            // const decoded = jwt.verify(token ?? "", process.env.JWT_SECRET!) as JwtPayload & { role?: string };
+            const decoded = parseJwt(token);
             // Nếu token đã hết hạn → redirect về login 
             /*if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
                 // console.log("👉 Token expired");
@@ -109,16 +116,16 @@ export default async function middleware(request: NextRequest) {
             } else {
                 return NextResponse.redirect(new URL("/register", request.url)); // Không đủ quyền
             }
-
+            // console.log("decodeEx: ", decodedEx);
         } catch (err: any) {
             if (err.name === "TokenExpiredError") {
-                // console.log("👉 Token expired");
+                console.log("👉 Token expired");
                 isExpired = true;
                 const response = NextResponse.redirect(new URL("/", request.url));
                 response.cookies.delete("accessToken");
                 return response;
             }
-            console.error("JWT verify error:", err);
+            // console.error("JWT verify error:", err);
             return NextResponse.redirect(new URL("/login", request.url));
         }
     }

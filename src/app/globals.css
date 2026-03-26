@@ -1688,23 +1688,18 @@ video {
 /* ảnh trong nội dung chi tiết */
 .image-wrapper-l {
   position: relative;
-  max-width: 100%;
-  /* padding-top: 75%; */
-  /* tỷ lệ 4:3, có thể đổi */
+  /* width: 100%; */
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  /* hoặc 1/1 nếu muốn vuông */
 }
 
-.product-image-l {
-  object-fit: contain;
-  /* hoặc cover */
-}
-
-/* .product-image-l {
-  max-width: 100%;
+.product-image {
+  width: 100%;
   height: auto;
-  object-fit: contain;
-  /* hoặc cover nếu muốn ảnh lấp đầy 
   display: block;
-} */
+}
+
 .phan-trang {
   position: absolute;
   bottom: -2.5%;
