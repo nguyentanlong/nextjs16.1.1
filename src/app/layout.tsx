@@ -3,9 +3,9 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Script from 'next/script';
 import { AuthProvider } from '@/context/AuthContext';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
-import { usePathname } from 'next/navigation';
+// import Footer from '@/components/Footer';
+// import Header from '@/components/Header';
+
 // import AddProductForm from '@/components/ProductEditor';
 //làm cho hiển thị hình ảnh mô tả khi share
 /*const imageUrl = `/favicon.ico`;
@@ -92,8 +92,6 @@ export default function RootLayout({ children }: {
   return json.data; // API của đệ trả về { data: [...] }
 }
   const products = await getProducts();*/
-  const pathname = usePathname();
-  const isLoginPage = pathname?.startsWith('/login');
   return (
     <html lang='vi'>
       <head>
@@ -105,9 +103,9 @@ export default function RootLayout({ children }: {
           {/* Nội dung trang */}
           {/* <ProductsHome /> */}
           <AuthProvider>
-            {!isLoginPage && <Header />}
-            <main>{children}</main>
-            {!isLoginPage && <Footer />}
+            {/* <Header /> */}
+            {children}
+            {/* <Footer /> */}
           </AuthProvider>
           {/* <ProductGrid products={products} /> */}
 
