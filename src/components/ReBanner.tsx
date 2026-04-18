@@ -1,3 +1,6 @@
+import Image from "next/image";
+import Link from "next/link";
+
 export default function ReBanner() {
     return (
         <>
@@ -5,33 +8,39 @@ export default function ReBanner() {
             <section className="double-banner">
                 <div className="banner-container">
                     {/* Banner trái */}
-                    <a href="#" className="banner-item left">
-                        <img
-                            src="https://www.trieuhaotravel.vn/Uploads/images/nttnhu/HQ%208-min_1.png_medium.webp"
-                            alt="Webcams 2024"
+                    <Link href="#" className="banner-item left">
+                        <Image
+                            src="/images/binh-chua-chay-goc-nuoc-figo.webp"
+                            alt="binh chua chay goc nuoc"
+                            width={800}
+                            height={600}
+                            style={{ width: "100%", height: "auto" }}
                             className="banner-bg"
                         />
                         <div className="banner-content">
-                            <span className="banner-tag">NEW TECHNOLOGIES</span>
-                            <h2>WEBCAMS 2024</h2>
-                            <p>Auctor litore ultrices suscipit malesuada nunc a netus</p>
-                            <button className="btn-shop">Shop more</button>
+                            <span className="banner-tag">Sản phẩm mới</span>
+                            <h2>Bình chữa cháy gốc nước</h2>
+                            <p>Chữa cháy được tất cả loại đám cháy</p>
+                            <button className="btn-shop">Xem nhiều hơn</button>
                         </div>
-                    </a>
+                    </Link>
                     {/* Banner phải */}
-                    <a href="#" className="banner-item right">
-                        <img
-                            src="https://www.trieuhaotravel.vn/Uploads/images/nttnhu/HQ%207-min_1.png_medium.webp"
-                            alt="Leather Cases"
+                    <Link href="#" className="banner-item right">
+                        <Image
+                            src="/images/binh-chua-chay-goc-nuoc-manh-phat.webp"
+                            alt="bình chữa cháy gốc nước"
+                            width={800}
+                            height={600}
+                            style={{ width: "100%", height: "auto" }}
                             className="banner-bg"
                         />
                         <div className="banner-content">
-                            <span className="banner-tag">APPLE ACCESSORIES</span>
-                            <h2>LEATHER CASES</h2>
-                            <p>Condimentum curabitur vestibulum dapibus porttitor adipiscing</p>
-                            <button className="btn-shop">Shop more</button>
+                            <span className="banner-tag">PCCC</span>
+                            <h2>Thiết bị chữa cháy</h2>
+                            <p>Có tem kiểm định chất lượng của nhà nước</p>
+                            <button className="btn-shop">Xem nhiều hơn</button>
                         </div>
-                    </a>
+                    </Link>
                 </div>
             </section>
         </>

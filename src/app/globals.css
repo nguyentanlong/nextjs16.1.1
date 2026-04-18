@@ -369,8 +369,11 @@ a {
 }
 
 .banner-small {
+  position: "relative";
+  width: "100%";
+  margin: "1rem";
   border-radius: 16px;
-  overflow: hidden;
+  /* overflow: hidden; */
   box-shadow: 0 8px 25px rgba(136, 57, 239, 0.15);
   transition: transform 0.3s;
 }
@@ -389,14 +392,17 @@ a {
 .hero-slider {
   position: relative;
   border-radius: 20px;
-  overflow: hidden;
+  /* overflow: hidden; */
   box-shadow: 0 15px 40px rgba(136, 57, 239, 0.25);
 }
 
 .slides {
-  position: relative;
+  /* position: relative; */
   width: 100%;
-  height: 480px;
+  height: auto;
+  display: block;
+  /* width: 100%; */
+  /* height: 480px; */
 }
 
 .slides img {
@@ -404,7 +410,7 @@ a {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
@@ -481,7 +487,7 @@ a {
   }
 
   .slides {
-    height: 100%;
+    /* height: 100%; */
   }
 }
 
@@ -798,11 +804,13 @@ a {
 .banner-item {
   position: relative;
   border-radius: 24px;
-  overflow: hidden;
-  height: 480px;
+  margin: 1rem;
+  /* overflow: hidden; */
+  /* height: 480px; */
   display: block;
   text-decoration: none;
   transition: transform 0.4s;
+
 }
 
 .banner-item:hover {
@@ -810,12 +818,13 @@ a {
 }
 
 .banner-bg {
-  position: absolute;
+  /* position: absolute; */
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  /* object-fit: cover; */
+  display: block;
   transition: transform 0.6s;
 }
 
@@ -848,6 +857,7 @@ a {
   font-weight: 800;
   margin: 8px 0 12px;
   line-height: 1.1;
+  font-family: -webkit-body;
 }
 
 .banner-content p {
@@ -1687,10 +1697,9 @@ video {
 
 /* ảnh trong nội dung chi tiết */
 .image-wrapper-l {
-  position: relative;
-  /* width: 100%; */
-  aspect-ratio: 3/4;
-  overflow: hidden;
+  position: "relative";
+  width: "100%";
+  margin: "1rem";
   /* hoặc 1/1 nếu muốn vuông */
 }
 

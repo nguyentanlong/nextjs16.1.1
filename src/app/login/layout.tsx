@@ -7,11 +7,16 @@ import "./stype-login.css";
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
   return (
     // <AuthProvider>
-    <main>{children}
-      <Script src="./script-login.js" />
-      {/* <Script src="./script-login-1.js" /> */}
-      <Script src="./script-alt.js" />
-    </main>
+    <html lang="vi">
+      <body>
+        {children}
+        <Script src="./script-login.js" />
+        {/* <Script src="./script-login-1.js" /> */}
+        <Script src="./script-alt.js" />
+      </body>
+    </html>
+
+
     // </AuthProvider>
   );
 }

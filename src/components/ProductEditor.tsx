@@ -1,10 +1,12 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 // import { Editor } from "@tinymce/tinymce-react";
-import dynamic from "next/dynamic";
+
 import Image from "next/image";
 import { AuthContext } from "@/context/AuthContext";
-import { ca } from "zod/locales";
+// import { ca } from "zod/locales";
+import dynamic from "next/dynamic";
+import TinyEditor from "./ProductEdit";
 const Editor = dynamic(() => import("@tinymce/tinymce-react").then(mod => mod.Editor),
     { ssr: false, });
 // Tự định nghĩa type cho handler
@@ -318,7 +320,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             {/* short description */}
             <div>
                 <label className="block font-medium">Mô tả ngắn</label>
-                <Editor
+                {/*<Editor
                     apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} // cần đăng ký API key miễn phí
                     value={product.shortDescription}
                     tinymceScriptSrc={tinymceCDN}//"https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.0/tinymce.min.js"
@@ -336,9 +338,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                             "table charmap emoticons | removeformat | preview fullscreen help",
                         // Cho phép chọn ảnh từ local 
                         file_picker_types: "image",
-                        /*file_picker_callback: (callback: (url: string, meta?: { alt?: string }) => void,
-                            value: string,
-                            meta: { filetype: string }*/
+                        
                         file_picker_callback: (callback: (url: string, meta?: Record<string, any>) => void,
                             value: string,
                             meta: Record<string, any>) => {
@@ -362,12 +362,18 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                         }
                     }}
                     onEditorChange={(content) => handleChange("shortDescription", content)}
+                />*/}
+                <TinyEditor
+                    value={product.shortDescription}
+                    onChange={(content) => handleChange("shortDescription", content)}
+                    height={250}
+                    enableLocalImage={true}
                 />
             </div>
             {/* Mô tả chi tiết bằng TinyMCE */}
             <div>
                 <label className="block font-medium">Nội dung chi tiết</label>
-                <Editor
+                {/*<Editor
                     apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} // cần đăng ký API key miễn phí
                     value={product.description}
                     tinymceScriptSrc={tinymceCDN}//"https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.0/tinymce.min.js"
@@ -383,63 +389,17 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                             "alignleft aligncenter alignright alignjustify | " +
                             "bullist numlist outdent indent | link image media | " +
                             "table charmap emoticons | removeformat | preview fullscreen help",
-                        // images_upload_url: 'https://api.tonkliplock1000.com/api/mediaasset',
-                        // automatic_uploads: true,
-                        // Cho phép chọn ảnh từ local 
-                        // file_picker_types: "image",
-                        /*file_picker_callback: (callback: (url: string, meta?: { alt?: string }) => void,
-                            value: string,
-                            meta: { filetype: string }*/
-                        /* file_picker_callback: (callback: (url: string, meta?: Record<string, any>) => void,
-                             value: string,
-                             meta: Record<string, any>) => {
-                             const input = document.createElement("input");
-                             input.setAttribute("type", "file");
-                             input.setAttribute("accept", "image/*");
- 
-                             input.onchange = (event: Event) => {
-                                 const target = event.target as HTMLInputElement;
-                                 const file = target.files?.[0]; if (!file) return;
- 
-                                 const reader = new FileReader();
-                                 reader.onload = function () {
-                                     // Chèn ảnh dạng Base64 vào nội dung
-                                     callback(reader.result as string, { alt: file.name });
-                                 };
-                                 reader.readAsDataURL(file);
-                             };
- 
-                             input.click();
-                         }*/
                         automatic_uploads: true,
                         images_upload_handler: uploadHandler,
-                        // Viết hàm với type đã định nghĩa
 
-                        /*images_upload_handler: async (
-                            blobInfo: { blob: () => Blob; filename: () => string },
-                            success: (url: string) => void,
-                            failure: (err: string) => void
-                        ) => {
-                            try {
-                                const formData = new FormData();
-                                // chú ý: key phải là 'filesDesc' để khớp với interceptor
-                                formData.append('filesDesc', blobInfo.blob(), blobInfo.filename());
-
-                                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/upload-description`, {
-                                    method: 'POST',
-                                    body: formData,
-                                    // credentials: 'include',
-                                });
-
-                                const data = await res.json();
-                                // API trả về [{ location: '/uploads/YYYY-MM-DD/filename.png' }]
-                                success(data[0].location);
-                            } catch (err: any) {
-                                failure("Upload failed: " + err.message);
-                            }
-                        },*/
                     }}
                     onEditorChange={(content) => handleChange("description", content)}
+                />*/}
+                <TinyEditor
+                    value={product.description}
+                    onChange={(content) => handleChange("description", content)}
+                    height={500}
+                    enableUpload={true}
                 />
             </div>
 

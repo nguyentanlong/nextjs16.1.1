@@ -9,7 +9,7 @@ import ReBanner from '@/components/ReBanner';
 // import Header from '@/components/Header';
 import HomeNavbar from '@/components/HomeNavbar';
 import { fetchSubCategories } from '@/lib/api';
-import type { SubCategory } from "@/styles/types";
+// import type { SubCategory } from "@/styles/types";
 // import Footer from '@/components/Footer';
 
 export default async function HomePage() {

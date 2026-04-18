@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ['/admin/', '/product-editor-client'], // chặn crawler vào trang nhạy cảm
             },
         ],
-        sitemap: 'https://tanlong.cameramattroi.com/sitemap.xml',
+        sitemap: 'https://tanlong.work.gd/sitemap.xml',
     }
 }

@@ -69,22 +69,41 @@ export async function generateMetadata({ params }: any) {
         title: "Không tìm thấy sản phẩm",
         description: "Sản phẩm không tồn tại",
     };
-
+    //làm cho hiển thị hình ảnh mô tả khi share
+    const imageUrl = product.media[0]?.startsWith("http")
+        ? product.media[0]
+        : `https://api.tonkliplock1000.com/api/${product.media[0]}`;
+    // ✅ Strip HTML trước khi dùng trong metadata
+    // console.log("đường dẫn ảnh: ", imageUrl)
+    function stripHtml(html: string) {
+        return html?.replace(/<[^>]*>/g, "").trim() ?? "";
+    }//làm cho hiển thị hình ảnh mô tả khi share
     return {
         title: product.productName,
         description: product.shortDescription,
         keywords: product.keywords,
         openGraph: {
             title: product.productName,
-            description: product.shortDescription,
-            url: `https://tanlong.cameramattroi.com/${product.slugP}`,
-            images: [{ url: product.media[0] }],
+            // Dùng trong generateMetadata:
+            description: stripHtml(product.shortDescription),
+            url: `https://tanlong.work.gd/${product.slugP}`,
+            images: [{
+                url: imageUrl,
+                width: 800,
+                height: 630,
+                alt: product.productName,
+            }],
         },
         twitter: {
             card: 'summary_large_image',
             title: product.productName,
             description: product.shortDescription,
-            images: [product.media[0]],//media[0]
+            images: [{
+                url: imageUrl,
+                width: 800,
+                height: 630,
+                alt: product.productName,
+            }],//media[0]
         },
     };
 }
@@ -103,7 +122,7 @@ export default async function ProductDetail({ params }: any) {
     // Lấy sản phẩm cùng danh mục 
     // const relatedProducts = await fetchRelatedProductsLocal(product.subCategoryId);
     // const [mainImg, setMainImg] = useState(product?.media?.[0] ?? "/favicon.ico");
-    if (!product) return <div>Không tìm thấy sản phẩm</div>;
+    if (!product) return (<div>Không tìm thấy sản phẩm</div>);
     // console.log("ProductId nhận: ", product.id);
 
     return (

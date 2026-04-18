@@ -1,9 +1,9 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
-import '../app/admin/font-css.css';
+/*import '../app/admin/font-css.css';
 import '../app/admin/material-dashboard.css';
 import '../app/admin/nucleo-icons.css';
-import '../app/admin/nucleo-svg.css';
+import '../app/admin/nucleo-svg.css';*/
 import Link from "next/link";
 // import { useContext } from "react";
 
@@ -42,7 +42,7 @@ export default function AdminSidebar() {
                     aria-hidden="true"
                     id="iconSidenav"
                 />
-                <a
+                <Link
                     className="navbar-brand px-4 py-3 m-0"
                     href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
                     target="_blank"
@@ -55,7 +55,7 @@ export default function AdminSidebar() {
                         alt="main_logo"
                     />
                     <span className="ms-1 text-sm text-dark">Tấn Long</span>
-                </a>
+                </Link>
             </div>
             <hr className="horizontal dark mt-0 mb-2" />
             <div
@@ -64,13 +64,13 @@ export default function AdminSidebar() {
             >
                 <ul className="navbar-nav">
                     <li className="nav-item">
-                        <a
+                        <Link
                             className="nav-link active bg-gradient-dark text-white"
                             href="../pages/dashboard.html"
                         >
                             <i className="material-symbols-rounded opacity-5">dashboard</i>
                             <span className="nav-link-text ms-1">Quản trị</span>
-                        </a>
+                        </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link text-dark"
@@ -80,19 +80,19 @@ export default function AdminSidebar() {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link text-dark" href="../pages/billing.html">
+                        <Link className="nav-link text-dark" href="../pages/billing.html">
                             <i className="material-symbols-rounded opacity-5">receipt_long</i>
                             <span className="nav-link-text ms-1">{(isAdminOrStaff) ? "Danh mục con" : "Lượt like"}</span>
-                        </a>
+                        </Link>
                     </li>
                     {(isAdminOrStaff) && <li className="nav-item">
-                        <a
+                        <Link
                             className="nav-link text-dark"
                             href="../pages/virtual-reality.html"
                         >
                             <i className="material-symbols-rounded opacity-5">view_in_ar</i>
                             <span className="nav-link-text ms-1">Sản phẩm</span>
-                        </a>
+                        </Link>
                     </li>}
                     <li className="nav-item mt-3">
                         <h6 className="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">
@@ -100,42 +100,42 @@ export default function AdminSidebar() {
                         </h6>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link text-dark" href="../pages/profile.html">
+                        <Link className="nav-link text-dark" href="../pages/profile.html">
                             <i className="material-symbols-rounded opacity-5">person</i>
                             <span className="nav-link-text ms-1">Profile</span>
-                        </a>
+                        </Link>
                     </li>
                     {isAdmin && (<li className="nav-item">
-                        <a className="nav-link text-dark" href="../pages/sign-in.html">
+                        <Link className="nav-link text-dark" href="../pages/sign-in.html">
                             <i className="material-symbols-rounded opacity-5">login</i>
                             <span className="nav-link-text ms-1">Nhân viên</span>
-                        </a>
+                        </Link>
                     </li>)}
                     {isAdmin && (<li className="nav-item">
-                        <a className="nav-link text-dark" href="../pages/sign-up.html">
+                        <Link className="nav-link text-dark" href="../pages/sign-up.html">
                             <i className="material-symbols-rounded opacity-5">assignment</i>
                             <span className="nav-link-text ms-1">Thêm nhân viên</span>
-                        </a>
+                        </Link>
                     </li>)}
                 </ul>
             </div>
             <div className="sidenav-footer position-absolute w-100 bottom-0 ">
                 <div className="mx-3">
-                    <a
+                    <Link
                         className="btn btn-outline-dark mt-4 w-100"
                         href="https://www.creative-tim.com/learning-lab/bootstrap/overview/material-dashboard?ref=sidebarfree"
                         type="button"
                     >
                         Tài liệu
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                         className="btn bg-gradient-dark w-100"
                         href="https://www.creative-tim.com/product/material-dashboard-pro?ref=sidebarfree"
                         type="button"
                     >
                         Hỗ trợ:{" "}
                         {(isAdminOrStaff) ? "0328 73 2676" : "038 542 9989"}
-                    </a>
+                    </Link>
                 </div>
             </div>
             {/* <main>{children}</main> */}

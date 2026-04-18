@@ -6,6 +6,10 @@
 import Script from "next/script";
 import AdminHeader from '@/components/AdminHeader';
 import AdminSidebar from '@/components/AdminSidebar';
+import './font-css.css';
+import './material-dashboard.css';
+import './nucleo-icons.css';
+import './nucleo-svg.css';
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
 

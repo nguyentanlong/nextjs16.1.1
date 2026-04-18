@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next'
 import { fetchAllProducts } from '@/lib/api'
-import { slugifyProduct } from "@/lib/slugify";
 
 export interface Product {
     id: string;
@@ -9,14 +8,14 @@ export interface Product {
     stock: number;
     shortDescription: string;
     media: string[];
-    slug: string; // thêm dòng này
+    slugP: string; // thêm dòng này
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const products = await fetchAllProducts()
 
     const productUrls: MetadataRoute.Sitemap = products.map((p) => ({
-        url: `https://tanlong.cameramattroi.com/${slugifyProduct(p.productName)}`,
+        url: `${p.slugP}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const, // dùng literal type
         priority: 0.8,
@@ -24,13 +23,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [
         {
-            url: 'https://tanlong.cameramattroi.com/',
+            url: 'https://tanlong.work.gd/',
             lastModified: new Date(),
             changeFrequency: 'daily' as const,
             priority: 1,
         },
         {
-            url: 'https://tanlong.cameramattroi.com/products',
+            url: 'https://tanlong.work.gd/tat-ca-san-pham',
             lastModified: new Date(),
             changeFrequency: 'daily' as const,
             priority: 0.9,

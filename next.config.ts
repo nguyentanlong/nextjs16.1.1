@@ -10,7 +10,7 @@ const securityHeaders = [
 ];
 
 // Content Security Policy—giới hạn nguồn tài nguyên được phép tải
-const csp = `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tiny.cloud https://*.tinymce.com; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://*.tinymce.com; img-src 'self' blob: data: https: https://cdn.tiny.cloud https://*.tinymce.com; font-src 'self' https: https://cdn.tiny.cloud https://*.tinymce.com; connect-src 'self' https://api.tonkliplock1000.com https://cdn.tiny.cloud https://*.tinymce.com blob:; media-src 'self' blob: data: https:; frame-ancestors 'self';
+const csp = `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tiny.cloud https://*.tinymce.com; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://*.tinymce.com; img-src 'self' blob: data: https: https://cdn.tiny.cloud https://*.tinymce.com; font-src 'self' https: https://cdn.tiny.cloud https://*.tinymce.com; connect-src 'self' https://api.tonkliplock1000.com https://cdn.tiny.cloud https://*.tinymce.com blob:; media-src 'self' blob: data: https:; frame-ancestors 'self'; frame-src 'self' https://www.google.com/;
 `.replace(/\s{2,}/g, ' ').trim();
 /*default-src 'self';
               script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tiny.cloud https://*.tinymce.com;
@@ -54,7 +54,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'api.tonkliplock1000.com' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdn.jsdelivr.net' },
-      { protocol: 'https', hostname: 'cameramattroi.com' },
+      { protocol: 'https', hostname: 'cameramattroi.com', pathname: '/**' }, // 👈 cho phép tất cả đường dẫn },
       // {
       //   protocol: "https",
       //   hostname: "api.tonkliplock1000.com",
@@ -62,6 +62,30 @@ const nextConfig: NextConfig = {
       // },
     ],
   },
+  /*images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cameramattroi.com',
+        pathname: '/wp-content/uploads/**', // 👈 QUAN TRỌNG
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.tonkliplock1000.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.jsdelivr.net',
+        pathname: '/**',
+      },
+    ],
+  },*/
   async rewrites() {
     return [{
       source: "/api/:path*",

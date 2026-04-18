@@ -1,3 +1,5 @@
+import { slugifyCategory } from "./slugify";
+
 // src/lib/api.ts
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
@@ -173,6 +175,35 @@ export function normalizeImage(image: string) {
 //fetch subcategories
 export async function fetchSubCategories(): Promise<SubCategory[]> {
     try {
+        const res = await fetch(`${API_BASE || API_BASE_L}/subcategories/subcate`, {
+            // có thể thêm { credentials: "include" } nếu cần
+        });
+        if (!res.ok) {
+            throw new Error(`Failed to fetch subcategories: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // Luôn đảm bảo trả về mảng
+        const subcategories = Array.isArray(data)
+            ? data
+            : data.subcategories ?? [];
+
+        // Chuẩn hóa dữ liệu để tránh mismatch
+        return subcategories.map((sc: any) => ({
+            id: sc.id,
+            categoryName: sc.categoryName,
+            // nếu slugSub không có, tạo slug từ categoryName
+            slugSub: sc.slugSub || slugifyCategory(sc.categoryName),
+            image: normalizeImage(sc.image),
+        }));
+    } catch (err) {
+        console.error("❌ Error fetching subcategories:", err);
+        return []; // fallback an toàn
+    }
+}
+/*export async function fetchSubCategories(): Promise<SubCategory[]> {
+    try {
         const res = await fetch(`${API_BASE || API_BASE_L}/subcategories/subcate`); // có thể thêm { credentials: "include" } nếu cần
         if (!res.ok) {
             throw new Error(`Failed to fetch subcategories: ${res.status}`);
@@ -190,7 +221,7 @@ export async function fetchSubCategories(): Promise<SubCategory[]> {
         console.error("❌ Error fetching subcategories:", err);
         return []; // hoặc throw err nếu muốn xử lý bên ngoài
     }
-}
+}*/
 export async function fetchProductsBySubCategory(
     slug: string,
     page = 1,

@@ -1,3 +1,6 @@
+import { normalizeImage } from "@/lib/api";
+import Image from "next/image";
+
 export default function Header() {
     return (<>
         {/* HERO BANNER SECTION */}
@@ -6,33 +9,48 @@ export default function Header() {
                 {/* Bên trái: 2 banner nhỏ */}
                 <div className="hero-left">
                     <a href="#" className="banner-small banner-freeship">
-                        <img
-                            src="https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/1/30/1142340/Honda-Wr-V.jpeg"
-                            alt="Freeship 0đ"
+                        <Image
+                            src={normalizeImage("/images/co-dien-manh-phat.webp")}
+                            alt="Camera-giam-sat"
+                            width={800}
+                            height={600}
+                            style={{ width: "100%", height: "auto" }}
                         />
                     </a>
                     <a href="#" className="banner-small banner-clean">
-                        <img
-                            src="https://hondaotovovankiet.vn/wp-content/uploads/2023/10/Honda_crv_2023_hondaotovovankiet.vn_.png"
-                            alt="Nhà sạch đẹp xinh"
+                        <Image
+                            src={normalizeImage("/images/w-electronic-slide-1.webp")}
+                            alt="Thiết bị pccc"
+                            width={800}
+                            height={600}
+                            style={{ width: "100%", height: "auto" }}
                         />
                     </a>
                 </div>
                 {/* Bên phải: Slider lớn 3 ảnh */}
                 <div className="hero-slider">
                     <div className="slides">
-                        <img
-                            src="https://eutrip.vn/view/admin/Themes/kcfinder/upload/images/tour-du-lich-ngam-cuc-quang-eutrip.jpg"
-                            alt="Slide 1"
+                        <Image
+                            src={normalizeImage("/images/camera-manh-phat-slide.webp")}
+                            alt="Năng lượng mặt trời"
+                            width={800}
+                            height={500}
+                            style={{ width: "100%", height: "auto" }}
                             className="active"
                         />
-                        <img
-                            src="https://eutrip.vn/view/admin/Themes/kcfinder/upload/images/tour-du-lich-ngam-cuc-quang-7.jpg"
-                            alt="Slide 2"
+                        <Image
+                            src={normalizeImage("/images/binh-chua-chay-manh-phat-slide.webp")}
+                            alt="Thiết bị pccc"
+                            width={800}
+                            height={600}
+                            style={{ width: "100%", height: "auto" }}
                         />
-                        <img
-                            src="https://eutrip.vn/view/admin/Themes/kcfinder/upload/images/tour-du-lich-ngam-cuc-quang-eutrip-14.jpg"
-                            alt="Slide 3"
+                        <Image
+                            src={normalizeImage("/images/bao-ho-lao-dong-manh-phat-slide.webp")}
+                            alt="Camera giám sát 306"
+                            width={800}
+                            height={600}
+                            style={{ width: "100%", height: "auto" }}
                         />
                     </div>
                     {/* Nút prev/next */}

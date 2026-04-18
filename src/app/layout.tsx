@@ -5,10 +5,17 @@ import Script from 'next/script';
 import { AuthProvider } from '@/context/AuthContext';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { usePathname } from 'next/navigation';
 // import AddProductForm from '@/components/ProductEditor';
-
+//làm cho hiển thị hình ảnh mô tả khi share
+/*const imageUrl = `/favicon.ico`;
+// ✅ Strip HTML trước khi dùng trong metadata
+function stripHtml(html: string) {
+    return html?.replace(/<[^>]*>/g, "").trim() ?? "";
+}*///làm cho hiển thị hình ảnh mô tả khi share
 // Metadata chuẩn SEO—không dùng next-seo, dùng Metadata API của Next.js 16.1.1
 export const metadata: Metadata = {
+
   title: {
     default: 'Camera giám sát - năng lượng mặt trời',
     template: '%s | Camera giám sát - năng lượng mặt trời',
@@ -26,13 +33,13 @@ export const metadata: Metadata = {
     'thiet bi pccc', 'bình chữa cháy', 'binh chua chay', 'bảo hộ lao động',
     'bao ho lao dong'
   ],
-  metadataBase: new URL('https://tanong.cameramattroi.com'),
+  metadataBase: new URL('https://tanong.work.gd'),
   openGraph: {
     title: 'Camera giám sát - năng lượng mặt trời',
     description: `Thi công điện dân dụng, công nghiệp, camera giám sát, năng lượng mặt trời, pccc, blhd, cơ điện tại HCM, Bình Dương, 
   Bình Phước, Đồng Nai, Tây Ninh, Vũng Tàu, DakNong, DakLak, toàn quốc. Nghiệm thu từng giai đoạn, chuyên
   nghiệp`,
-    url: 'https://tanlong.cameramattroi.com',
+    url: 'https://tanlong.work.gd',
     siteName: 'Camera giám sát - năng lượng mặt trời',
     images: [{
       url: '/favicon.ico', width: 1200, height: 630,
@@ -50,10 +57,13 @@ export const metadata: Metadata = {
     description: `Thi công điện dân dụng, công nghiệp, camera giám sát, năng lượng mặt trời, pccc, blhd, cơ điện tại HCM, Bình Dương, 
   Bình Phước, Đồng Nai, Tây Ninh, Vũng Tàu, DakNong, DakLak, toàn quốc. Nghiệm thu từng giai đoạn, chuyên
   nghiệp`,
-    images: ['/favicon.icon'],
+    images: [{
+      url: '/favicon.ico', width: 800, height: 630,
+      alt: 'Camera giám sát - năng lượng mặt trời'
+    }],
   },
   alternates: {
-    canonical: 'https://tanlong.cameramattroi.com',
+    canonical: 'https://tanlong.work.gd',
     /*languages: {
       vi: 'https://cameramattroi.com/vi',
       en: 'https://cameramattroi.com/en',
@@ -82,6 +92,8 @@ export default function RootLayout({ children }: {
   return json.data; // API của đệ trả về { data: [...] }
 }
   const products = await getProducts();*/
+  const pathname = usePathname();
+  const isLoginPage = pathname?.startsWith('/login');
   return (
     <html lang='vi'>
       <head>
@@ -93,9 +105,9 @@ export default function RootLayout({ children }: {
           {/* Nội dung trang */}
           {/* <ProductsHome /> */}
           <AuthProvider>
-            <Header />
+            {!isLoginPage && <Header />}
             <main>{children}</main>
-            <Footer />
+            {!isLoginPage && <Footer />}
           </AuthProvider>
           {/* <ProductGrid products={products} /> */}
 
