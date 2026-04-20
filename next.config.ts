@@ -10,7 +10,7 @@ const securityHeaders = [
 ];
 
 // Content Security Policy—giới hạn nguồn tài nguyên được phép tải
-const csp = `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tiny.cloud https://*.tinymce.com; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://*.tinymce.com; img-src 'self' blob: data: https: https://cdn.tiny.cloud https://*.tinymce.com; font-src 'self' https: https://cdn.tiny.cloud https://*.tinymce.com; connect-src 'self' https://api.tonkliplock1000.com https://cdn.tiny.cloud https://*.tinymce.com blob:; media-src 'self' blob: data: https:; frame-ancestors 'self'; frame-src 'self' https://www.google.com/; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com"
+const csp = `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tiny.cloud https://*.tinymce.com; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://*.tinymce.com; img-src 'self' blob: data: https: https://cdn.tiny.cloud https://*.tinymce.com; font-src 'self' https: https://cdn.tiny.cloud https://*.tinymce.com; connect-src 'self' https://api.tonkliplock1000.com https://cdn.tiny.cloud https://*.tinymce.com blob:; media-src 'self' blob: data: https:; frame-ancestors 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com";
 `.replace(/\s{2,}/g, ' ').trim();
 /*default-src 'self';
               script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tiny.cloud https://*.tinymce.com;

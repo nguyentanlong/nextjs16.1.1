@@ -45,13 +45,14 @@ export default function ProductTabs({ description }: ProductTabsProps) {
 
                 {activeTab === "video" && (
                     <div id="video" className="tab-pane active">
-                        <iframe
+                        {/* <iframe
                             width="100%"
                             height={500}
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                            src=""
                             frameBorder={0}
                             allowFullScreen
-                        />
+                        /> */}
+                        <iframe width={"100%"} height={500} src="https://www.youtube.com/embed/4XYpvi4wNmE?si=P-hA_zGpdS09k0xH" title="YouTube video player" frameBorder={0} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
                     </div>
                 )}
 
