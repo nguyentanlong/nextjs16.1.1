@@ -1,6 +1,6 @@
 'use client'
 import ProductEditor from "@/components/ProductEditor";
 
-export default async function AddProduct() {
+export default function AddProduct() {
     return (<ProductEditor />);
 }

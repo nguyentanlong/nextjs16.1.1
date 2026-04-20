@@ -6,21 +6,6 @@ import AppImage from "./ImageCatagory";
 import { slugifyCategory } from "@/lib/slugify";
 
 export default function Category({ subCategories }: { subCategories: SubCategory[] }) {
-    // interface SubCategory { id: number; categoryName: string; image: string; }
-    /*const [subCategoriesHome, setSubCategoriesHome] = useState<SubCategory[]>([]);
-    useEffect(() => {
-        const loadData = async () => {
-            const data = await fetchSubCategories();
-            // console.log("data trong category.tsx:  ", data);
-            setSubCategoriesHome(data);
-        };
-        loadData();
-    }, []);
-    // Nếu cả prop lẫn state đều rỗng thì mới báo "chưa có danh mục"
-    const categoriesToRender = subCategoriesHome.length > 0 ? subCategoriesHome : SubCategory;
-    if (!categoriesToRender || categoriesToRender.length === 0) {
-        return <div>Chưa có Danh Mục</div>;
-    }*/
     return (
         <>
             {/* ==================== DANH MỤC + PHỐ MUA SẮM ==================== */}
@@ -38,21 +23,11 @@ export default function Category({ subCategories }: { subCategories: SubCategory
                                         className="cat-item"
                                         key={sc.id} />
                                 </Link>
-                                // <Link key={sc.id} href={`/${slugifyProduct(sc.categoryName)}`} className="cat-item">
-                                //     <Image
-                                //         src={normalizeImage(sc.image ? sc.image : "uploads/subcategories/xuong-thue-nguyen-tan-long-1773219281651.jpg")}
-                                //         alt={sc.categoryName}
-                                //         width={100}
-                                //         height={100}
-                                //     />
-                                //     <p>{sc.categoryName}</p>
-                                // </Link>
                             ))}
-                            <button className="carousel-prev">&lt;</button>
-                            <button className="carousel-next">{">"}</button>
+
                         </div>
-
-
+                        <button className="carousel-prev">&lt;</button>
+                        <button className="carousel-next">{">"}</button>
                     </div>
                 </div>
             </section>

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: '%s | Camera giám sát - năng lượng mặt trời',
   },
   icons: {
-    icon: '/favicon.ico', // favicon chính 
+    icon: '/logo-manh-phat-van-ban.png', // favicon chính 
     shortcut: '/favicon.png', // favicon phụ 
     apple: '/favicon.ico',
   },// cho iOS
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     url: 'https://tanlong.work.gd',
     siteName: 'Camera giám sát - năng lượng mặt trời',
     images: [{
-      url: '/favicon.ico', width: 1200, height: 630,
+      url: '/logo-manh-phat-van-ban.png', width: 1200, height: 630,
       alt: 'Camera giám sát - năng lượng mặt trời'
     }],
     locale: 'vi_VN',
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   Bình Phước, Đồng Nai, Tây Ninh, Vũng Tàu, DakNong, DakLak, toàn quốc. Nghiệm thu từng giai đoạn, chuyên
   nghiệp`,
     images: [{
-      url: '/favicon.ico', width: 800, height: 630,
+      url: '/logo-manh-phat-van-ban.png', width: 800, height: 630,
       alt: 'Camera giám sát - năng lượng mặt trời'
     }],
   },

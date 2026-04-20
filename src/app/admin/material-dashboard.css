@@ -200,7 +200,7 @@
 
 body {
   margin: 0;
-  font-family: var(--bs-body-font-family);
+  /* font-family: var(--bs-body-font-family); */
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
@@ -3876,6 +3876,7 @@ fieldset:disabled .btn {
   --bs-btn-disabled-color: #0a0a0a;
   --bs-btn-disabled-bg: #e91e63;
   --bs-btn-disabled-border-color: #e91e63;
+
 }
 
 .btn-secondary {
@@ -24668,7 +24669,8 @@ hr.horizontal.gray-light {
 
 @media (min-width: 1200px) {
   .g-sidenav-hidden.rtl .main-content {
-    margin-right: 7rem !important;
+    margin-right: 3rem !important;
+    /*7*/
   }
 }
 

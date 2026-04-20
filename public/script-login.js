@@ -7,7 +7,7 @@
 //     // Initialize the login form
 //     new LoginForm1();
 // });
-const passwordInput = document.getElementById("password");
+/*const passwordInput = document.getElementById("password");
 const toggleBtn = document.getElementById("passwordToggle");
 
 if (passwordInput && toggleBtn) toggleBtn.addEventListener("click", () => {
@@ -30,4 +30,30 @@ document.addEventListener('visibilitychange', () => {
             }
         }
     }
-});
+});*/
+// public/script-login.js
+
+(() => {
+    const passwordInput = document.getElementById("password");
+    const toggleBtn = document.getElementById("passwordToggle");
+
+    if (passwordInput && toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+            passwordInput.setAttribute("type", type);
+            toggleBtn.textContent = type === "password" ? "👁️" : "🙈";
+        });
+    }
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+            const activeElement = document.activeElement;
+            if (activeElement && activeElement.tagName !== "INPUT") {
+                const emailInput = document.querySelector("#email");
+                if (emailInput && !emailInput.value) {
+                    setTimeout(() => emailInput.focus(), 100);
+                }
+            }
+        }
+    });
+})();

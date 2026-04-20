@@ -76,6 +76,8 @@ export default function TinyEditor({
                     "table charmap emoticons | removeformat | preview fullscreen help",
                 media_live_embeds: true,
                 media_filter_html: false, // cho phép giữ nguyên iframe
+                sandbox_iframes: false,           // ← THÊM: không sandbox iframe
+                convert_unsafe_embeds: false,     // ← THÊM: không convert iframe thành embed
                 extended_valid_elements: "iframe[src|frameborder|allowfullscreen|allow|referrerpolicy|width|height]",
                 content_style: "iframe {width:100%; height:400px;}",
                 // --- Upload ảnh lên server ---

@@ -10,6 +10,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // ✅ thêm state này
     async function handleSubmitLogin(e: React.FormEvent) {
         e.preventDefault();
         // if (loading) return; // chặn double click 
@@ -48,9 +49,10 @@ export default function LoginPage() {
                     <div className="form-group">
                         <div className="input-wrapper password-wrapper">
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}  /* ✅ dùng state */
                                 placeholder="Mật khẩu"
-                                value={password} onChange={(e) => setPassword(e.target.value)}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 id="password"
                                 name="password"
                                 autoComplete="current-password"
@@ -61,10 +63,9 @@ export default function LoginPage() {
                                 className="password-toggle"
                                 id="passwordToggle"
                                 aria-label="Toggle password visibility"
-
+                                onClick={() => setShowPassword(prev => !prev)}  /* ✅ onClick React */
                             >
-                                👁️
-                                {/* <span className="eye-icon" /> */}
+                                {showPassword ? "🙈" : "👁️"}  {/* ✅ icon theo state */}
                             </button>
                             <span className="focus-border" />
                         </div>
