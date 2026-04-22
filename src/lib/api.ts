@@ -72,7 +72,9 @@ export async function fetchProductsHome(page = 1, limit = 8) {
     try {
         const res = await fetch(
             `${API_BASE}/home?page=${page}&limit=${limit}`,
-            { next: { revalidate: 259200, } }
+            {
+                cache: "no-store",
+            }/*{ next: { revalidate: 259200, } }*/
         );
         // const res = await fetcher(`${API_BASE || API_BASE_L}/home?page=${page}&limit=${limit}`);
         // return data?.data ?? []

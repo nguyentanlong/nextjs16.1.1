@@ -18,6 +18,9 @@ export default function ProductsHomeClient({
     limit: number;
 }) {
     const totalPages = Math.ceil(total / limit);
+    if (!products || products.length === 0) {
+        return <div>Không có sản phẩm nào.</div>;
+    }
 
     return (
         <>
