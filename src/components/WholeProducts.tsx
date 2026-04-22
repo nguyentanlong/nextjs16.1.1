@@ -1,52 +1,37 @@
-"use client";
-
-import Image from "next/image";
-import { fetchProductsBySubCategory, normalizeImage } from "@/lib/api";
+// src/components/ProductsHome.tsx
+import { fetchAllProducts } from "@/lib/api";
 import Link from "next/link";
-import Pagination from "./Pagination";
+import Image from "next/image";
+import { normalizeImage } from "@/lib/api";
 
-export default function ProductsBySubCategoryClient({
-    products,
-    total,
-    currentPage,
-    slug,
-}: {
-    products: any[];
-    total: number;
-    currentPage: number;
-    slug: string;
-}) {
-    const limit = 10;
-    const totalPages = Math.ceil(total / limit);
+export default async function WholeProducts() {
+    const products = await fetchAllProducts();
 
-    if (!products || products.length === 0) {
-        return <div>Không có sản phẩm nào.</div>;
-    }
-
-    return (
-        <>
-            {/* {loading && <div>Đang tải...</div>} */}
-            {products.map((p) => (
+    return (<>
+        <span>Tất cả sản phẩm</span>
+        <div className="suggestion-grid">
+            {products.map((p: any) => (
                 <div key={p.id} className="suggestion-card">
                     <Link href={`/${p.slugP}`} className="product-link">
                         {p.discountPercent && (
-                            <div className="badge-percent">
-                                -50%-{/*p.discountPercent*/}%
-                            </div>
+                            <div className="badge-percent">-50%</div>
                         )}
-
                         {p.media && p.media.length > 0 ? (
                             (() => {
                                 const src = p.media[0];
                                 const ext = src.split(".").pop()?.toLowerCase();
                                 const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
-
                                 return isVideo ? (
-                                    <video src={normalizeImage(src)} controls width={100} height={90} />
+                                    <video
+                                        src={normalizeImage(src)}
+                                        controls
+                                        width={100}
+                                        height={90}
+                                    />
                                 ) : (
                                     <Image
                                         src={normalizeImage(src)}
-                                        alt={p.productName}
+                                        alt={String(p.productName ?? p.slugP ?? "0328732676")}
                                         width={100}
                                         height={90}
                                     />
@@ -55,7 +40,6 @@ export default function ProductsBySubCategoryClient({
                         ) : (
                             <div className="placeholder" />
                         )}
-
                         <div className="badges">
                             <span className="badge-discount">Discount Extra</span>
                             <span className="badge-official">Official Sale</span>
@@ -70,8 +54,6 @@ export default function ProductsBySubCategoryClient({
                     </Link>
                 </div>
             ))}
-            {/* ✅ Dùng Pagination component */}
-            <Pagination currentPage={currentPage} totalPages={totalPages} />
-        </>
-    );
+        </div>
+    </>);
 }

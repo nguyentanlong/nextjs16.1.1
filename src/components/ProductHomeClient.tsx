@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { normalizeImage } from "@/lib/api";
 import { altImage } from "@/lib/slugify";
+import Pagination from "./Pagination";
 
 export default function ProductsHomeClient({
     products,
@@ -74,38 +75,8 @@ export default function ProductsHomeClient({
                     </div>
                 ))}
             </div>
-            {/* Phân trang */}
-            <ul className="pagination">
-                {/* Nút « */}
-                <li>
-                    {currentPage > 1 ? (
-                        <Link href={`?page=${currentPage - 1}`} scroll={false}>«</Link>
-                    ) : (
-                        <a style={{ pointerEvents: "none", opacity: 0.4 }}>«</a>
-                    )}
-                </li>
-
-                {/* Các số trang */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <li key={p}>
-                        <Link
-                            href={`?page=${p}`}
-                            className={currentPage === p ? "active" : ""}
-                            scroll={false}>
-                            {p}
-                        </Link>
-                    </li>
-                ))}
-
-                {/* Nút » */}
-                <li>
-                    {currentPage < totalPages ? (
-                        <Link href={`?page=${currentPage + 1}`} scroll={false}>»</Link>
-                    ) : (
-                        <a style={{ pointerEvents: "none", opacity: 0.4 }}>»</a>
-                    )}
-                </li>
-            </ul>
+            {/* ✅ Dùng Pagination component */}
+            <Pagination currentPage={currentPage} totalPages={totalPages} />
         </>
     );
 }

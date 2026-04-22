@@ -5,9 +5,12 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
   background: #f9f5ff;
-  color: #737373;
+  font-family: ui-rounded;
+  color: #2e8b57;
+  /*#af7100ba;*/
+  line-height: 1.8;
+  font-size: 16pt
 }
 
 a {
@@ -1089,20 +1092,6 @@ a {
   border-radius: 20px;
 }
 
-/*detail product*/
-/* * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: #f8f9fa;
-  color: #333;
-  line-height: 1.6;
-} 
-*/
 html,
 body {
   overflow-x: hidden;
@@ -1170,6 +1159,8 @@ body {
   text-overflow: unset !important;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  font-size: 14pt;
+  line-height: 1.2;
 }
 
 .price-box {
