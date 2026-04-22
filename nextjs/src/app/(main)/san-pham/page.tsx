@@ -1,5 +1,6 @@
 
-import ProductsAll from "@/components/ProductsAll";
+
+import WholeProducts from "@/components/WholeProducts";
 import { fetchAllProducts } from "@/lib/api";
 export default async function AllProduct() {
     const productAll = await fetchAllProducts();
@@ -7,5 +8,5 @@ export default async function AllProduct() {
         return <div>Chưa có sản phẩm nào</div>;
     }
     return (
-        <><ProductsAll /></>);
+        <><WholeProducts /></>);
 }

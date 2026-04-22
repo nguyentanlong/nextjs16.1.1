@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { normalizeImage } from "@/lib/api";
 
-export default async function ProductsAll() {
+export default async function WholeProducts() {
     const products = await fetchAllProducts();
 
     return (
