@@ -98,10 +98,10 @@ export default function RootLayout({ children }: {
 
           {/* Footer sẽ thêm sau */}
           {/* <AddProductForm /> */}
-          <Script src="/script.js" strategy="afterInteractive" />
-          <Script src="./script-alt.js" strategy="afterInteractive" />
-          <Script src="./product-script.js" strategy="afterInteractive" />
-          <Script src="/script-login.js" strategy="afterInteractive" />
+          {/* <Script src="/script.js" strategy="lazyOnload" /> 
+          <Script src="./script-alt.js" strategy="lazyOnload" />
+          <Script src="./product-script.js" strategy="lazyOnload" />
+          <Script src="/script-login.js" strategy="lazyOnload" />*/}
           {/* <script src="/tinymce/tinymce.min.js"></script> */}
         </>
       </body>

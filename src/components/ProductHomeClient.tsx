@@ -61,8 +61,8 @@ export default function ProductsHomeClient({
                             )}
 
                             <div className="badges">
-                                <span className="badge-discount">Discount Extra</span>
-                                <span className="badge-official">Official Sale</span>
+                                <span className="badge-discount">Khuyến mãi</span>
+                                <span className="badge-official">Cửa hàng</span>
                             </div>
                             <h3>{p.productName}</h3>
                             <div className="price">

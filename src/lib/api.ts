@@ -234,26 +234,6 @@ export async function fetchCategories(): Promise<Category[]> {
         return []; // fallback an toàn
     }
 }
-/*export async function fetchSubCategories(): Promise<SubCategory[]> {
-    try {
-        const res = await fetch(`${API_BASE || API_BASE_L}/subcategories/subcate`); // có thể thêm { credentials: "include" } nếu cần
-        if (!res.ok) {
-            throw new Error(`Failed to fetch subcategories: ${res.status}`);
-        }
-        const data = await res.json();
-        // console.log("data trong lib/api:  ", data);
-        if (Array.isArray(data)) {
-            return data;
-        }
-
-        // Nếu backend trả về object có field subcategories
-        return data.subcategories ?? [];
-        // return data//data.subcategories ?? []; // đảm bảo trả về mảng
-    } catch (err) {
-        console.error("❌ Error fetching subcategories:", err);
-        return []; // hoặc throw err nếu muốn xử lý bên ngoài
-    }
-}*/
 export async function fetchProductsBySubCategory(
     slug: string,
     page = 1,
@@ -266,16 +246,17 @@ export async function fetchProductsBySubCategory(
         );
 
         const text = await res.text();
-        if (!text) return { data: [], total: 0 };
+        if (!text) return { data: [], total: 0, categoryName: "" };
 
         const json = JSON.parse(text);
 
         return {
             data: json?.data ?? [],
             total: json?.total ?? 0,
+            categoryName: json?.categoryName ?? "",
         };
     } catch (err) {
         console.error("Fetch subcategory error:", err);
-        return { data: [], total: 0 };
+        return { data: [], total: 0, categoryName: "" };
     }
 }

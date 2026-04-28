@@ -7,8 +7,8 @@ import "./stype-login.css";
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
   return (<>
     {children}
-    <Script src="./script-login.js" />
-    <Script src="./script-alt.js" />
+    <Script src="./script-login.js" strategy="lazyOnload" />
+    <Script src="./script-alt.js" strategy="lazyOnload" />
   </>
   );
 }

@@ -1,5 +1,3 @@
-
-
 import WholeProducts from "@/components/WholeProducts";
 import { fetchAllProducts } from "@/lib/api";
 export default async function AllProduct() {

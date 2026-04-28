@@ -30,19 +30,6 @@ export default function SearchBar() {
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    /*const handleCategoryClick = (categoryName: string) => {
-        setQuery(categoryName);
-        setShowSuggest(false);
-        // router.push(`/category/${categoryName}`);
-    };
-
-    const handleProductClick = (productName: string) => {
-        setQuery(productName);
-        setShowSuggest(false);
-        // router.push(`/product/${productName}`);
-        // <Link href={`/${slugifyProduct(p.productName)}`} className="product-link"></Link>
-    };*/
-
     return (
         <form className="search-form" role="search">
             <div className="search-wrapper">

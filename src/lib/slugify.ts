@@ -45,11 +45,28 @@ export function slugifyCategory(categoryName: string): string {
     // + ".html";
 }
 
-/*export async function getAllSlugProduct() {
-    const products = await fetchAllProducts();
-    return products.map((p) => ({ slug: slugifyProduct(p.productName) }));
+// utils/validators.ts
+
+// ✅ Validate số điện thoại Việt Nam (bắt đầu bằng 0 hoặc +84, 9-11 số)
+export function validatePhoneVN(phone: string): boolean {
+    const regex = /^(?:\+84|0)(?:\d{9,10})$/;
+    return regex.test(phone);
 }
-export async function generateStaticSubcateories() {
-    const products = await fetchSubCategories();
-    return products.map((p) => ({ slug: slugifyCategory(p.categoryName) }));
-}*/
+
+// ✅ Validate email
+export function validateEmail(email: string): boolean {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+// ✅ Validate mật khẩu (ít nhất 8 ký tự, có chữ hoa, chữ thường, số, ký tự đặc biệt)
+export function validatePassword(password: string): boolean {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+}
+
+// ✅ Validate username (chỉ chữ, số, gạch dưới, từ 3–20 ký tự)
+export function validateUsername(username: string): boolean {
+    const regex = /^[a-zA-Z0-9_]{3,20}$/;
+    return regex.test(username);
+}

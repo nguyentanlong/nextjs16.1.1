@@ -34,8 +34,8 @@ export default function AdminPage({ children }: { children: React.ReactNode }) {
 
             </div>
 
-            <Script src="./material-dashdoard.min.js" />
-            <Script src="./perfect-scrollbar.min.js" />
+            <Script src="./material-dashdoard.min.js" strategy="lazyOnload" />
+            <Script src="./perfect-scrollbar.min.js" strategy="lazyOnload" />
         </>
         // </AuthProvider>
     );

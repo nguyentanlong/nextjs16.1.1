@@ -540,7 +540,7 @@ a {
   position: relative;
   overflow: hidden;
   border-radius: 16px;
-  background: #a0d9df;
+  background: #ffa50085;
   padding: 20px 0;
 }
 
@@ -611,7 +611,7 @@ a {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: #88ebaf96;
+  background: #00ff89b8;
   border: none;
   width: 44px;
   height: 44px;
@@ -634,7 +634,7 @@ a {
 /* RESPONSIVE: Tablet & Mobile → 1 item hiện */
 @media (max-width: 1024px) {
   .carousel-track {
-    padding: 0 50px;
+    padding: 0 20px;
   }
 
   .cat-item {
@@ -647,10 +647,16 @@ a {
 
   /* vuốt bằng ngón tay */
   .carousel-track {
-    scroll-snap-type: x mandatory;
+    /*scroll-snap-type: x mandatory;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;*/
     /* mượt như iPhone */
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    /* ẩn scrollbar Firefox */
+    -ms-overflow-style: none;
+    /*
     padding: 0 20px;
     scrollbar-width: none;
     /* ẩn thanh cuộn Firefox */
@@ -694,6 +700,11 @@ a {
 @media (max-width: 768px) {
   .suggestion-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .carousel-prev,
+  .carousel-next {
+    display: none;
   }
 }
 
@@ -1523,12 +1534,17 @@ nav ul li a:hover {
   background-color: #f5f5f5;
 }
 
-.hamburger {
+.bieutuong {
   display: none;
   cursor: pointer;
+  /* bieutuong lines */
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  z-index: 1000;
 }
 
-.hamburger .line {
+.bieutuong .line {
   width: 25px;
   height: 1px;
   background-color: #1f1f1f;
@@ -1537,42 +1553,48 @@ nav ul li a:hover {
   transition: all 0.3s ease-in-out;
 }
 
-.hamburger-active {
+.bieutuong-active {
   transition: all 0.3s ease-in-out;
   transition-delay: 0.6s;
   transform: rotate(45deg);
 }
 
-.hamburger-active .line:nth-child(2) {
+.bieutuong-active .line:nth-child(2) {
   width: 0px;
 }
 
-.hamburger-active .line:nth-child(1),
-.hamburger-active .line:nth-child(3) {
+.bieutuong-active .line:nth-child(1),
+.bieutuong-active .line:nth-child(3) {
   transition-delay: 0.3s;
 }
 
-.hamburger-active .line:nth-child(1) {
+.bieutuong-active .line:nth-child(1) {
   transform: translateY(12px);
 }
 
-.hamburger-active .line:nth-child(3) {
+.bieutuong-active .line:nth-child(3) {
   transform: translateY(-5px) rotate(90deg);
 }
 
-.menubar {
-  position: absolute;
+/* Bỏ display: none, chỉ dùng left để ẩn/hiện — mượt hơn */
+.menudienthoai {
+  position: fixed;
   top: 0;
   left: -60%;
+  /* ẩn bằng cách đẩy ra ngoài màn hình */
   display: flex;
+  /* luôn flex, không toggle display */
+  flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   width: 60%;
   height: 100vh;
   padding: 20% 0;
   background: rgba(255, 255, 255);
-  transition: all 0.5s ease-in;
-  z-index: 2;
+  transition: left 0.5s ease-in-out;
+  /* chỉ transition left */
+  z-index: 998;
+  box-shadow: none;
 }
 
 .active {
@@ -1580,16 +1602,16 @@ nav ul li a:hover {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
-.menubar ul {
+.menudienthoai ul {
   padding: 0;
   list-style: none;
 }
 
-.menubar ul li {
+.menudienthoai ul li {
   margin-bottom: 32px;
 }
 
-.menubar ul li a {
+.menudienthoai ul li a {
   text-decoration: none;
   color: #000;
   font-size: 95%;
@@ -1598,17 +1620,20 @@ nav ul li a:hover {
   border-radius: 5px;
 }
 
-.menubar ul li a:hover {
+.menudienthoai ul li a:hover {
   background-color: #f5f5f5;
 }
 
-@media screen and (max-width: 790px) {
-  .hamburger {
-    display: block;
-  }
+.menudienthoai.menudienthoai-open {
+  left: 0;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 
-  nav ul {
-    display: none;
+
+
+@media screen and (max-width: 790px) {
+  .bieutuong {
+    display: block;
   }
 
 }

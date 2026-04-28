@@ -1,83 +1,64 @@
+// src/components/RelateProducts.tsx
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-// import { slugifyProduct } from "@/lib/slugify";
-import { fetchRelatedProducts, normalizeImage } from "@/lib/api";
+import { normalizeImage } from "@/lib/api";
 
-/*interface Product {
-    id: string;
-    productName: string;
-    price: number;
-    media: string[];
-    stock: number;
-    subCategoryId: number;
-}*/
+// related-card: flex: 0 0 160px + gap: 20px = 180px (điều chỉnh nếu CSS khác)
+const ITEM_WIDTH = 180;
+const VISIBLE = 5;
 
 interface RelatedProductsProps {
-    productId: string;
-    // products: Product[];
+    products: any[];
 }
 
-export default function RelatedProducts({ productId }: RelatedProductsProps) {
-    const trackRef = useRef<HTMLDivElement>(null);
+export default function RelatedProducts({ products }: RelatedProductsProps) {
     const [index, setIndex] = useState(0);
-    const [related, setRelated] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
+    const trackRef = useRef<HTMLDivElement>(null);
 
+    if (!products || products.length === 0) {
+        return (
+            <div className="related-products">
+                <h2>Sản phẩm chung danh mục</h2>
+                <div>Không có sản phẩm chung danh mục</div>
+            </div>
+        );
+    }
 
-    const items = related.length;
-    const visible = 5; // số item hiển thị cùng lúcuseEffect(() => {
-    useEffect(() => {
-        if (!productId) return;
+    const maxIndex = Math.max(0, products.length - VISIBLE);
 
-        const fetchData = async () => {
-            setLoading(true);
-            const data = await fetchRelatedProducts(productId);
-            // console.log("API related:", data); // 🔥 debug
-            setRelated(data);
-            setLoading(false);
-        };
+    const handlePrev = () => setIndex((prev) => Math.max(0, prev - 1));
+    const handleNext = () => setIndex((prev) => Math.min(maxIndex, prev + 1));
 
-        fetchData();
-    }, [productId]);
-
-    //  console.log("related products:", related);
-    useEffect(() => {
-        const track = trackRef.current;
-        if (!track || related.length === 0) return;
-
-        const update = () => {
-            const width = track.children[0].clientWidth + 20;
-            track.style.transform = `translateX(-${index * width}px)`;
-        };
-
-        update();
-        window.addEventListener("resize", update);
-
-        return () => window.removeEventListener("resize", update);
-    }, [index, related]);
-    const handleNext = () => {
-        setIndex((prev) => (prev < items - visible ? prev + 1 : 0));
-    };
-
-    const handlePrev = () => {
-        setIndex((prev) => (prev > 0 ? prev - 1 : items - visible));
-    };
     return (
         <div className="related-products">
             <h2>Sản phẩm chung danh mục</h2>
-            {loading && <div>Đang tải sản phẩm liên quan...</div>}
 
-            {!loading && related.length === 0 && (
-                <div>Không có sản phẩm chung danh mục</div>
-            )}
             <div className="related-carousel">
-                <div className="carousel-track" ref={trackRef}>
-                    {Array.isArray(related) &&
-                        related.map((p) => {
-                            const src = p.media && p.media.length > 0 ? p.media[0] : null;
+
+                <button
+                    className="carousel-prev"
+                    onClick={handlePrev}
+                    aria-label="Trước"
+                    style={{ opacity: index === 0 ? 0.3 : 1 }}
+                >
+                    &lt;
+                </button>
+
+                {/* Wrapper clip */}
+                <div style={{ overflow: "hidden", flex: 1 }}>
+                    <div
+                        className="carousel-track"
+                        ref={trackRef}
+                        style={{
+                            transform: `translateX(-${index * ITEM_WIDTH}px)`,
+                            transition: "transform 0.5s ease",
+                        }}
+                    >
+                        {products.map((p) => {
+                            const src = p.media?.[0] ?? null;
                             const ext = src?.split(".").pop()?.toLowerCase();
                             const isVideo = ["mp4", "webm", "ogg"].includes(ext || "");
 
@@ -87,15 +68,15 @@ export default function RelatedProducts({ productId }: RelatedProductsProps) {
                                         {src ? (
                                             isVideo ? (
                                                 <video
-                                                    src={normalizeImage(p.media[0])}//.startsWith("/") ? src : `/${src}`
+                                                    src={normalizeImage(src)}
                                                     controls
                                                     width={100}
                                                     height={100}
                                                 />
                                             ) : (
                                                 <Image
-                                                    src={normalizeImage(p.media[0])}//src.startsWith("/") ? src : `/${src}`
-                                                    alt={`Sản phẩm liên quan ${p.id}`}
+                                                    src={normalizeImage(src)}
+                                                    alt={String(p.productName ?? p.slugP ?? "product")}
                                                     width={100}
                                                     height={100}
                                                 />
@@ -103,7 +84,6 @@ export default function RelatedProducts({ productId }: RelatedProductsProps) {
                                         ) : (
                                             <div className="placeholder" />
                                         )}
-
                                         <h4>{p.productName}</h4>
                                         <p className="price">
                                             {Number(p.price).toLocaleString("vi-VN")} ₫
@@ -112,25 +92,26 @@ export default function RelatedProducts({ productId }: RelatedProductsProps) {
                                 </Link>
                             );
                         })}
+                    </div>
                 </div>
-                <button className="carousel-prev" onClick={handlePrev}>
-                    &lt;
-                </button>
-                <button className="carousel-next" onClick={handleNext}>
-                    {">"}
-                </button>
-                <span
-                    style={{
-                        display: "flex",
-                        justifyContent: "end",
-                        color: "orange",
-                        paddingTop: 15,
-                    }}
+
+                <button
+                    className="carousel-next"
+                    onClick={handleNext}
+                    aria-label="Tiếp"
+                    style={{ opacity: index >= maxIndex ? 0.3 : 1 }}
                 >
+                    &gt;
+                </button>
+
+            </div>
+
+            {/* ✅ Đổi span → Link */}
+            <div style={{ display: "flex", justifyContent: "end", paddingTop: 15 }}>
+                <Link href="/tat-ca-san-pham" style={{ color: "orange" }}>
                     Xem Tất cả
-                </span>
+                </Link>
             </div>
         </div>
     );
-
 }

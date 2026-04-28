@@ -6,8 +6,8 @@ export default function RegisterLayout({ children }: { children: React.ReactNode
     return (
 
         <main>{children}
-            <Script src="./script-register.js" />
-            <Script src="./script-alt.js" />
+            <Script src="./script-register.js" strategy="lazyOnload" />
+            <Script src="./script-alt.js" strategy="lazyOnload" />
         </main>
     );
 }

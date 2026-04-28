@@ -25,7 +25,7 @@ export default async function HomePage({
     <main>
       <HomeNavbar />
       <HeroBanner />
-      <Category subCategories={subCategories} />
+
       <PopularCategory categories={categories} />
       {/*
         key={searchParams.page} → mỗi lần đổi trang, Suspense reset
@@ -38,6 +38,7 @@ export default async function HomePage({
       >
         <ProductsSection searchParams={{ page: currentPage }} />
       </Suspense>
+      <Category subCategories={subCategories} />
       <ReBanner />
       {/* <Footer /> */}
     </main>
@@ -63,10 +64,10 @@ function ProductsSkeleton() {
               {/* badges placeholder */}
               <div className="badges">
                 <span className="badge-discount" style={{ background: "#e0e0e0", color: "transparent" }}>
-                  Discount Extra
+                  Khuyến mãi
                 </span>
                 <span className="badge-official" style={{ background: "#e0e0e0", color: "transparent" }}>
-                  Official Sale
+                  Cửa hàng
                 </span>
               </div>
 
