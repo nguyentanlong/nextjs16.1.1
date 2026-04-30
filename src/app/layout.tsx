@@ -86,23 +86,11 @@ export default function RootLayout({ children }: {
       </head>
       <body>
         <>
-          {/* Header—lấy dữ liệu động theo locale */}
-          {/* Nội dung trang */}
-          {/* <ProductsHome /> */}
           <AuthProvider>
             {/* <Header /> */}
             {children}
             {/* <Footer /> */}
           </AuthProvider>
-          {/* <ProductGrid products={products} /> */}
-
-          {/* Footer sẽ thêm sau */}
-          {/* <AddProductForm /> */}
-          {/* <Script src="/script.js" strategy="lazyOnload" /> 
-          <Script src="./script-alt.js" strategy="lazyOnload" />
-          <Script src="./product-script.js" strategy="lazyOnload" />
-          <Script src="/script-login.js" strategy="lazyOnload" />*/}
-          {/* <script src="/tinymce/tinymce.min.js"></script> */}
         </>
       </body>
     </html>

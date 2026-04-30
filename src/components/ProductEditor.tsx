@@ -49,8 +49,10 @@ interface Product {
     description: string;      // text
     keywords: string[]; // ✅ mảng string
     stock: number | 3;
+    N0: number | 5;
     // có thể thêm shortDescription, keywords, stock… nếu cần
     files?: File[]; // ✅ thêm để lưu danh sách file
+
 }
 
 
@@ -69,6 +71,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             description: "",
             keywords: [],
             stock: 3,
+            N0: 5,
             files: []
         }
     );
@@ -118,65 +121,74 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
         setIsSubmitting(true);
         const formData = new FormData();
         try {
-            formData.append("productName", product.productName ?? "từ nextjs");
+            formData.append("productName", product.productName ?? "Nguyễn Tấn Long");
             formData.append("price", product.price.toString() ?? "2676");
             if (product.subCategoryId) {
                 formData.append("subCategoryId", product.subCategoryId.toString() ?? "2");
             }
-            formData.append("shortDescription", product.shortDescription ?? "từ nextjs");
-            formData.append("description", product.description) ?? "từ nextjs";
-            // keywords là mảng → stringify để backend parse 
-            // formData.append("keywords", JSON.stringify(product.keywords));
-            /*product.keywords.forEach(k => {
-                formData.append("keywords", k.trim());
-            });*/
+            formData.append("shortDescription", product.shortDescription ?? "145 DT 741, kp Phước Trung, p Phước Bình, Đồng Nai");
+            formData.append("description", product.description) ?? "Thiết kế website, software, camera, năng lượng mặt trời, pccc";
             formData.append("stock", product.stock?.toString() ?? "0"); // ✅ thêm dòng này
-            /*            if (product.files && product.files.length > 0) {
-                            product.files.forEach(file => {
-                                formData.append("files", file); // ✅ đúng key cho Multer FilesInterceptor
-                            });
-                        }*/
+            formData.append("N0", product.N0?.toString() ?? "5");
             product.keywords.forEach(k => {
                 if (k.trim()) {
                     formData.append("keywords", k.trim());
                 }
             });
 
-            const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
+            /*const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
             if (fileInput?.files) {
                 for (const file of fileInput.files) {
                     // console.log("APPEND:", file.name);
                     formData.append("files", file);
                 }
             }
-            // Log tất cả key/value trong FormData 
-            /*for (const [key, value] of formData.entries()) {
-                console.log("FormData:", key, value);
-            }*/
-
             const res = await fetch("/api/products", {
                 method: "POST",
                 // headers: { Authorization: `Bearer ${accessToken}` },
                 body: formData,
                 credentials: "include",
             });
-            // console.log("AccessToken in ProductEditor:", accessToken);
-            // const text = await res.text();
-            // console.log("Response raw body:", text);
-            // try {
-            //     const data = JSON.parse(text);
-            //     console.log("Parsed JSON:", data);
-            // }
-            // catch { console.log("Response is not JSON"); }
+            
             if (res.ok) {
                 const data = await res.json();
-                console.log("✅ Product created:", data);
                 alert("Thêm sản phẩm thành công!");
             }
             else {
-                // const err = await res.json();
-                // console.error("❌ Error:", err);
                 alert("Có lỗi khi thêm sản phẩm");
+            }
+        } finally {
+            setIsSubmitting(false);
+        }*/
+            // File mới nếu có chọn lại
+            const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
+            if (fileInput?.files) {
+                for (const file of fileInput.files) {
+                    formData.append("files", file);
+                }
+            }
+
+            // ✅ Nếu có product.id → PUT (cập nhật), không có → POST (tạo mới)
+            const isEdit = !!product.id;
+            const url = isEdit ? `/api/products/${product.id}` : "/api/products";
+            const method = isEdit ? "PUT" : "POST";
+
+            const res = await fetch(url, {
+                method,
+                body: formData,
+                credentials: "include",
+            });
+
+            if (res.ok) {
+                alert(isEdit ? "Cập nhật sản phẩm thành công!" : "Thêm sản phẩm thành công!");
+                if (isEdit) {
+                    // Quay lại danh sách sau khi sửa
+                    window.location.href = "/admin/san-pham";
+                }
+            } else {
+                const err = await res.json().catch(() => ({}));
+                console.error("❌ Error:", err);
+                alert(isEdit ? "Có lỗi khi cập nhật sản phẩm" : "Có lỗi khi thêm sản phẩm");
             }
         } finally {
             setIsSubmitting(false);
@@ -275,6 +287,15 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                     className="border rounded px-2 py-1 w-full"
                     required
                 />
+                <label className="block font-medium">Hiển thị</label>
+                <input
+                    type="number"
+                    placeholder="5"
+                    value={product.price === 0 ? "5" : product.N0}
+                    onChange={(e) => handleChange("N0", Number(e.target.value))}
+                    className="border rounded px-2 py-1 w-full"
+                    required
+                />
             </div>
 
             {/* SubCategoryId */}
@@ -320,49 +341,6 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             {/* short description */}
             <div>
                 <label className="block font-medium">Mô tả ngắn</label>
-                {/*<Editor
-                    apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} // cần đăng ký API key miễn phí
-                    value={product.shortDescription}
-                    tinymceScriptSrc={tinymceCDN}//"https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.0/tinymce.min.js"
-                    init={{
-                        height: 250,
-                        menubar: true,
-                        // base_url: "/tinymce", // nơi chứa plugins, skins, themes//
-                        base_url: `https://cdn.tiny.cloud/1/${process.env.NEXT_PUBLIC_TINYMCE_API_KEY}/tinymce/6`,//"https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.0/",
-                        plugins: "advlist autolink lists link image media charmap preview anchor " +
-                            "searchreplace visualblocks code fullscreen " +
-                            "insertdatetime table help wordcount emoticons",
-                        toolbar: "undo redo | formatselect | bold italic underline forecolor backcolor | " +
-                            "alignleft aligncenter alignright alignjustify | " +
-                            "bullist numlist outdent indent | link image media | " +
-                            "table charmap emoticons | removeformat | preview fullscreen help",
-                        // Cho phép chọn ảnh từ local 
-                        file_picker_types: "image",
-                        
-                        file_picker_callback: (callback: (url: string, meta?: Record<string, any>) => void,
-                            value: string,
-                            meta: Record<string, any>) => {
-                            const input = document.createElement("input");
-                            input.setAttribute("type", "file");
-                            input.setAttribute("accept", "image/*");
-
-                            input.onchange = (event: Event) => {
-                                const target = event.target as HTMLInputElement;
-                                const file = target.files?.[0]; if (!file) return;
-
-                                const reader = new FileReader();
-                                reader.onload = function () {
-                                    // Chèn ảnh dạng Base64 vào nội dung
-                                    callback(reader.result as string, { alt: file.name });
-                                };
-                                reader.readAsDataURL(file);
-                            };
-
-                            input.click();
-                        }
-                    }}
-                    onEditorChange={(content) => handleChange("shortDescription", content)}
-                />*/}
                 <TinyEditor
                     value={product.shortDescription}
                     onChange={(content) => handleChange("shortDescription", content)}
@@ -373,28 +351,6 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             {/* Mô tả chi tiết bằng TinyMCE */}
             <div>
                 <label className="block font-medium">Nội dung chi tiết</label>
-                {/*<Editor
-                    apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} // cần đăng ký API key miễn phí
-                    value={product.description}
-                    tinymceScriptSrc={tinymceCDN}//"https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.0/tinymce.min.js"
-                    init={{
-                        height: 500,
-                        menubar: true,
-                        // base_url: "/tinymce", // nơi chứa plugins, skins, themes//
-                        base_url: `https://cdn.tiny.cloud/1/${process.env.NEXT_PUBLIC_TINYMCE_API_KEY}/tinymce/6`,//"https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.0/",
-                        plugins: "advlist autolink lists link image media charmap preview anchor " +
-                            "searchreplace visualblocks code fullscreen " +
-                            "insertdatetime table help wordcount emoticons",
-                        toolbar: "undo redo | formatselect | bold italic underline forecolor backcolor | " +
-                            "alignleft aligncenter alignright alignjustify | " +
-                            "bullist numlist outdent indent | link image media | " +
-                            "table charmap emoticons | removeformat | preview fullscreen help",
-                        automatic_uploads: true,
-                        images_upload_handler: uploadHandler,
-
-                    }}
-                    onEditorChange={(content) => handleChange("description", content)}
-                />*/}
                 <TinyEditor
                     value={product.description}
                     onChange={(content) => handleChange("description", content)}

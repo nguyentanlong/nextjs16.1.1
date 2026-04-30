@@ -12,10 +12,10 @@ export async function POST(req: Request) {
         const formData = await req.formData();
         const res = await fetch(`${API_BASE}/addProduct`, {
             method: "POST",
-            headers: {
+            // headers: {
 
-                Authorization: `Bearer ${token}`,
-            },
+            //     Authorization: `Bearer ${token}`,
+            // },
             body: formData,
             credentials: "include",
             duplex: "half",

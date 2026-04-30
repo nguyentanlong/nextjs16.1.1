@@ -4,7 +4,7 @@ import HeroBanner from '@/components/HeroBanner';
 import Category from '@/components/Category';
 import PopularCategory from '@/components/PopularCategory';
 import ReBanner from '@/components/ReBanner';
-import HomeNavbar from '@/components/HomeNavbar';
+// import HomeNavbar from '@/components/HomeNavbar';
 import { fetchCategories, fetchSubCategories } from '@/lib/api';
 import { Suspense } from 'react';
 import ProductsSection from '@/components/ProductsSection';
@@ -21,27 +21,25 @@ export default async function HomePage({
   const subCategories = await fetchSubCategories(); // chạy trên server
   const categories = await fetchCategories();
 
-  return (
-    <main>
-      <HomeNavbar />
-      <HeroBanner />
-
-      <PopularCategory categories={categories} />
-      {/*
+  return (<>
+    {/* <HomeNavbar /> */}
+    <HeroBanner />
+    <PopularCategory categories={categories} />
+    {/*
         key={searchParams.page} → mỗi lần đổi trang, Suspense reset
         → hiện skeleton → fetch xong hiện sản phẩm mới
         Các component trên (Banner, Category...) KHÔNG bị re-render
       */}
-      <Suspense
-        key={currentPage} // ✅ dùng biến đã await
-        fallback={<ProductsSkeleton />}
-      >
-        <ProductsSection searchParams={{ page: currentPage }} />
-      </Suspense>
-      <Category subCategories={subCategories} />
-      <ReBanner />
-      {/* <Footer /> */}
-    </main>
+    <Suspense
+      key={currentPage} // ✅ dùng biến đã await
+      fallback={<ProductsSkeleton />}
+    >
+      <ProductsSection searchParams={{ page: currentPage }} />
+    </Suspense>
+    <Category subCategories={subCategories} />
+    <ReBanner />
+    {/* <Footer /> */}
+  </>
   );
 }
 // Skeleton 8 card — hiện trong lúc fetch trang mới

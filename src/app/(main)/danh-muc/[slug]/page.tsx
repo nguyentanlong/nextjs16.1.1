@@ -1,6 +1,6 @@
 // src/app/danh-muc/[slug]/page.tsx
 import { Suspense } from "react";
-import { fetchProductsBySubCategory } from "@/lib/api";
+import { fetchProductsBySubCategory, fetchSubCategories } from "@/lib/api";
 import ProductsBySubCategoryClient from "@/components/ProductsBySubCategoryClient";
 
 const LIMIT = 10;
@@ -9,16 +9,22 @@ export default async function SubCategoryPage({
     params,
     searchParams,
 }: {
-    params: Promise<{ slug: string, categoryName: string }>;
+    params: Promise<{ slug: string }>;
     searchParams: Promise<{ page?: string }>;
 }) {
-    const { slug, categoryName } = await params;
+    const { slug } = await params;
     const { page: pageParam } = await searchParams;
     const currentPage = Math.max(1, Number(pageParam || 1));
 
+    // ✅ fetch subCategories để lấy categoryName theo slug
+    const subCategories = await fetchSubCategories();
+    const current = subCategories.find((sc) => sc.slugSub === slug);
+    const categoryName = current?.categoryName ?? slug;
+    // console.log("Tên danh mục: ", categoryName);
+
     return (
         <div>
-            <h1>Danh mục: {slug} {categoryName}</h1>
+            <h1>Danh mục: {categoryName}</h1>
             <Suspense
                 key={`${slug}-${currentPage}`}
                 fallback={<SubCategorySkeleton />}

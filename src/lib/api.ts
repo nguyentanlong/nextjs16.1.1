@@ -152,18 +152,6 @@ export async function fetchRelatedProducts(productId: string) {
     }
 }
 
-
-
-// =========================
-// ========================= // Kiểu 2: Gọi API backend (khi có endpoint riêng) // =========================
-// export async function fetchRelatedProductsAPI(categoryId: string): Promise<Product[]> {
-// const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/products/related?categoryId=${categoryId}`, {
-// method: "GET", headers: {
-//  "Content-Type": "application/json" }, revalidate: 259200, });
-// if (!res.ok) {
-// throw new Error("Không lấy được sản phẩm liên quan"); }
-// const data = await res.json();
-// return data.products as Product[]; }
 export function normalizeImage(image: string) {
     const img = image.trim();
     if (img.startsWith("http://") || img.startsWith("https://")) {
@@ -258,5 +246,38 @@ export async function fetchProductsBySubCategory(
     } catch (err) {
         console.error("Fetch subcategory error:", err);
         return { data: [], total: 0, categoryName: "" };
+    }
+}
+
+// Lấy danh sách sản phẩm cho admin (có phân trang + search)
+export async function fetchAdminProducts(page = 1, limit = 10, search = "") {
+    const res = await fetch(
+        `${API_BASE}/all`,//home?page=${page}&limit=${limit}&search=${search}
+        { cache: "no-store" } // ✅ admin cần data mới nhất, không cache
+    );
+    if (!res.ok) return { data: [], total: 0 };
+    return res.json();
+}
+
+// Xóa sản phẩm (soft delete)
+export async function deleteProduct(id: string, token: string) {
+    const res = await fetch(`${API_BASE}/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.ok;
+}
+
+// Fetch sản phẩm theo id cho trang admin edit
+export async function fetchProductByIdEdit(id: string) {
+    try {
+        const res = await fetch(
+            `${API_BASE}/${id}`,
+            { cache: "no-store" } // ✅ luôn lấy data mới nhất
+        );
+        if (!res.ok) return null;
+        return res.json();
+    } catch {
+        return null;
     }
 }

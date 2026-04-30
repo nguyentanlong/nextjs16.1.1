@@ -6,6 +6,7 @@ import Navigation from './Navigation';
 import SearchBar from './SearchBar';
 import { SubCategory } from '@/styles/types';
 import { fetchSubCategories } from "@/lib/api";
+import HomeNavbar from './HomeNavbar';
 
 export default async function Header() {
     const subCategories: SubCategory[] = await fetchSubCategories();
@@ -62,8 +63,8 @@ export default async function Header() {
                     {/* Logo */}
                     <Link href="/" className="logo">
                         <img
-                            src="https://pantravel.vn/wp-content/uploads/2024/07/cuc-quang-hien-tuong-dep-nhat-cua-tu-nhien-1536x864.jpg"
-                            alt="Muamau"
+                            src="/images/camera-manh-phat-slide.webp"
+                            alt="Nguyễn Tấn Long"
                             height={44}
                         />
                     </Link>
@@ -85,6 +86,7 @@ export default async function Header() {
                     <SearchBar />
                 </div>
             </header>
+            <HomeNavbar />
         </>
     );
 }
