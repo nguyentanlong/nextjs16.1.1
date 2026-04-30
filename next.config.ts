@@ -52,6 +52,11 @@ const nextConfig: NextConfig = {
 
   async rewrites() {
     return [
+      {
+        source: "/api/products/:path*",
+        destination: "/api/products/:path*", // giữ nguyên
+        has: [{ type: "header", key: "x-skip-rewrite" }],
+      },
       { source: '/api/:path*', destination: 'https://api.tonkliplock1000.com/:path*' },
       { source: '/mediaasset/:path*', destination: 'https://api.tonkliplock1000.com/api/mediaasset/:path*' },
       { source: '/uploads/:path*', destination: 'https://api.tonkliplock1000.com/api/uploads/:path*' },

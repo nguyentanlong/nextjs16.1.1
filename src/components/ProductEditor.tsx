@@ -170,7 +170,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
 
             // ✅ Nếu có product.id → PUT (cập nhật), không có → POST (tạo mới)
             const isEdit = !!product.id;
-            const url = isEdit ? `/api/products/${product.id}` : "/api/products";
+            const url = isEdit ? `/api/admin/products/${product.id}` : "/api/admin/products";
             const method = isEdit ? "PUT" : "POST";
 
             const res = await fetch(url, {

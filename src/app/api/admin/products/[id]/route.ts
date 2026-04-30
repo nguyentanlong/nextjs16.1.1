@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_L;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;// || process.env.NEXT_PUBLIC_API_BASE_L;
 
 // ✅ PUT — cập nhật sản phẩm
 export async function PUT(
@@ -12,6 +12,9 @@ export async function PUT(
     const { id } = await params;
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
+    // ✅ Log để xem URL thực sự gọi là gì
+    console.log("PUT URL:", `${API_BASE}/${id}`);
+    console.log("Token:", token ? "có" : "không có");
 
     try {
         const formData = await req.formData();
