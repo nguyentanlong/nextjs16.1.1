@@ -168,9 +168,12 @@ export async function fetchSubCategories(): Promise<SubCategory[]> {
     try {
         const res = await fetch(`${API_BASE || API_BASE_L}/subcategories/subcate`, {
             // có thể thêm { credentials: "include" } nếu cần
+            next: { revalidate: 259200 },
         });
         if (!res.ok) {
-            throw new Error(`Failed to fetch subcategories: ${res.status}`);
+            // throw new Error(`Failed to fetch subcategories: ${res.status}`);
+            console.error("fetchSubCategories failed:", res.status);
+            return []; // ✅ trả về [] thay vì throw
         }
 
         const data = await res.json();

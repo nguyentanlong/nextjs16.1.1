@@ -119,6 +119,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
         // onSave(product);
         if (isSubmitting) return; // chặn double submit
         setIsSubmitting(true);
+
         const formData = new FormData();
         try {
             formData.append("productName", product.productName ?? "Nguyễn Tấn Long");
@@ -136,30 +137,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                 }
             });
 
-            /*const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
-            if (fileInput?.files) {
-                for (const file of fileInput.files) {
-                    // console.log("APPEND:", file.name);
-                    formData.append("files", file);
-                }
-            }
-            const res = await fetch("/api/products", {
-                method: "POST",
-                // headers: { Authorization: `Bearer ${accessToken}` },
-                body: formData,
-                credentials: "include",
-            });
-            
-            if (res.ok) {
-                const data = await res.json();
-                alert("Thêm sản phẩm thành công!");
-            }
-            else {
-                alert("Có lỗi khi thêm sản phẩm");
-            }
-        } finally {
-            setIsSubmitting(false);
-        }*/
+
             // File mới nếu có chọn lại
             const fileInput = document.querySelector<HTMLInputElement>("#productFiles");
             if (fileInput?.files) {
@@ -172,13 +150,33 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             const isEdit = !!product.id;
             const url = isEdit ? `/api/admin/products/${product.id}` : "/api/admin/products";
             const method = isEdit ? "PUT" : "POST";
+            // ✅ LOG 1 — xem url và method
+            console.log("=== SUBMIT ===");
+            console.log("method:", method);
+            console.log("url:", url);
+            console.log("product.id:", product.id);
 
+            // ✅ LOG 2 — xem toàn bộ fields trong formData
+            console.log("--- FormData fields ---");
+            for (const [key, value] of formData.entries()) {
+                if (value instanceof File) {
+                    console.log(`  ${key}: [File] name=${value.name} size=${value.size} type=${value.type}`);
+                } else {
+                    console.log(`  ${key}: "${value}"`);
+                }
+            }
             const res = await fetch(url, {
                 method,
                 body: formData,
                 credentials: "include",
             });
+            // ✅ LOG 3 — xem response từ route handler
+            console.log("--- Response ---");
+            console.log("status:", res.status);
+            console.log("statusText:", res.statusText);
 
+            const text = await res.text();
+            console.log("body:", text);
             if (res.ok) {
                 alert(isEdit ? "Cập nhật sản phẩm thành công!" : "Thêm sản phẩm thành công!");
                 if (isEdit) {
@@ -188,6 +186,9 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             } else {
                 const err = await res.json().catch(() => ({}));
                 console.error("❌ Error:", err);
+                // console.log("Status:", res.status);           // thêm dòng này
+                // console.log("Status text:", res.statusText);  // thêm dòng này
+                // const text = await res.text();                // dùng text thay vì json
                 alert(isEdit ? "Có lỗi khi cập nhật sản phẩm" : "Có lỗi khi thêm sản phẩm");
             }
         } finally {
@@ -291,7 +292,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                 <input
                     type="number"
                     placeholder="5"
-                    value={product.price === 0 ? "5" : product.N0}
+                    value={product.N0 === 0 ? "5" : product.N0}
                     onChange={(e) => handleChange("N0", Number(e.target.value))}
                     className="border rounded px-2 py-1 w-full"
                     required
