@@ -10,6 +10,8 @@ export async function PUT(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
+    console.log("=== PUT /api/admin/products/[id] ĐƯỢC GỌI ==="); // ← thêm dòng này
+    console.log("id:", id);
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
     // ✅ Log để xem URL thực sự gọi là gì
@@ -25,7 +27,7 @@ export async function PUT(
                 Authorization: `Bearer ${token}`,
             },
             body: formData,
-            credentials: "include",
+            // credentials: "include",
             duplex: "half",
         } as RequestInit & { duplex: "half" });
 
@@ -47,6 +49,8 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
+    console.log("=== PUT /api/admin/products/[id] ĐƯỢC GỌI ==="); // ← thêm dòng này
+    console.log("id:", id);
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
 
@@ -56,7 +60,7 @@ export async function DELETE(
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            credentials: "include",
+            // credentials: "include",
         });
 
         const text = await res.text();

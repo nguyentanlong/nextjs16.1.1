@@ -51,16 +51,26 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
-    return [
-      {
-        source: "/api/products/:path*",
-        destination: "/api/products/:path*", // giữ nguyên
-        has: [{ type: "header", key: "x-skip-rewrite" }],
-      },
-      { source: '/api/:path*', destination: 'https://api.tonkliplock1000.com/:path*' },
-      { source: '/mediaasset/:path*', destination: 'https://api.tonkliplock1000.com/api/mediaasset/:path*' },
-      { source: '/uploads/:path*', destination: 'https://api.tonkliplock1000.com/api/uploads/:path*' },
-    ];
+    return {
+      beforeFiles: [
+        // ✅ /api/admin/* đến route handler trước
+        /*{
+          source: "/api/admin/:path*",
+          destination: "/api/admin/:path*",
+        },
+        // ✅ /api/products/* đến route handler trước
+        {
+          source: "/api/products/:path*",
+          destination: "/api/products/:path*",
+        },*/
+      ],
+      afterFiles: [
+        { source: "/api/:path*", destination: "https://api.tonkliplock1000.com/:path*" },
+        { source: "/mediaasset/:path*", destination: "https://api.tonkliplock1000.com/api/mediaasset/:path*" },
+        { source: "/uploads/:path*", destination: "https://api.tonkliplock1000.com/api/uploads/:path*" },
+      ],
+      fallback: [],
+    };
   },
 };
 

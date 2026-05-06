@@ -271,16 +271,37 @@ export async function deleteProduct(id: string, token: string) {
     return res.ok;
 }
 
-// Fetch sản phẩm theo id cho trang admin edit
 export async function fetchProductByIdEdit(id: string) {
+    const cleanId = id.trim();
+    const url = `${API_BASE}/${cleanId}`;
+
+    console.log("=== fetchProductByIdEdit ===");
+    console.log("URL:", url);
+
     try {
-        const res = await fetch(
-            `${API_BASE}/${id}`,
-            { cache: "no-store" } // ✅ luôn lấy data mới nhất
-        );
+        const res = await fetch(url, {
+            cache: "no-store",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        console.log("HTTP status:", res.status);
+
+        // ✅ Clone response trước khi đọc — tránh Body already read
+        const cloned = res.clone();
+        const text = await cloned.text();
+        console.log("Raw response:", text.slice(0, 500));
+
         if (!res.ok) return null;
-        return res.json();
-    } catch {
+
+        const data = JSON.parse(text);
+        console.log("product.id:", data.id);
+
+        return { ...data, id: data.id ?? cleanId };
+
+    } catch (err: any) {
+        console.error("fetchProductByIdEdit error:", err.message);
         return null;
     }
 }

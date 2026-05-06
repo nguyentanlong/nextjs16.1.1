@@ -44,6 +44,7 @@ export default function ProductTable({ products, total, currentPage, search }: P
     startTransition(() => {
       router.push(`?search=${searchInput}&page=1`);
     });
+
   }
 
   return (
@@ -139,14 +140,14 @@ export default function ProductTable({ products, total, currentPage, search }: P
                       // background: p.isActive ? "#e6f9f0" : "#ffeaea",
                       // color: p.isActive ? "#27ae60" : "#e74c3c",
                     }}>
-                      {p.N0}
+                      {p.N0}  {p.id}
                     </span>
                   </td>
 
                   {/* Thao tác */}
                   <td style={{ ...td, textAlign: "center", whiteSpace: "nowrap" }}>
                     <Link
-                      href={`/admin/san-pham/${p.id}`}
+                      href={`/admin-api/products/${p.id}`}
                       style={{
                         display: "inline-block", marginRight: 8,
                         padding: "4px 12px", borderRadius: 4,

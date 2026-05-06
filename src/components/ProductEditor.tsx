@@ -14,29 +14,29 @@ type TinyMCEUploadHandler = (
     blobInfo: { blob: () => Blob; filename: () => string }
 ) => Promise<string>;
 
-const uploadHandler: TinyMCEUploadHandler = async (blobInfo) => {
-    try {
-        const formData1 = new FormData();
-        formData1.append('filesDesc', blobInfo.blob(), blobInfo.filename());
+// const uploadHandler: TinyMCEUploadHandler = async (blobInfo) => {
+//     try {
+//         const formData1 = new FormData();
+//         formData1.append('filesDesc', blobInfo.blob(), blobInfo.filename());
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/upload-description`, {
-            method: 'POST',
-            body: formData1,
-        });
+//         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/upload-description`, {
+//             method: 'POST',
+//             body: formData1,
+//         });
 
-        const data = await res.json();
-        // Nếu backend trả về mảng [{ location: '...' }]
-        // Nếu backend trả về mảng
-        if (!Array.isArray(data) || data.length === 0) {
-            throw new Error("Upload failed: no file returned");
-        }
+//         const data = await res.json();
+//         // Nếu backend trả về mảng [{ location: '...' }]
+//         // Nếu backend trả về mảng
+//         if (!Array.isArray(data) || data.length === 0) {
+//             throw new Error("Upload failed: no file returned");
+//         }
 
-        // Vì backend trả về mảng [{ location: '...' }]
-        return data[0].location;
-    } catch (err: any) {
-        throw new Error("Upload failed: " + err.message);
-    }
-};
+//         // Vì backend trả về mảng [{ location: '...' }]
+//         return data[0].location;
+//     } catch (err: any) {
+//         throw new Error("Upload failed: " + err.message);
+//     }
+// };
 
 
 interface SubCategory { id: number; categoryName: string; }
@@ -90,7 +90,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
     useEffect(() => {
         const fetchSubCategories = async () => {
             try {
-                const res = await fetch("/api/subcategories");//,{ credentials: "include" }
+                const res = await fetch("/admin-api/subcategories");//,{ credentials: "include" }
                 // console.log("Res trong ProductEditor: ", res);
                 if (res.ok) {
                     const data = await res.json(); setSubCategories(data);
@@ -119,6 +119,12 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
         // onSave(product);
         if (isSubmitting) return; // chặn double submit
         setIsSubmitting(true);
+        // ✅ Log ngay đầu handleSubmit
+        console.log("=== SUBMIT ===");
+        console.log("product.id:", product.id);
+        console.log("product.productName:", product.productName);
+        console.log("isEdit:", !!product.id);
+        console.log("url sẽ gọi:", !!product.id ? `/api/admin/products/${product.id}` : "/api/admin/products");
 
         const formData = new FormData();
         try {
@@ -148,35 +154,18 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
 
             // ✅ Nếu có product.id → PUT (cập nhật), không có → POST (tạo mới)
             const isEdit = !!product.id;
-            const url = isEdit ? `/api/admin/products/${product.id}` : "/api/admin/products";
+            const url = isEdit ? `/admin-api/products/${product.id}` : "/admin-api/products";
             const method = isEdit ? "PUT" : "POST";
-            // ✅ LOG 1 — xem url và method
-            console.log("=== SUBMIT ===");
-            console.log("method:", method);
-            console.log("url:", url);
-            console.log("product.id:", product.id);
 
-            // ✅ LOG 2 — xem toàn bộ fields trong formData
-            console.log("--- FormData fields ---");
-            for (const [key, value] of formData.entries()) {
-                if (value instanceof File) {
-                    console.log(`  ${key}: [File] name=${value.name} size=${value.size} type=${value.type}`);
-                } else {
-                    console.log(`  ${key}: "${value}"`);
-                }
-            }
             const res = await fetch(url, {
                 method,
                 body: formData,
                 credentials: "include",
             });
-            // ✅ LOG 3 — xem response từ route handler
-            console.log("--- Response ---");
-            console.log("status:", res.status);
-            console.log("statusText:", res.statusText);
+
 
             const text = await res.text();
-            console.log("body:", text);
+
             if (res.ok) {
                 alert(isEdit ? "Cập nhật sản phẩm thành công!" : "Thêm sản phẩm thành công!");
                 if (isEdit) {
@@ -197,7 +186,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
     };
     // const handleSave = (data: any) => { console.log("Saved product:", data); }
 
-    const tinymceCDN = `https://cdn.tiny.cloud/1/${process.env.NEXT_PUBLIC_TINYMCE_API_KEY}/tinymce/6/tinymce.min.js`;
+    // const tinymceCDN = `https://cdn.tiny.cloud/1/${process.env.NEXT_PUBLIC_TINYMCE_API_KEY}/tinymce/6/tinymce.min.js`;
 
     return (
         <form onSubmit={handleSubmit} className="formaddproduct">

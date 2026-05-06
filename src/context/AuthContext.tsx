@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             async function loadUser() {
                 try {
-                    const res = await fetch("/api/auth/me", {
+                    const res = await fetch("/admin-api/auth/me", {
                         credentials: "include",
                     });
                     // ❗ nếu không OK → bỏ qua
@@ -104,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (email: string, password: string) => {
         try {
-            const res = await fetch(`/api/auth/login`, {
+            const res = await fetch(`/admin-api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -116,7 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Sau khi login thành công, gọi /api/auth/me
             // const resME = await fetch(`/api/auth/me`, { credentials: "include" });
             // if (!resME.ok) throw new Error("Không lấy được thông tin user");
-            const res1 = await fetch("/api/auth/me", {
+            const res1 = await fetch("/admin-api/auth/me", {
                 credentials: "include",
                 cache: "no-store"
             })
@@ -193,7 +193,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return res;
     };*/
     const logout = async () => {
-        await fetch(`/api/auth/logout`, { method: "POST", credentials: "include" });
+        await fetch(`/admin-api/auth/logout`, { method: "POST", credentials: "include" });
         setAccessToken(null); // ✅ clear token khi logout
         // localStorage.removeItem("user");
         setUser(null);

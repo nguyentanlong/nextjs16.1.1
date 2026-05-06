@@ -16,7 +16,7 @@ export default function RegisterPage() {
         // console.log("Mật khẩu từ form: ", password);
         try {
             // Gửi dữ liệu lên API
-            const res = await fetch(`/api/auth/register`, {
+            const res = await fetch(`/admin-api/auth/register`, {
                 method: "POST",
                 body: formData, // gửi multipart/form-data
             });
