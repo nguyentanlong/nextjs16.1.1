@@ -53,16 +53,15 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
-        // ✅ /api/admin/* đến route handler trước
-        /*{
-          source: "/api/admin/:path*",
-          destination: "/api/admin/:path*",
-        },
-        // ✅ /api/products/* đến route handler trước
         {
           source: "/api/products/:path*",
           destination: "/api/products/:path*",
-        },*/
+        },
+        // ✅ Giữ lại route handler cho admin
+        {
+          source: "/api/admin/:path*",
+          destination: "/api/admin/:path*",
+        },
       ],
       afterFiles: [
         { source: "/api/:path*", destination: "https://api.tonkliplock1000.com/:path*" },

@@ -147,7 +147,7 @@ export default function ProductTable({ products, total, currentPage, search }: P
                   {/* Thao tác */}
                   <td style={{ ...td, textAlign: "center", whiteSpace: "nowrap" }}>
                     <Link
-                      href={`/admin-api/products/${p.id}`}
+                      href={`/admin/san-pham/${p.id}`}
                       style={{
                         display: "inline-block", marginRight: 8,
                         padding: "4px 12px", borderRadius: 4,

@@ -1,5 +1,6 @@
 import { slugifyCategory } from "./slugify";
 
+
 // src/lib/api.ts
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 const API_BASE_L = process.env.NEXT_PUBLIC_API_BASE_L;
@@ -271,33 +272,20 @@ export async function deleteProduct(id: string, token: string) {
     return res.ok;
 }
 
-export async function fetchProductByIdEdit(id: string) {
+export async function fetchProductByIdEdit(id: string, token?: string) {
     const cleanId = id.trim();
-    const url = `${API_BASE}/${cleanId}`;
-
-    console.log("=== fetchProductByIdEdit ===");
-    console.log("URL:", url);
 
     try {
-        const res = await fetch(url, {
+        const res = await fetch(`${API_BASE}/${cleanId}`, {
             cache: "no-store",
             headers: {
+                Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
-            }
+            },
         });
 
-        console.log("HTTP status:", res.status);
-
-        // ✅ Clone response trước khi đọc — tránh Body already read
-        const cloned = res.clone();
-        const text = await cloned.text();
-        console.log("Raw response:", text.slice(0, 500));
-
         if (!res.ok) return null;
-
-        const data = JSON.parse(text);
-        console.log("product.id:", data.id);
-
+        const data = await res.json();
         return { ...data, id: data.id ?? cleanId };
 
     } catch (err: any) {

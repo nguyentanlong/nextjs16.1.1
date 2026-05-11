@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             async function loadUser() {
                 try {
-                    const res = await fetch("/admin-api/auth/me", {
+                    const res = await fetch("/api/auth/me", {
                         credentials: "include",
                     });
                     // ❗ nếu không OK → bỏ qua
@@ -104,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (email: string, password: string) => {
         try {
-            const res = await fetch(`/admin-api/auth/login`, {
+            const res = await fetch(`/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -116,27 +116,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Sau khi login thành công, gọi /api/auth/me
             // const resME = await fetch(`/api/auth/me`, { credentials: "include" });
             // if (!resME.ok) throw new Error("Không lấy được thông tin user");
-            const res1 = await fetch("/admin-api/auth/me", {
+            const res1 = await fetch("/api/auth/me", {
                 credentials: "include",
                 cache: "no-store"
             })
             // fetch('/api/auth/me').then(r => r.json()).then(console.log)
-            const data1 = await res.json()
 
-            // setUser(data.user)
-            // const dataME = await resME.json();
-            // console.log("dataMe  ", dataME.data);
+            const data1 = await res1.json()
 
-            // localStorage.setItem("user", JSON.stringify(user));
-            // console.log("data.data.user  ", data.data.user);
-            // console.log("Data LOGIN AuthContext:  ", data1);
             setUser(normalizeUser(data1));
-            // console.log("Data LOGIN AuthContext normalizeUser:  ", normalizeUser(data1));
-            // setAccessToken(data.data.accessToken);
-            // setRefreshToken(data.data.refreshToken);
-            // localStorage.setItem("refreshToken", data.refreshToken);
-            // localStorage.setItem("user", JSON.stringify(data.data.user)); // ✅ lưu đúng user
-            // setUser(data.user);
+
         } catch (err) {
             console.error("❌ Login error:", err);
         } finally {
@@ -193,7 +182,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return res;
     };*/
     const logout = async () => {
-        await fetch(`/admin-api/auth/logout`, { method: "POST", credentials: "include" });
+        await fetch(`/api/auth/logout`, { method: "POST", credentials: "include" });
         setAccessToken(null); // ✅ clear token khi logout
         // localStorage.removeItem("user");
         setUser(null);
@@ -211,5 +200,4 @@ export const useAuth = () => {
     if (!ctx) throw new Error("useAuth must be used within AuthProvider");
     return ctx;
 };
-
 

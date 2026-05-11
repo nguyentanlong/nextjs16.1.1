@@ -62,6 +62,7 @@ interface ProductEditorProps {
 }
 
 export default function ProductEditor({ initialProduct }: ProductEditorProps) {//sau initalProduct , onSave
+    console.log("initialProduct.id:", initialProduct?.id); // ← thêm dòng này
     const [product, setProduct] = useState<Product>(() =>
         initialProduct ?? {
             productName: "",
@@ -75,6 +76,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             files: []
         }
     );
+    console.log("useState init - initialProduct:", initialProduct);
     const auth = useContext(AuthContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     if (!auth) {
@@ -90,7 +92,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
     useEffect(() => {
         const fetchSubCategories = async () => {
             try {
-                const res = await fetch("/admin-api/subcategories");//,{ credentials: "include" }
+                const res = await fetch("/api/subcategories");//,{ credentials: "include" }
                 // console.log("Res trong ProductEditor: ", res);
                 if (res.ok) {
                     const data = await res.json(); setSubCategories(data);
@@ -117,6 +119,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // onSave(product);
+        console.log("product state khi submit:", JSON.stringify(product));
         if (isSubmitting) return; // chặn double submit
         setIsSubmitting(true);
         // ✅ Log ngay đầu handleSubmit
@@ -154,7 +157,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
 
             // ✅ Nếu có product.id → PUT (cập nhật), không có → POST (tạo mới)
             const isEdit = !!product.id;
-            const url = isEdit ? `/admin-api/products/${product.id}` : "/admin-api/products";
+            const url = isEdit ? `/api/admin/products/${product.id}` : "/api/admin/products";
             const method = isEdit ? "PUT" : "POST";
 
             const res = await fetch(url, {
@@ -173,11 +176,9 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                     window.location.href = "/admin/san-pham";
                 }
             } else {
-                const err = await res.json().catch(() => ({}));
-                console.error("❌ Error:", err);
-                // console.log("Status:", res.status);           // thêm dòng này
-                // console.log("Status text:", res.statusText);  // thêm dòng này
-                // const text = await res.text();                // dùng text thay vì json
+                // const err = await res.json().catch(() => ({}));
+                console.error("❌ Error:", text);
+
                 alert(isEdit ? "Có lỗi khi cập nhật sản phẩm" : "Có lỗi khi thêm sản phẩm");
             }
         } finally {

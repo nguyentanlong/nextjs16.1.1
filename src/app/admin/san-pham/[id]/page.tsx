@@ -2,6 +2,7 @@
 import { fetchProductByIdEdit } from "@/lib/api";
 import ProductEditor from "@/components/ProductEditor";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
 export default async function EditProductPage({
     params,
@@ -9,8 +10,11 @@ export default async function EditProductPage({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    const product = await fetchProductByIdEdit(id);
-    console.log("product.id:", product?.id);
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+    const product = await fetchProductByIdEdit(id, token);
+    console.log("product.id trong page.:", product?.id);
+    console.log("product từ API:", JSON.stringify(product));
 
     if (!product) notFound();
 
