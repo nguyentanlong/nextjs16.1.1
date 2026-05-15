@@ -1,7 +1,11 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-export default function AdminHeader() {
+// Thêm prop
+interface AdminHeaderProps {
+    onToggleSidebar?: () => void;
+}
+export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
     const { user, logout } = useAuth();
     const isAdminOrStaff = user?.role === "admin" || user?.role === "staff";
     const router = useRouter()
@@ -9,6 +13,7 @@ export default function AdminHeader() {
         logout();
         router.push("/");
     } // ✅ quay về trang login }
+
     return (
         <>
             {/* Navbar */}
@@ -17,11 +22,11 @@ export default function AdminHeader() {
                 id="navbarBlur"
                 data-scroll="true"
             >
-                <div className="container-fluid py-1 px-3">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <div className="container-fluid d-flex w-100">
+                    <nav aria-label="breadcrumb" className="d-none d-md-flex">
+                        <ol className="breadcrumb bg-transparent mb-0">
                             <li className="breadcrumb-item text-sm">
-                                <a className="opacity-5 text-dark" href="javascript:;">
+                                <a className="opacity-5 text-dark" href="#">
                                     Pages
                                 </a>
                             </li>
@@ -36,18 +41,20 @@ export default function AdminHeader() {
                     <div
                         className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
                         id="navbar"
+                        style={{ listStyle: "none" }}
                     >
-                        <div className="ms-md-auto pe-md-3 d-flex align-items-center">
+                        <div className="d-none d-md-flex ms-md-auto pe-md-3 d-flex align-items-center">
                             <div className="input-group input-group-outline">
                                 <label className="form-label">Tìm kiếm ...</label>
                                 <input type="text" className="form-control" />
                             </div>
                         </div>
-                        <li className="nav-item d-xl-none ps-3 d-flex align-items-center">
+                        <li className="flex-grow-1 justify-content-end">
                             <a
-                                href="javascript:;"
+                                href="#"
                                 className="nav-link text-body p-0"
                                 id="iconNavbarSidenav"
+                                onClick={onToggleSidebar}
                             >
                                 <div className="sidenav-toggler-inner">
                                     <i className="sidenav-toggler-line" />
@@ -56,31 +63,32 @@ export default function AdminHeader() {
                                 </div>
                             </a>
                         </li>
-                        <li className="nav-item px-3 d-flex align-items-center">
-                            <a href="javascript:;" className="nav-link text-body p-0">
+                        <li className="flex-grow-1 justify-content-end">
+                            <a href="#" className="nav-link text-body p-0">
                                 <i className="material-symbols-rounded fixed-plugin-button-nav">
                                     settings
                                 </i>
                             </a>
                         </li>
-                        <li className="nav-item dropdown pe-3 d-flex align-items-center">
+                        <li className="flex-grow-1 justify-content-end">
                             <a
-                                href="javascript:;"
+                                href="#"
                                 className="nav-link text-body p-0"
                                 id="dropdownMenuButton"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
+                                onClick={(e) => { e.preventDefault(); onToggleSidebar?.(); }}
                             >
                                 <i className="material-symbols-rounded">notifications</i>
                             </a>
                             <ul
-                                className="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
+                                className="dropdown-menu  dropdown-menu-end  flex-grow-1 justify-content-end"
                                 aria-labelledby="dropdownMenuButton"
                             >
                                 <li className="mb-2">
                                     <a
                                         className="dropdown-item border-radius-md"
-                                        href="javascript:;"
+                                        href="#"
                                     >
                                         <div className="d-flex py-1">
                                             <div className="my-auto">
@@ -105,7 +113,7 @@ export default function AdminHeader() {
                                 <li className="mb-2">
                                     <a
                                         className="dropdown-item border-radius-md"
-                                        href="javascript:;"
+                                        href="#"
                                     >
                                         <div className="d-flex py-1">
                                             <div className="my-auto">
@@ -129,7 +137,7 @@ export default function AdminHeader() {
                                 <li>
                                     <a
                                         className="dropdown-item border-radius-md"
-                                        href="javascript:;"
+                                        href="#"
                                     >
                                         <div className="d-flex py-1">
                                             <div className="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
@@ -183,7 +191,7 @@ export default function AdminHeader() {
                                 </li>
                             </ul>
                         </li>
-                        <li className="nav-item d-flex align-items-center">
+                        <li className="flex-grow-1 justify-content-end">
                             <a
                                 href="../pages/sign-in.html"
                                 className="nav-link text-body font-weight-bold px-0"
@@ -191,7 +199,7 @@ export default function AdminHeader() {
                                 <i className="material-symbols-rounded">account_circle</i>
                             </a>
                         </li>
-                        <li className="rong"> <button onClick={handleLogout}>Đăng xuất</button></li>
+                        <li className="flex-grow-1 justify-content-end"> <button onClick={handleLogout}>Đăng xuất</button></li>
                     </div>
                 </div>
             </nav>

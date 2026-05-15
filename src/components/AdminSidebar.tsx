@@ -1,15 +1,20 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
-/*import '../app/admin/font-css.css';
+import '../app/admin/font-css.css';
 import '../app/admin/material-dashboard.css';
 import '../app/admin/nucleo-icons.css';
-import '../app/admin/nucleo-svg.css';*/
+import '../app/admin/nucleo-svg.css';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 // import { useContext } from "react";
 
-export default function AdminSidebar() {
+interface AdminSidebarProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
     const { user, loading } = useAuth();
     const pathname = usePathname()
     const navClass = (href: string) =>
@@ -38,15 +43,36 @@ export default function AdminSidebar() {
 
     return (
         <>
+            {/* Overlay khi sidebar mở trên mobile */}
+            {isOpen && (
+                <div
+                    onClick={onClose}
+                    style={{
+                        position: "fixed", inset: 0,
+                        background: "rgba(0,0,0,0.4)",
+                        zIndex: 998,
+                    }}
+                />
+            )}
             <aside
                 className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2"
                 id="sidenav-main"
+                style={{
+                    transition: "transform 0.3s ease",
+                    // Mobile: ẩn/hiện theo isOpen. Desktop: luôn hiện (CSS class xử lý)
+                    transform: typeof window !== "undefined" && window.innerWidth < 1200
+                        ? isOpen ? "translateX(0)" : "translateX(-120%)"
+                        : undefined,
+                    zIndex: 999,
+                }}
             >
                 <div className="sidenav-header">
                     <i
                         className="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
                         aria-hidden="true"
                         id="iconSidenav"
+                        style={{ cursor: "pointer" }}
+                        onClick={onClose}
                     />
                     {/* Link logo giữ nguyên trỏ ra ngoài */}
 
@@ -56,7 +82,7 @@ export default function AdminSidebar() {
                         target="_blank"
                     >
                         <Image
-                            src="/logo-manh-phat-van-ban.png"
+                            src="/images/co-dien-manh-phat.webp"
                             alt="Tấn Long"
                             width={100}
                             height={32}

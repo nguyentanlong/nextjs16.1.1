@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-
+const isProd = process.env.NODE_ENV === "production";
 export async function POST(req: Request) {
     const body = await req.formData(); // vì có avatar (file upload)
     // Regex kiểm tra
@@ -46,17 +46,17 @@ export async function POST(req: Request) {
 
     response.cookies.set("authToken", data.accessToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-        maxAge: 60 * 60, // 1h
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",  // ← fix chính
+        path: '/',
+        maxAge: 60 * 15, // trước để 1h 60*60
     });
 
     response.cookies.set("refreshToken", data.refreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",  // ← fix chính
+        path: '/',
         maxAge: 60 * 60 * 24 * 7, // 7 ngày
     });
 

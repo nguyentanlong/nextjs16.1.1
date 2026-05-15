@@ -7,6 +7,7 @@ import { AuthContext } from "@/context/AuthContext";
 // import { ca } from "zod/locales";
 import dynamic from "next/dynamic";
 import TinyEditor from "./ProductEdit";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 const Editor = dynamic(() => import("@tinymce/tinymce-react").then(mod => mod.Editor),
     { ssr: false, });
 // Tự định nghĩa type cho handler
@@ -62,7 +63,7 @@ interface ProductEditorProps {
 }
 
 export default function ProductEditor({ initialProduct }: ProductEditorProps) {//sau initalProduct , onSave
-    console.log("initialProduct.id:", initialProduct?.id); // ← thêm dòng này
+    // console.log("initialProduct.id:", initialProduct?.id); // ← thêm dòng này
     const [product, setProduct] = useState<Product>(() =>
         initialProduct ?? {
             productName: "",
@@ -76,7 +77,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             files: []
         }
     );
-    console.log("useState init - initialProduct:", initialProduct);
+    // console.log("useState init - initialProduct:", initialProduct);
     const auth = useContext(AuthContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     if (!auth) {
@@ -119,15 +120,15 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // onSave(product);
-        console.log("product state khi submit:", JSON.stringify(product));
+        // console.log("product state khi submit:", JSON.stringify(product));
         if (isSubmitting) return; // chặn double submit
         setIsSubmitting(true);
         // ✅ Log ngay đầu handleSubmit
-        console.log("=== SUBMIT ===");
+        /*console.log("=== SUBMIT ===");
         console.log("product.id:", product.id);
         console.log("product.productName:", product.productName);
         console.log("isEdit:", !!product.id);
-        console.log("url sẽ gọi:", !!product.id ? `/api/admin/products/${product.id}` : "/api/admin/products");
+        console.log("url sẽ gọi:", !!product.id ? `/products/${product.id}` : "/products");*/
 
         const formData = new FormData();
         try {
@@ -157,7 +158,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
 
             // ✅ Nếu có product.id → PUT (cập nhật), không có → POST (tạo mới)
             const isEdit = !!product.id;
-            const url = isEdit ? `/api/admin/products/${product.id}` : "/api/admin/products";
+            const url = isEdit ? `/products/${product.id}` : "/products";
             const method = isEdit ? "PUT" : "POST";
 
             const res = await fetch(url, {
@@ -165,6 +166,7 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
                 body: formData,
                 credentials: "include",
             });
+            // const res = await fetchWithAuth(url, { method, body: formData });
 
 
             const text = await res.text();

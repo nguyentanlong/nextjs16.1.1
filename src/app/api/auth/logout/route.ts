@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+const isProd = process.env.NODE_ENV === "production";
 
 export async function POST(req: Request) {
 
@@ -25,23 +26,24 @@ export async function POST(req: Request) {
         body: JSON.stringify({ refreshToken }),
     });
 
-    const data = await res.json();
-
+    const text = await res.text();
+    let data: any = {};
+    try { data = JSON.parse(text); } catch { data = { message: "logged out" }; }
 
     const response = NextResponse.json(data, { status: res.status });
 
     response.cookies.set("refreshToken", "", {
         path: "/",
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",  // ← fix chính
         maxAge: 0,
     });
     response.cookies.set("accessToken", "", {
         path: "/",
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
         maxAge: 0,
     });
 

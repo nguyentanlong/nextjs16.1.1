@@ -51,17 +51,18 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
+    // console.log("=== REWRITES LOADED ===");
     return {
       beforeFiles: [
-        {
+        /*{
           source: "/api/products/:path*",
           destination: "/api/products/:path*",
-        },
+        },*/
         // ✅ Giữ lại route handler cho admin
-        {
+        /*{
           source: "/api/admin/:path*",
           destination: "/api/admin/:path*",
-        },
+        },*/
       ],
       afterFiles: [
         { source: "/api/:path*", destination: "https://api.tonkliplock1000.com/:path*" },

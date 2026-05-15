@@ -13,8 +13,8 @@ export default async function EditProductPage({
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
     const product = await fetchProductByIdEdit(id, token);
-    console.log("product.id trong page.:", product?.id);
-    console.log("product từ API:", JSON.stringify(product));
+    /*console.log("product.id trong page.:", product?.id);
+    console.log("product từ API:", JSON.stringify(product));*/
 
     if (!product) notFound();
 

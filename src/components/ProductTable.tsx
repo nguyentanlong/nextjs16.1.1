@@ -140,7 +140,7 @@ export default function ProductTable({ products, total, currentPage, search }: P
                       // background: p.isActive ? "#e6f9f0" : "#ffeaea",
                       // color: p.isActive ? "#27ae60" : "#e74c3c",
                     }}>
-                      {p.N0}  {p.id}
+                      {p.N0}
                     </span>
                   </td>
 

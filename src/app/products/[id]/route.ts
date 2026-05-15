@@ -36,13 +36,13 @@ export async function PUT(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
-    console.log("=== PUT /api/admin/products/[id] ĐƯỢC GỌI ==="); // ← thêm dòng này
-    console.log("id:", id);
+    /*console.log("=== PUT /products/[id] ĐƯỢC GỌI ==="); // ← thêm dòng này
+    console.log("id:", id);*/
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
     // ✅ Log để xem URL thực sự gọi là gì
-    console.log("PUT URL:", `${API_BASE}/${id}`);
-    console.log("Token:", token ? "có" : "không có");
+    /*console.log("PUT URL:", `${API_BASE}/${id}`);
+    console.log("Token:", token ? "có" : "không có");*/
 
     try {
         const formData = await req.formData();
@@ -58,6 +58,7 @@ export async function PUT(
         } as RequestInit & { duplex: "half" });
 
         const text = await res.text();
+        // console.log("Backend PUT response:", text);
         return new NextResponse(text, {
             status: res.status,
             headers: { "Content-Type": "application/json" },
@@ -75,8 +76,8 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
-    console.log("=== PUT /api/admin/products/[id] ĐƯỢC GỌI ==="); // ← thêm dòng này
-    console.log("id:", id);
+    /*console.log("=== PUT /products/[id] ĐƯỢC GỌI ==="); // ← thêm dòng này
+    console.log("id:", id);*/
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
 
