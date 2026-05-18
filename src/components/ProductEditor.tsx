@@ -161,13 +161,12 @@ export default function ProductEditor({ initialProduct }: ProductEditorProps) {/
             const url = isEdit ? `/products/${product.id}` : "/products";
             const method = isEdit ? "PUT" : "POST";
 
-            const res = await fetch(url, {
+            /*const res = await fetch(url, {
                 method,
                 body: formData,
                 credentials: "include",
-            });
-            // const res = await fetchWithAuth(url, { method, body: formData });
-
+            });*/
+            const res = await fetchWithAuth(url, { method, body: formData });
 
             const text = await res.text();
 
